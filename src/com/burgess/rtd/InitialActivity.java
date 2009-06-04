@@ -1,3 +1,13 @@
+/**
+ * InitialActivity.java
+ * com.burgess.rtd
+ *
+ * Created Jun 3, 2009
+ *
+ * Author: Andrew Burgess
+ * Email: abombm1@gmail.com
+ * Copyright: 2009
+ */
 package com.burgess.rtd;
 
 import android.app.Activity;
