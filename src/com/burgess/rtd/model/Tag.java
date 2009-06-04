@@ -14,9 +14,6 @@ package com.burgess.rtd.model;
  * Represents a Tag stored in the database
  */
 public class Tag {
-	public int id;
-	public String name;
-	
 	public static String getDBCreateString() {
 		return "create table tags (" +
 				"id integer primary key autoincrement, " +

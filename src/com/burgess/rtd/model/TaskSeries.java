@@ -10,22 +10,10 @@
  */
 package com.burgess.rtd.model;
 
-import java.util.Date;
-
 /**
  * Represents a TaskSeries object in the database
  */
 public class TaskSeries {
-	public int id;
-	public Date created;
-	public Date modified;
-	public String name;
-	public int listId;
-	public String source;
-	public String url;
-	public int locationId;
-	public boolean synced;
-	
 	public static String getDBCreateString() {
 		return "create table task_series (" +
 				"id integer primary key autoincrement, " +

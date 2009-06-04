@@ -10,20 +10,10 @@
  */
 package com.burgess.rtd.model;
 
-import java.util.Date;
-
 /**
  * Represents a Note stored in the database
  */
 public class Note {
-	public int id;
-	public int taskId;
-	public String title;
-	public String body;
-	public Date created;
-	public Date modified;
-	public boolean synced;
-	
 	public static String getDBCreateString() {
 		return "create table notes (" +
 				"id integer primary key autoincrement, " +

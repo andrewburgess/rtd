@@ -28,7 +28,7 @@ public class InitialActivity extends Activity implements IInitialView {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.main);
+        setContentView(R.layout.initial);
         
         controller = new InitialController(this);
         controller.initializeView();

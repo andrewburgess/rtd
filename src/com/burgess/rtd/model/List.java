@@ -14,14 +14,6 @@ package com.burgess.rtd.model;
  * Represents a List object in the database
  */
 public class List {
-	public int id;
-	public String name;
-	public boolean deleted;
-	public boolean archived;
-	public int position;
-	public boolean smart;
-	public boolean synced;
-	
 	public static String getDBCreateString() {
 		return "create table lists (" +
 				"id integer primary key autoincrement, " +
