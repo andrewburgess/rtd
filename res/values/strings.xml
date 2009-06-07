@@ -3,4 +3,5 @@
     <string name="hello">Hello World, InitialActivity!</string>
     <string name="app_name">RTD</string>
 <string name="configure_not_synced">You have not authorized for RTM</string>
+<string name="sync_prompt">Sync w/ RTM:</string>
 </resources>

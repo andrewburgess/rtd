@@ -4,21 +4,63 @@
 	android:layout_width="fill_parent" 
 	android:layout_height="fill_parent"
 	android:orientation="vertical"
+	android:padding="5px"
 	xmlns:android="http://schemas.android.com/apk/res/android">
 
 	<TextView
 		android:layout_height="wrap_content" 
 		android:layout_width="fill_parent" 
 		android:text="Configure RTD" 
-		android:textSize="20px" 
+		android:textSize="24px" 
 		android:textStyle="bold" 
-		android:gravity="center_horizontal" android:layout_marginBottom="10px">
-	</TextView>
+		android:gravity="center_horizontal" 
+		android:layout_marginBottom="10px" />
 
-	<TextView android:id="@+id/authstatus"
-		android:layout_height="wrap_content"
+	<LinearLayout
 		android:layout_width="fill_parent"
-		android:layout_margin="2px">
-	</TextView>
+		android:layout_height="wrap_content"
+		android:orientation="horizontal">
+		
+		<TextView
+			android:layout_height="wrap_content"
+			android:layout_width="wrap_content"
+			android:textSize="16px"
+			android:text="Auth Status: "/>
+		<TextView android:id="@+id/authstatus"
+			android:layout_height="wrap_content"
+			android:layout_width="wrap_content"
+			android:textSize="16px"
+			android:layout_weight="1"
+			android:text="Not authenticated" />
+		
+	</LinearLayout>
+	
+	<Button android:id="@+id/authbutton"
+			android:layout_height="wrap_content"
+			android:layout_width="wrap_content"
+			android:textSize="16px"
+			android:text="Authenticate" 
+			android:layout_marginBottom="20px"/>
+			
+	<LinearLayout
+		android:layout_height="wrap_content"
+		android:layout_width="wrap_content"
+		android:orientation="horizontal">
+		
+		<TextView
+			android:layout_height="wrap_content"
+			android:layout_width="wrap_content"
+			android:textSize="16px"
+			android:text="Sync w/ RTM: " />
+		
+		<Spinner 
+	        android:id="@+id/spinner"
+	        android:layout_height="wrap_content"
+	        android:layout_width="wrap_content"
+	        android:drawSelectorOnTop="true"
+	        android:prompt="@string/sync_prompt" />
+		
+		
+	</LinearLayout>
 
 </LinearLayout>

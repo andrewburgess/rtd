@@ -11,6 +11,7 @@
 package com.burgess.rtd;
 
 import android.app.Activity;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 
@@ -37,5 +38,12 @@ public class InitialActivity extends Activity implements IInitialView {
 	@Override
 	public SharedPreferences getPreferences() {
 		return this.getSharedPreferences(Program.APPLICATION, 0);
+	}
+
+	@Override
+	public void launchConfigureActivity() {
+		Intent intent = new Intent(this, ConfigureActivity.class);
+		startActivity(intent);	
+		finish();
 	}
 }

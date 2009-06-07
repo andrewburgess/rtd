@@ -40,6 +40,7 @@ public class InitialController {
 		if (token == null) {
 			//Application needs to be configured
 			Log.d(Program.LOG, "Needs configuring");
+			view.launchConfigureActivity();
 		} else {
 			//Application has been set up, start main program
 			Log.d(Program.LOG, "All set up");

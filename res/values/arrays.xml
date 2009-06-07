@@ -1,0 +1,11 @@
+<resources>
+	<string-array name="sync_types">
+		<item id="1">immediately</item>
+		<item id="2">once an hour</item>
+		<item id="3">once every 6 hours</item>
+		<item id="4">once every 12 hours</item>
+		<item id="5">once a day</item>
+		<item id="6">manually</item>
+	</string-array>
+
+</resources>
