@@ -58,9 +58,14 @@
 	        android:layout_height="wrap_content"
 	        android:layout_width="wrap_content"
 	        android:drawSelectorOnTop="true"
-	        android:prompt="@string/sync_prompt" />
-		
-		
+	        android:prompt="@string/sync_prompt"/>
+	        
 	</LinearLayout>
+	
+	<TextView
+		android:layout_height="wrap_content"
+		android:layout_width="fill_parent"
+		android:textSize="12px"
+		android:text="Syncing more often uses more battery" android:textStyle="italic"/>
 
 </LinearLayout>
