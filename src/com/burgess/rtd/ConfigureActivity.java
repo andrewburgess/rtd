@@ -11,8 +11,12 @@
 package com.burgess.rtd;
 
 import android.app.Activity;
+import android.content.Context;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.view.View;
+import android.view.View.OnClickListener;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.Spinner;
@@ -27,6 +31,16 @@ import com.burgess.rtd.interfaces.view.IConfigureView;
  */
 public class ConfigureActivity extends Activity implements IConfigureView {
 	private ConfigureController controller;
+	private Context context = this;
+	private Button authenticateButton;
+	
+	private OnClickListener authenticateButtonOnClickListener = new OnClickListener() {
+		@Override
+		public void onClick(View v) {
+			Intent intent = new Intent(context, AuthenticateActivity.class);
+			startActivityForResult(intent, 0);			
+		}
+	};
 	
 	@Override
 	public void onCreate(Bundle savedInstance) {
@@ -34,6 +48,9 @@ public class ConfigureActivity extends Activity implements IConfigureView {
 		setContentView(R.layout.configure);
 		
 		populateSpinner();
+		
+		authenticateButton = (Button) findViewById(R.id.authbutton);
+		authenticateButton.setOnClickListener(authenticateButtonOnClickListener);
 
 		controller = new ConfigureController(this);
 		controller.initializeView();

@@ -11,6 +11,15 @@
 package com.burgess.rtd.constants;
  
 public class RTM {
-  public static final String API_KEY = "c54b775ba175d358b9adf622a1fd383f";
-  public static final String SHARED_SECRET = "3af29ded6429d6bc";
+	public static final String PATH = "http://api.rememberthemilk.com/services/rest/?";
+	public static final String AUTH_PATH = "http://www.rememberthemilk.com/services/auth/?";
+	
+	//Methods
+	public static final String GET_FROB = "rtm.auth.getFrob";
+	public static final String GET_TOKEN = "rtm.auth.getToken";
+	public static final String TEST_ECHO = "rtm.test.echo";
+	public static final String LISTS_GET_LIST = "rtm.lists.getList";
+	public static final String AUTH_CHECK_TOKEN = "rtm.auth.checkToken";
+	public static final String LISTS_ADD = "rtm.lists.add";
+	public static final String TASKS_GET_LIST = "rtm.tasks.getList";
 }

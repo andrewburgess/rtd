@@ -1,0 +1,24 @@
+/**
+ * IAuthenticateView.java
+ * com.burgess.rtd.interfaces.view
+ *
+ * Created Jun 8, 2009
+ *
+ * Author: Andrew Burgess
+ * Email: abombm1@gmail.com
+ * Copyright: 2009
+ */
+package com.burgess.rtd.interfaces.view;
+
+import android.content.Context;
+
+/**
+ * @author Andrew
+ *
+ */
+public interface IAuthenticateView {
+	public Context getContext();
+	public void createDialog(String message);
+	public void dismissDialog();
+	public void loadUrl(String url);
+}

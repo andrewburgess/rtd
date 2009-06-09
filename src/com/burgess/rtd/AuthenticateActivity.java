@@ -11,11 +11,64 @@
 package com.burgess.rtd;
 
 import android.app.Activity;
+import android.app.ProgressDialog;
+import android.content.Context;
 import android.os.Bundle;
+import android.view.ViewGroup.LayoutParams;
+import android.webkit.WebView;
+import android.webkit.WebViewClient;
+import android.widget.TextView;
 
-public class AuthenticateActivity extends Activity {
+import com.burgess.rtd.controller.AuthenticateController;
+import com.burgess.rtd.interfaces.view.IAuthenticateView;
+
+public class AuthenticateActivity extends Activity implements IAuthenticateView {
+	private AuthenticateController controller;
+	private Context context = this;
+	private WebView wv;
+	private ProgressDialog dialog;
+		
+	private class AuthenticateWebViewClient extends WebViewClient {
+		@Override
+		public boolean shouldOverrideUrlLoading(WebView view, String url) {
+			view.loadUrl(url);
+			return true;
+		}
+	}
+	
 	@Override
 	public void onCreate(Bundle savedInstance) {
 		super.onCreate(savedInstance);
+		
+		setContentView(R.layout.authenticate);
+		
+		wv = (WebView) findViewById(R.id.webview);
+		wv.setWebViewClient(new AuthenticateWebViewClient());
+		wv.getSettings().setJavaScriptEnabled(true);
+		
+		controller = new AuthenticateController(this);
+		controller.initializeView();
+	}
+
+	@Override
+	public void createDialog(String message) {
+		dialog = new ProgressDialog(this);
+		dialog.setTitle(message);
+		dialog.show();
+	}
+	
+	@Override
+	public void dismissDialog() {
+		dialog.dismiss();
+	}
+
+	@Override
+	public Context getContext() {
+		return context;
+	}
+
+	@Override
+	public void loadUrl(String url) {
+		wv.loadUrl(url);
 	}
 }

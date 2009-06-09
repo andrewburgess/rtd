@@ -19,6 +19,7 @@ import java.util.Vector;
 
 import android.util.Log;
 
+import com.burgess.rtd.constants.API;
 import com.burgess.rtd.constants.Program;
 import com.burgess.rtd.constants.RTM;
 
@@ -54,7 +55,7 @@ public class Request {
 			setParameter("method", name);
 		}
 		
-		setParameter("api_key", RTM.API_KEY);
+		setParameter("api_key", API.API_KEY);
 		setParameter("format", format);
 	}
 	
@@ -90,7 +91,7 @@ public class Request {
 	 * @return	An MD5 encoded string for the request
 	 */
 	private String signMethod() {
-		String str = RTM.SHARED_SECRET;
+		String str = API.SHARED_SECRET;
 		Vector<String> v = new Vector<String>(parameters.keySet());
 		Collections.sort(v);
 		
