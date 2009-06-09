@@ -10,6 +10,8 @@
  */
 package com.burgess.rtd.controller;
 
+import org.json.JSONException;
+
 import android.os.Handler;
 import android.os.Message;
 
@@ -20,17 +22,38 @@ import com.burgess.rtd.model.Request;
 import com.burgess.rtd.model.rtm.GetFrob;
 
 /**
- * @author Andrew
+ * Handles Authenticating the application with RTM
  *
+ * @author Andrew Burgess
  */
 public class AuthenticateController {
+	/**
+	 * Handle obtaining a frob from RTM
+	 */
 	private static final int FROB = 1;
 	
+	/**
+	 * View to control
+	 */
 	private IAuthenticateView view;
+	/**
+	 * Provides access to RTM data services
+	 */
 	private RTMModel rtm;
+	/**
+	 * Frob object parsed from RTM data services
+	 */
 	private GetFrob frob;
 	
+	/**
+	 * Handles things while a thread is working.
+	 */
 	private Handler handler = new Handler() {
+		/**
+		 * Handle a message from a thread
+		 * 
+		 * @param msg	The message passed along from the thread
+		 */
 		public void handleMessage(Message msg) {
 			switch (msg.what) {
 				case FROB:
@@ -43,11 +66,22 @@ public class AuthenticateController {
 		}
 	};
 	
+	/**
+	 * Thread which gets a frob from the RTM service to determine the URL
+	 * to authenticate with
+	 */
 	private Thread getFrobThread = new Thread() {
+		/**
+		 * Runs the thread
+		 */
 		public void run() {
 			Request r = new Request(RTM.GET_FROB);
 			frob = new GetFrob();
-			frob.parse(rtm.execute(RTM.PATH, r));
+			try {
+				frob.parse(rtm.execute(RTM.PATH, r));
+			} catch (JSONException e) {
+				
+			}
 			
 			Message m = new Message();
 			m.what = FROB;
@@ -55,14 +89,24 @@ public class AuthenticateController {
 		}
 	};
 	
+	/**
+	 * Creates a new controller
+	 *
+	 * @param view	A view that will be controlled by this class
+	 */
 	public AuthenticateController(IAuthenticateView view) {
 		this.view = view;
 		
 		rtm = new RTMModel(view.getContext());
 	}
 	
+	/**
+	 * Initializes the view by starting a dialog box and then getting the URL
+	 * for the WebView
+	 */
 	public void initializeView() {
-		getFrobThread.start();
 		view.createDialog("Obtaining Auth URL");
+		
+		getFrobThread.start();
 	}
 }

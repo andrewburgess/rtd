@@ -17,8 +17,13 @@ import android.content.Context;
  *
  */
 public interface IAuthenticateView {
+	//Dialog constants
+	public static final int GETTING_FROB_DIALOG = 0;
+	public static final int FROB_PARSE_ERROR_DIALOG = 1;
+	
 	public Context getContext();
 	public void createDialog(String message);
 	public void dismissDialog();
 	public void loadUrl(String url);
+	public void createErrorDialog(int id);
 }

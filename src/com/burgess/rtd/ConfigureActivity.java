@@ -11,12 +11,14 @@
 package com.burgess.rtd;
 
 import android.app.Activity;
+import android.app.Dialog;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.view.ViewGroup.LayoutParams;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.Spinner;
@@ -54,6 +56,13 @@ public class ConfigureActivity extends Activity implements IConfigureView {
 
 		controller = new ConfigureController(this);
 		controller.initializeView();
+		
+		Dialog wee = new Dialog(this);
+		wee.setContentView(R.layout.error_dialog);
+		wee.setTitle("Parse Error");
+		TextView tv = (TextView) wee.findViewById(R.id.error_text);
+		tv.setText(R.string.parse_frob_error);
+		wee.show();
 	}
 
 

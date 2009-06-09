@@ -1,7 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="hello">Hello World, InitialActivity!</string>
-    <string name="app_name">RTD</string>
+    <string name="app_name">Remember the Droid</string>
 <string name="configure_not_synced">You have not authorized for RTM</string>
 <string name="sync_prompt">Sync w/ RTM:</string>
+<string name="parse_frob_error">Error parsing data from\nrtm.auth.getFrob\n\nPlease submit a bug report</string>
+<string name="issue_url">http://github.com/andrewburgess/rtd/issues</string>
 </resources>

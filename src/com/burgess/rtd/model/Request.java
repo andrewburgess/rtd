@@ -21,7 +21,6 @@ import android.util.Log;
 
 import com.burgess.rtd.constants.API;
 import com.burgess.rtd.constants.Program;
-import com.burgess.rtd.constants.RTM;
 
 /**
  * Represents a Request string that needs to be submitted to RTM.

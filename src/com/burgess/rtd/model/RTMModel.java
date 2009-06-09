@@ -17,9 +17,6 @@ import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.Calendar;
-import java.util.Hashtable;
-
-import org.json.JSONException;
 
 import android.content.Context;
 import android.net.ConnectivityManager;
@@ -34,7 +31,6 @@ public class RTMModel {
 	private static final int BUFFER_LENGTH = 1024;
 	
 	private Context context;
-	private String url;
 	private Request request;
 	
 	public RTMModel(Context context) {
@@ -42,7 +38,6 @@ public class RTMModel {
 	}
 	
 	public String execute(String url, Request request) {
-		this.url = url;
 		this.request = request;
 		NetworkInfo mobile = ((ConnectivityManager)context.getSystemService(Context.CONNECTIVITY_SERVICE)).getNetworkInfo(ConnectivityManager.TYPE_MOBILE);
 		NetworkInfo wifi = ((ConnectivityManager)context.getSystemService(Context.CONNECTIVITY_SERVICE)).getNetworkInfo(ConnectivityManager.TYPE_WIFI);

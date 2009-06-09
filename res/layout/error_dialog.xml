@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<LinearLayout
+	android:layout_width="fill_parent"
+	android:layout_height="fill_parent"
+	android:orientation="vertical"
+	xmlns:android="http://schemas.android.com/apk/res/android" android:padding="5dp">
+	
+	<LinearLayout
+		android:layout_width="fill_parent"
+		android:layout_height="wrap_content"
+		android:orientation="horizontal">
+		
+		<ImageView
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			android:layout_marginRight="15dp"
+			android:src="@drawable/error" />
+		
+		<LinearLayout
+			android:layout_height="fill_parent"
+			android:layout_width="fill_parent"
+			android:orientation="vertical">	
+			
+			<TextView android:id="@+id/error_text"
+				android:layout_width="fill_parent"
+				android:layout_height="wrap_content"
+				android:text="hai"/>
+			<TextView
+				android:layout_height="wrap_content"
+				android:layout_width="fill_parent"
+				android:layout_marginTop="10dp"
+				android:text="@string/issue_url" android:autoLink="web" android:textSize="11px" android:linksClickable="true"/>
+		
+		</LinearLayout>
+		
+	</LinearLayout>
+	
+	
+	<Button
+		android:layout_height="wrap_content"
+		android:text="Understood" android:layout_width="fill_parent" android:layout_margin="10dp"/>
+			
+</LinearLayout>

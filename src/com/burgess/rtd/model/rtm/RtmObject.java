@@ -10,6 +10,8 @@
  */
 package com.burgess.rtd.model.rtm;
 
+import org.json.JSONException;
+
 /**
  * @author Andrew
  *
@@ -17,5 +19,5 @@ package com.burgess.rtd.model.rtm;
 public abstract class RtmObject {
 	public String status;
 	
-	public abstract void parse(String data);
+	public abstract void parse(String data) throws JSONException;
 }

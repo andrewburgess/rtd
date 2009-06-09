@@ -14,23 +14,28 @@ public final class R {
     public static final class attr {
     }
     public static final class drawable {
-        public static final int icon=0x7f020000;
+        public static final int error=0x7f020000;
+        public static final int icon=0x7f020001;
     }
     public static final class id {
         public static final int authbutton=0x7f060002;
         public static final int authstatus=0x7f060001;
+        public static final int error_text=0x7f060004;
         public static final int spinner=0x7f060003;
         public static final int webview=0x7f060000;
     }
     public static final class layout {
         public static final int authenticate=0x7f030000;
         public static final int configure=0x7f030001;
-        public static final int initial=0x7f030002;
+        public static final int error_dialog=0x7f030002;
+        public static final int initial=0x7f030003;
     }
     public static final class string {
         public static final int app_name=0x7f050001;
         public static final int configure_not_synced=0x7f050002;
         public static final int hello=0x7f050000;
+        public static final int issue_url=0x7f050005;
+        public static final int parse_frob_error=0x7f050004;
         public static final int sync_prompt=0x7f050003;
     }
 }
