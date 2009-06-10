@@ -12,14 +12,18 @@ package com.burgess.rtd.controller;
 
 import org.json.JSONException;
 
+import android.content.SharedPreferences;
 import android.os.Handler;
 import android.os.Message;
 
+import com.burgess.rtd.constants.Program;
 import com.burgess.rtd.constants.RTM;
 import com.burgess.rtd.interfaces.view.IAuthenticateView;
 import com.burgess.rtd.model.RTMModel;
 import com.burgess.rtd.model.Request;
 import com.burgess.rtd.model.rtm.GetFrob;
+import com.burgess.rtd.model.rtm.GetToken;
+import com.burgess.rtd.model.rtm.Timeline;
 
 /**
  * Handles Authenticating the application with RTM
@@ -31,6 +35,7 @@ public class AuthenticateController {
 	 * Handle obtaining a frob from RTM
 	 */
 	private static final int FROB = 1;
+	private static final int TOKEN = 2;
 	
 	/**
 	 * View to control
@@ -44,6 +49,8 @@ public class AuthenticateController {
 	 * Frob object parsed from RTM data services
 	 */
 	private GetFrob frob;
+	
+	private GetToken token;
 	
 	/**
 	 * Handles things while a thread is working.
@@ -62,6 +69,12 @@ public class AuthenticateController {
 					r.setParameter("perms", "delete");
 					r.setParameter("frob", frob.frob);
 					view.loadUrl(RTM.AUTH_PATH + r.toString());
+					break;
+				case TOKEN:
+					saveAuthDetails();
+					view.dismissDialog();
+					view.finish();
+					break;
 			}
 		}
 	};
@@ -81,10 +94,42 @@ public class AuthenticateController {
 				frob.parse(rtm.execute(RTM.PATH, r));
 			} catch (JSONException e) {
 				
+			} catch (Exception e) {
+				
 			}
 			
 			Message m = new Message();
 			m.what = FROB;
+			handler.sendMessage(m);
+		}
+	};
+	
+	private Thread getAuthTokenThread = new Thread() {
+		public void run() {
+			Request request = new Request(RTM.GET_TOKEN);
+			request.setParameter("frob", frob.frob);
+			token = new GetToken();
+			try {
+				token.parse(rtm.execute(RTM.PATH, request));
+			} catch (JSONException e) {
+				
+			} catch (Exception e) {
+				
+			}
+			
+			request = new Request(RTM.TIMELINE_CREATE);
+			request.setParameter("auth_token", token.token);
+			Timeline timeline = new Timeline();
+			try {
+				timeline.parse(rtm.execute(RTM.PATH, request));
+			} catch (JSONException e) {
+				
+			} catch (Exception e) {
+				
+			}
+			
+			Message m = new Message();
+			m.what = TOKEN;
 			handler.sendMessage(m);
 		}
 	};
@@ -108,5 +153,22 @@ public class AuthenticateController {
 		view.createDialog("Obtaining Auth URL");
 		
 		getFrobThread.start();
+	}
+	
+	public void getAuthToken() {
+		view.createDialog("Getting Auth Token");
+		getAuthTokenThread.start();
+	}
+	
+	private void saveAuthDetails() {
+		if (token == null)
+			return;
+		
+		SharedPreferences.Editor editor = view.getPreferences().edit();
+		editor.putString(Program.AUTH_TOKEN, token.token);
+		editor.putString(Program.FULLNAME, token.fullname);
+		editor.putString(Program.USERNAME, token.username);
+		editor.putLong(Program.ID, token.id);
+		editor.commit();
 	}
 }

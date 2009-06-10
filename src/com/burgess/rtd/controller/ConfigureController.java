@@ -17,6 +17,8 @@ import com.burgess.rtd.interfaces.view.IConfigureView;
 
 public class ConfigureController {
 	private IConfigureView view;
+	private String token;
+	private String username;
 	
 	public ConfigureController(IConfigureView view) {
 		this.view = view;
@@ -24,9 +26,13 @@ public class ConfigureController {
 	
 	public void initializeView() {
 		SharedPreferences preferences = view.getPreferences();
+		token = preferences.getString(Program.AUTH_TOKEN, Program.DEFAULT_AUTH_TOKEN);
+		username = preferences.getString(Program.USERNAME, "");
 		
-		if (preferences.getString(Program.AUTH_TOKEN, Program.DEFAULT_AUTH_TOKEN) == Program.DEFAULT_AUTH_TOKEN) {
-			
+		if (token == Program.DEFAULT_AUTH_TOKEN) {
+			view.setAuthStatus("Not authenticated");
+		} else {
+			view.setAuthStatus(username + " logged in");
 		}
 	}
 }

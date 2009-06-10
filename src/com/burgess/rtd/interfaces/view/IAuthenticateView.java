@@ -11,6 +11,7 @@
 package com.burgess.rtd.interfaces.view;
 
 import android.content.Context;
+import android.content.SharedPreferences;
 
 /**
  * @author Andrew
@@ -26,4 +27,6 @@ public interface IAuthenticateView {
 	public void dismissDialog();
 	public void loadUrl(String url);
 	public void createErrorDialog(int id);
+	public SharedPreferences getPreferences();
+	public void finish();
 }

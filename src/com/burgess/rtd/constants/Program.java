@@ -19,6 +19,9 @@ public class Program {
 	//Config values
 	public static final String AUTH_TOKEN = "authtoken";
 	public static final String LAST_SYNC = "lastsync";
+	public static final String USERNAME = "username";
+	public static final String FULLNAME = "fullname";
+	public static final String ID = "id";
 	
 	public static final String DEFAULT_AUTH_TOKEN = "0000000000000000";
 	

@@ -33,6 +33,7 @@ public class ConfigureActivity extends Activity implements IConfigureView {
 	private ConfigureController controller;
 	private Context context = this;
 	private Button authenticateButton;
+	private TextView authstatus;
 	
 	private OnClickListener authenticateButtonOnClickListener = new OnClickListener() {
 		@Override
@@ -52,6 +53,7 @@ public class ConfigureActivity extends Activity implements IConfigureView {
 		
 		authenticateButton = (Button) findViewById(R.id.authbutton);
 		authenticateButton.setOnClickListener(authenticateButtonOnClickListener);
+		authstatus = (TextView) findViewById(R.id.authstatus);
 
 		controller = new ConfigureController(this);
 		controller.initializeView();
@@ -83,5 +85,11 @@ public class ConfigureActivity extends Activity implements IConfigureView {
 	            this, R.array.sync_types, android.R.layout.simple_spinner_item);
 	    adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
 	    s.setAdapter(adapter);
+	}
+
+
+	@Override
+	public void setAuthStatus(String status) {
+		authstatus.setText(status);
 	}
 }

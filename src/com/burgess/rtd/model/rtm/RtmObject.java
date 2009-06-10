@@ -19,5 +19,5 @@ import org.json.JSONException;
 public abstract class RtmObject {
 	public String status;
 	
-	public abstract void parse(String data) throws JSONException;
+	public abstract void parse(String data) throws JSONException, Exception;
 }

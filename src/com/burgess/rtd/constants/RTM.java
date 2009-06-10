@@ -22,4 +22,5 @@ public class RTM {
 	public static final String AUTH_CHECK_TOKEN = "rtm.auth.checkToken";
 	public static final String LISTS_ADD = "rtm.lists.add";
 	public static final String TASKS_GET_LIST = "rtm.tasks.getList";
+	public static final String TIMELINE_CREATE = "rtm.timeline.create";
 }

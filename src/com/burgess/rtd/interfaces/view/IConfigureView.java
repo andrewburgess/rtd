@@ -15,4 +15,5 @@ import android.content.SharedPreferences;
 public interface IConfigureView {
 	public SharedPreferences getPreferences();
 	public void configureAuthentication(boolean isAuthenticated);
+	public void setAuthStatus(String status);
 }

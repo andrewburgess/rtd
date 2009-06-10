@@ -13,10 +13,6 @@ package com.burgess.rtd.model.rtm;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import android.util.Log;
-
-import com.burgess.rtd.constants.Program;
-
 /**
  * @author Andrew
  *
@@ -28,16 +24,13 @@ public class GetFrob extends RtmObject {
 	 * @see com.burgess.rtd.model.rtm.RtmObject#parse(java.lang.String)
 	 */
 	@Override
-	public void parse(String data) throws JSONException {
-		try {
-			JSONObject json = new JSONObject(data).getJSONObject("rsp");
-			status = json.getString("stat");
-			if (status.equals("ok")) {
-				frob = json.getString("frob");
-			}
-		} catch (JSONException e) {
-			Log.e(Program.LOG, e.getMessage());
-			throw e;
+	public void parse(String data) throws JSONException, Exception {
+		JSONObject json = new JSONObject(data).getJSONObject("rsp");
+		status = json.getString("stat");
+		if (status.equals("ok")) {
+			frob = json.getString("frob");
+		} else {
+			throw new Exception("RTM return status: " + status);
 		}
 	}
 

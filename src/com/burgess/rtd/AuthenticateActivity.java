@@ -14,12 +14,18 @@ import android.app.Activity;
 import android.app.Dialog;
 import android.app.ProgressDialog;
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.util.Log;
+import android.view.View;
 import android.view.Window;
+import android.view.View.OnClickListener;
 import android.webkit.WebChromeClient;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
+import android.widget.Button;
 
+import com.burgess.rtd.constants.Program;
 import com.burgess.rtd.controller.AuthenticateController;
 import com.burgess.rtd.interfaces.view.IAuthenticateView;
 
@@ -45,6 +51,14 @@ public class AuthenticateActivity extends Activity implements IAuthenticateView 
 		}
 	};
 	
+	private OnClickListener authButtonOnClickListener = new OnClickListener() {
+		@Override
+		public void onClick(View arg0) {
+			Log.i(Program.LOG, "Clicked");
+			controller.getAuthToken();
+		}
+	};
+	
 	@Override
 	protected Dialog onCreateDialog(int id) {
 		Dialog dialog;
@@ -67,6 +81,9 @@ public class AuthenticateActivity extends Activity implements IAuthenticateView 
 		wv.setWebViewClient(new AuthenticateWebViewClient());
 		wv.getSettings().setJavaScriptEnabled(true);
 		wv.setWebChromeClient(new AuthenticateWebChromeClient());
+		
+		Button authButton = (Button) findViewById(R.id.authbutton);
+		authButton.setOnClickListener(authButtonOnClickListener);
 		
 		controller = new AuthenticateController(this);
 		controller.initializeView();
@@ -98,5 +115,10 @@ public class AuthenticateActivity extends Activity implements IAuthenticateView 
 	@Override
 	public void createErrorDialog(int id) {
 		
+	}
+
+	@Override
+	public SharedPreferences getPreferences() {
+		return this.getSharedPreferences(Program.APPLICATION, 0);
 	}
 }

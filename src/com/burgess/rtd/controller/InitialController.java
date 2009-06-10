@@ -44,6 +44,7 @@ public class InitialController {
 		} else {
 			//Application has been set up, start main program
 			Log.d(Program.LOG, "All set up");
+			view.launchConfigureActivity();
 		}
 	}
 }
