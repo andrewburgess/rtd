@@ -11,7 +11,6 @@
 package com.burgess.rtd;
 
 import android.app.Activity;
-import android.app.Dialog;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -46,6 +45,7 @@ public class ConfigureActivity extends Activity implements IConfigureView {
 	@Override
 	public void onCreate(Bundle savedInstance) {
 		super.onCreate(savedInstance);
+		
 		setContentView(R.layout.configure);
 		
 		populateSpinner();
@@ -55,13 +55,6 @@ public class ConfigureActivity extends Activity implements IConfigureView {
 
 		controller = new ConfigureController(this);
 		controller.initializeView();
-		
-		Dialog wee = new Dialog(this);
-		wee.setContentView(R.layout.error_dialog);
-		wee.setTitle("Parse Error");
-		TextView tv = (TextView) wee.findViewById(R.id.error_text);
-		tv.setText(R.string.parse_frob_error);
-		wee.show();
 	}
 
 

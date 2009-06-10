@@ -19,6 +19,7 @@ import android.view.Window;
 import android.webkit.WebChromeClient;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
+import android.widget.TextView;
 
 import com.burgess.rtd.controller.AuthenticateController;
 import com.burgess.rtd.interfaces.view.IAuthenticateView;
@@ -29,6 +30,8 @@ public class AuthenticateActivity extends Activity implements IAuthenticateView 
 	private WebView wv;
 	private ProgressDialog dialog;
 	private AuthenticateActivity instance = this;
+	
+	TextView tv;
 		
 	private class AuthenticateWebViewClient extends WebViewClient {
 		@Override
@@ -41,7 +44,7 @@ public class AuthenticateActivity extends Activity implements IAuthenticateView 
 	private class AuthenticateWebChromeClient extends WebChromeClient {
 		@Override
 		public void onProgressChanged(WebView view, int newProgress) {
-			instance.setProgress(newProgress);
+			instance.setProgress(newProgress * 100);
 		}
 	};
 	
@@ -60,7 +63,6 @@ public class AuthenticateActivity extends Activity implements IAuthenticateView 
 	@Override
 	public void onCreate(Bundle savedInstance) {
 		super.onCreate(savedInstance);
-		
 		requestWindowFeature(Window.FEATURE_PROGRESS);
 		setContentView(R.layout.authenticate);
 		
@@ -68,6 +70,8 @@ public class AuthenticateActivity extends Activity implements IAuthenticateView 
 		wv.setWebViewClient(new AuthenticateWebViewClient());
 		wv.getSettings().setJavaScriptEnabled(true);
 		wv.setWebChromeClient(new AuthenticateWebChromeClient());
+		
+		tv = (TextView) findViewById(R.id.text);
 		
 		controller = new AuthenticateController(this);
 		controller.initializeView();
