@@ -90,10 +90,11 @@ public class AuthenticateActivity extends Activity implements IAuthenticateView 
 	}
 
 	@Override
-	public void createDialog(String message) {
+	public void createDialog(String title, String message) {
 		dialog = new ProgressDialog(this);
 		dialog.setOwnerActivity(this);
-		dialog.setTitle(message);
+		dialog.setTitle(title);
+		dialog.setMessage(message);
 		dialog.show();
 	}
 	

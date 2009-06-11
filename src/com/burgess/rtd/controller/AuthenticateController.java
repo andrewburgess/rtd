@@ -150,13 +150,13 @@ public class AuthenticateController {
 	 * for the WebView
 	 */
 	public void initializeView() {
-		view.createDialog("Obtaining Auth URL");
+		view.createDialog("Sit tight", "Figuring out your auth URL");
 		
 		getFrobThread.start();
 	}
 	
 	public void getAuthToken() {
-		view.createDialog("Getting Auth Token");
+		view.createDialog("Hold please", "Asking nicely for your auth token");
 		getAuthTokenThread.start();
 	}
 	
