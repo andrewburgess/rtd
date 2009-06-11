@@ -30,6 +30,8 @@ import com.burgess.rtd.interfaces.view.IConfigureView;
  * Allows the user to configure the application
  */
 public class ConfigureActivity extends Activity implements IConfigureView {
+	private static final int REQUEST_AUTHENTICATE = 0;
+	
 	private ConfigureController controller;
 	private Context context = this;
 	private Button authenticateButton;
@@ -39,7 +41,7 @@ public class ConfigureActivity extends Activity implements IConfigureView {
 		@Override
 		public void onClick(View v) {
 			Intent intent = new Intent(context, AuthenticateActivity.class);
-			startActivityForResult(intent, 0);			
+			startActivityForResult(intent, REQUEST_AUTHENTICATE);			
 		}
 	};
 	
@@ -57,6 +59,17 @@ public class ConfigureActivity extends Activity implements IConfigureView {
 
 		controller = new ConfigureController(this);
 		controller.initializeView();
+	}
+	
+	@Override
+	public void onActivityResult(int requestCode, int resultCode, Intent data) {
+		switch (requestCode) {
+			case REQUEST_AUTHENTICATE:
+				controller.refreshAuthStatus();
+				break;
+			default:
+				break;
+		}
 	}
 
 

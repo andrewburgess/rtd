@@ -19,13 +19,18 @@ public class ConfigureController {
 	private IConfigureView view;
 	private String token;
 	private String username;
+	private SharedPreferences preferences;
 	
 	public ConfigureController(IConfigureView view) {
 		this.view = view;
 	}
 	
 	public void initializeView() {
-		SharedPreferences preferences = view.getPreferences();
+		refreshAuthStatus();
+	}
+	
+	public void refreshAuthStatus() {
+		preferences = view.getPreferences();
 		token = preferences.getString(Program.AUTH_TOKEN, Program.DEFAULT_AUTH_TOKEN);
 		username = preferences.getString(Program.USERNAME, "");
 		
