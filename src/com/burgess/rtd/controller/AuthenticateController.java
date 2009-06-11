@@ -10,14 +10,21 @@
  */
 package com.burgess.rtd.controller;
 
+import java.io.IOException;
+import java.net.MalformedURLException;
+
+import org.apache.http.HttpException;
 import org.json.JSONException;
 
 import android.content.SharedPreferences;
 import android.os.Handler;
 import android.os.Message;
 
+import com.burgess.rtd.R;
 import com.burgess.rtd.constants.Program;
 import com.burgess.rtd.constants.RTM;
+import com.burgess.rtd.exceptions.NetworkUnavailableException;
+import com.burgess.rtd.exceptions.RTDError;
 import com.burgess.rtd.interfaces.view.IAuthenticateView;
 import com.burgess.rtd.model.RTMModel;
 import com.burgess.rtd.model.Request;
@@ -34,6 +41,7 @@ public class AuthenticateController {
 	/**
 	 * Handle obtaining a frob from RTM
 	 */
+	private static final int ERROR = -1;
 	private static final int FROB = 1;
 	private static final int TOKEN = 2;
 	
@@ -49,8 +57,9 @@ public class AuthenticateController {
 	 * Frob object parsed from RTM data services
 	 */
 	private GetFrob frob;
-	
 	private GetToken token;
+	
+	private RTDError error;
 	
 	/**
 	 * Handles things while a thread is working.
@@ -63,8 +72,11 @@ public class AuthenticateController {
 		 */
 		public void handleMessage(Message msg) {
 			switch (msg.what) {
+				case ERROR:
+					view.createErrorDialog(error);
+					break;
 				case FROB:
-					view.dismissDialog();
+					view.removeDialog(Program.Dialog.GET_FROB);
 					Request r = new Request("");
 					r.setParameter("perms", "delete");
 					r.setParameter("frob", frob.frob);
@@ -72,7 +84,7 @@ public class AuthenticateController {
 					break;
 				case TOKEN:
 					saveAuthDetails();
-					view.dismissDialog();
+					view.removeDialog(Program.Dialog.GET_AUTH);
 					view.finish();
 					break;
 			}
@@ -88,17 +100,44 @@ public class AuthenticateController {
 		 * Runs the thread
 		 */
 		public void run() {
-			Request r = new Request(RTM.GET_FROB);
-			frob = new GetFrob();
-			try {
-				frob.parse(rtm.execute(RTM.PATH, r));
-			} catch (JSONException e) {
-				
-			} catch (Exception e) {
-				
-			}
-			
 			Message m = new Message();
+			
+			try {
+				Request r = new Request(RTM.GET_FROB);
+				frob = new GetFrob();
+				frob.parse(rtm.execute(RTM.PATH, r));
+			} catch (MalformedURLException e) {
+				error = new RTDError(Program.Error.MALFORMED_URL, R.string.error_default, true);
+				m.what = ERROR;
+				handler.sendMessage(m);
+				return;
+			} catch (JSONException e) {
+				error = new RTDError(Program.Error.JSON_EXCEPTION, R.string.error_auth_getFrob, true);
+				m.what = ERROR;
+				handler.sendMessage(m);
+				return;
+			} catch (IOException e) {
+				error = new RTDError(Program.Error.IO_EXCEPTION, R.string.error_default, true);
+				m.what = ERROR;
+				handler.sendMessage(m);
+				return;
+			} catch (HttpException e) {
+				error = new RTDError(Program.Error.HTTP_EXCEPTION, R.string.error_default, true);
+				m.what = ERROR;
+				handler.sendMessage(m);
+				return;
+			} catch (NetworkUnavailableException e) {
+				error = new RTDError(Program.Error.NETWORK_UNAVAILABLE_EXCEPTION, R.string.error_network_unavailable, false);
+				m.what = ERROR;
+				handler.sendMessage(m);
+				return;
+			} catch (Exception e) {
+				error = new RTDError(Program.Error.EXCEPTION, R.string.error_default, true);
+				m.what = ERROR;
+				handler.sendMessage(m);
+				return;
+			}
+
 			m.what = FROB;
 			handler.sendMessage(m);
 		}
@@ -106,29 +145,65 @@ public class AuthenticateController {
 	
 	private Thread getAuthTokenThread = new Thread() {
 		public void run() {
-			Request request = new Request(RTM.GET_TOKEN);
-			request.setParameter("frob", frob.frob);
-			token = new GetToken();
+			Message m = new Message();
+			
+			String timelineData;
 			try {
+				Request request = new Request(RTM.GET_TOKEN);
+				request.setParameter("frob", frob.frob);
+				token = new GetToken();
 				token.parse(rtm.execute(RTM.PATH, request));
+				
+				request = new Request(RTM.TIMELINE_CREATE);
+				request.setParameter("auth_token", token.token);
+				
+				timelineData = rtm.execute(RTM.PATH, request);
+			} catch (MalformedURLException e) {
+				error = new RTDError(Program.Error.MALFORMED_URL, R.string.error_default, true);
+				m.what = ERROR;
+				handler.sendMessage(m);
+				return;
 			} catch (JSONException e) {
-				
+				error = new RTDError(Program.Error.JSON_EXCEPTION, R.string.error_auth_getToken, true);
+				m.what = ERROR;
+				handler.sendMessage(m);
+				return;
+			} catch (IOException e) {
+				error = new RTDError(Program.Error.IO_EXCEPTION, R.string.error_default, true);
+				m.what = ERROR;
+				handler.sendMessage(m);
+				return;
+			} catch (HttpException e) {
+				error = new RTDError(Program.Error.HTTP_EXCEPTION, R.string.error_default, true);
+				m.what = ERROR;
+				handler.sendMessage(m);
+				return;
+			} catch (NetworkUnavailableException e) {
+				error = new RTDError(Program.Error.NETWORK_UNAVAILABLE_EXCEPTION, R.string.error_network_unavailable, false);
+				m.what = ERROR;
+				handler.sendMessage(m);
+				return;
 			} catch (Exception e) {
-				
+				error = new RTDError(Program.Error.EXCEPTION, R.string.error_default, true);
+				m.what = ERROR;
+				handler.sendMessage(m);
+				return;
 			}
 			
-			request = new Request(RTM.TIMELINE_CREATE);
-			request.setParameter("auth_token", token.token);
 			Timeline timeline = new Timeline();
 			try {
-				timeline.parse(rtm.execute(RTM.PATH, request));
+				timeline.parse(timelineData);
 			} catch (JSONException e) {
-				
+				error = new RTDError(Program.Error.JSON_EXCEPTION, R.string.error_timeline_create, true);
+				view.createErrorDialog(error);
+				return;
 			} catch (Exception e) {
-				
+				error = new RTDError(Program.Error.EXCEPTION, R.string.error_default, true);
+				view.createErrorDialog(error);
+				return;
 			}
 			
-			Message m = new Message();
+			
 			m.what = TOKEN;
 			handler.sendMessage(m);
 		}
@@ -150,13 +225,13 @@ public class AuthenticateController {
 	 * for the WebView
 	 */
 	public void initializeView() {
-		view.createDialog("Sit tight", "Figuring out your auth URL");
+		view.showDialog(Program.Dialog.GET_FROB);
 		
 		getFrobThread.start();
 	}
 	
 	public void getAuthToken() {
-		view.createDialog("Hold please", "Asking nicely for your auth token");
+		view.showDialog(Program.Dialog.GET_AUTH);
 		getAuthTokenThread.start();
 	}
 	

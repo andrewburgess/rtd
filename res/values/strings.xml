@@ -2,8 +2,20 @@
 <resources>
     <string name="hello">Hello World, InitialActivity!</string>
     <string name="app_name">Remember the Droid</string>
-<string name="configure_not_synced">You have not authorized for RTM</string>
-<string name="sync_prompt">Sync w/ RTM:</string>
-<string name="parse_frob_error">Error parsing data from\nrtm.auth.getFrob\n\nPlease submit a bug report</string>
-<string name="issue_url">http://github.com/andrewburgess/rtd/issues</string>
+    
+    <string name="dialog_get_frob_title">Sit Tight</string>
+	<string name="dialog_get_frob_message">Figuring out your auth URL</string>
+	<string name="dialog_get_auth_title">Hold Please</string>
+	<string name="dialog_get_auth_message">Asking nicely for your auth token</string>
+    
+    <string name="error_auth_getFrob">Error parsing data from\nrtm.auth.getFrob\n\nPlease submit a bug report</string>
+    <string name="error_auth_getToken">Error parsing data from\nrtm.auth.getToken\n\nPlease submit a bug report</string>
+	<string name="error_default">An error has occured\n\nPlease submit a bug report</string>
+	<string name="error_parse_default">Error parsing RTM data\n\nPlease submit a bug report</string>
+	<string name="error_timeline_create">Error parsing data from\nrtm.timeline.create\n\nPlease submit a bug report</string>
+	<string name="error_network_unavailable">Network is not available!</string>
+	<string name="issue_url">http://github.com/andrewburgess/rtd/issues</string>
+	
+	<string name="configure_not_synced">You have not authorized for RTM</string>
+	<string name="sync_prompt">Sync w/ RTM:</string>
 </resources>

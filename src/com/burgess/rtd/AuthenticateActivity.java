@@ -24,17 +24,19 @@ import android.webkit.WebChromeClient;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
 import android.widget.Button;
+import android.widget.TextView;
 
 import com.burgess.rtd.constants.Program;
 import com.burgess.rtd.controller.AuthenticateController;
+import com.burgess.rtd.exceptions.RTDError;
 import com.burgess.rtd.interfaces.view.IAuthenticateView;
 
 public class AuthenticateActivity extends Activity implements IAuthenticateView {	
 	private AuthenticateController controller;
 	private Context context = this;
 	private WebView wv;
-	private ProgressDialog dialog;
 	private AuthenticateActivity instance = this;
+	private RTDError error;
 		
 	private class AuthenticateWebViewClient extends WebViewClient {
 		@Override
@@ -59,16 +61,49 @@ public class AuthenticateActivity extends Activity implements IAuthenticateView 
 		}
 	};
 	
+	private OnClickListener errorButtonOnClickListener = new OnClickListener() {
+		@Override
+		public void onClick(View view) {
+			dismissDialog(Program.Dialog.ERROR);
+			finish();
+		}
+	};
+	
 	@Override
 	protected Dialog onCreateDialog(int id) {
 		Dialog dialog;
-		
 		switch (id) {
+			case Program.Dialog.GET_FROB:
+				dialog = new ProgressDialog(this);
+				((ProgressDialog) dialog).setMessage(this.getString(R.string.dialog_get_frob_message));
+				dialog.setTitle(this.getString(R.string.dialog_get_frob_title));
+				return dialog;
+			case Program.Dialog.GET_AUTH:
+				dialog = new ProgressDialog(this);
+				((ProgressDialog) dialog).setMessage(this.getString(R.string.dialog_get_auth_message));
+				dialog.setTitle(this.getString(R.string.dialog_get_auth_title));
+				return dialog;
+			case Program.Dialog.ERROR:
+				dialog = new Dialog(this);
+				dialog.setOwnerActivity(this);
+				dialog.setContentView(R.layout.error_dialog);
+				dialog.setTitle("Error #" + error.errorCode + " occurred");
+				
+				TextView tv = (TextView) dialog.findViewById(R.id.error_text);
+				tv.setText(error.errorMessageId);
+				
+				if (!error.showIssueUrl) {
+					TextView url = (TextView) dialog.findViewById(R.id.issue_url);
+					url.setVisibility(View.INVISIBLE);
+				}
+				
+				Button btn = (Button) dialog.findViewById(R.id.error_button);
+				btn.setOnClickListener(errorButtonOnClickListener);
+				
+				return dialog;
 			default:
-				dialog = new Dialog(context);
+				return null;
 		}
-		
-		return dialog;
 	}
 	
 	@Override
@@ -90,20 +125,6 @@ public class AuthenticateActivity extends Activity implements IAuthenticateView 
 	}
 
 	@Override
-	public void createDialog(String title, String message) {
-		dialog = new ProgressDialog(this);
-		dialog.setOwnerActivity(this);
-		dialog.setTitle(title);
-		dialog.setMessage(message);
-		dialog.show();
-	}
-	
-	@Override
-	public void dismissDialog() {
-		dialog.dismiss();
-	}
-
-	@Override
 	public Context getContext() {
 		return context;
 	}
@@ -114,8 +135,9 @@ public class AuthenticateActivity extends Activity implements IAuthenticateView 
 	}
 
 	@Override
-	public void createErrorDialog(int id) {
-		
+	public void createErrorDialog(RTDError error) {
+		this.error = error;
+		showDialog(Program.Dialog.ERROR);
 	}
 
 	@Override

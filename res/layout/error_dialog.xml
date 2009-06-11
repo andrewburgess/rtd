@@ -25,7 +25,7 @@
 				android:layout_width="fill_parent"
 				android:layout_height="wrap_content"
 				android:text="hai"/>
-			<TextView
+			<TextView android:id="@+id/issue_url"
 				android:layout_height="wrap_content"
 				android:layout_width="fill_parent"
 				android:layout_marginTop="10dp"
@@ -36,8 +36,10 @@
 	</LinearLayout>
 	
 	
-	<Button
+	<Button android:id="@+id/error_button"
 		android:layout_height="wrap_content"
-		android:text="Understood" android:layout_width="fill_parent" android:layout_margin="10dp"/>
+		android:layout_width="fill_parent"
+		android:layout_margin="10dp"
+		android:text="Understood"/>
 			
 </LinearLayout>

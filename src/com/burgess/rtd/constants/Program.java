@@ -23,7 +23,22 @@ public class Program {
 	public static final String FULLNAME = "fullname";
 	public static final String ID = "id";
 	
+	//Default values
 	public static final String DEFAULT_AUTH_TOKEN = "0000000000000000";
-	
 	public static final SimpleDateFormat DATE_FORMAT = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss");
+	
+	public static class Dialog {
+		public static final int GET_FROB = 1;
+		public static final int GET_AUTH = 2;
+		public static final int ERROR = 3;
+	}
+	
+	public static class Error {
+		public static final int EXCEPTION = 0;
+		public static final int JSON_EXCEPTION = 1;
+		public static final int MALFORMED_URL = 2;
+		public static final int IO_EXCEPTION = 3;
+		public static final int HTTP_EXCEPTION = 4;
+		public static final int NETWORK_UNAVAILABLE_EXCEPTION = 5;
+	}
 }

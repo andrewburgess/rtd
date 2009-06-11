@@ -13,6 +13,8 @@ package com.burgess.rtd.interfaces.view;
 import android.content.Context;
 import android.content.SharedPreferences;
 
+import com.burgess.rtd.exceptions.RTDError;
+
 /**
  * @author Andrew
  *
@@ -23,10 +25,10 @@ public interface IAuthenticateView {
 	public static final int FROB_PARSE_ERROR_DIALOG = 1;
 	
 	public Context getContext();
-	public void createDialog(String title, String message);
-	public void dismissDialog();
+	public void showDialog(int id);
 	public void loadUrl(String url);
-	public void createErrorDialog(int id);
+	public void createErrorDialog(RTDError error);
 	public SharedPreferences getPreferences();
 	public void finish();
+	public void removeDialog(int id);
 }
