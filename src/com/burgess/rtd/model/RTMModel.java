@@ -18,15 +18,14 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.Calendar;
 
-import org.apache.http.HttpException;
-
 import android.content.Context;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.util.Log;
 
+import com.burgess.rtd.R;
 import com.burgess.rtd.constants.Program;
-import com.burgess.rtd.exceptions.NetworkUnavailableException;
+import com.burgess.rtd.exceptions.RTDException;
 
 public class RTMModel {
 	private static long lastAccess = 0;
@@ -40,10 +39,7 @@ public class RTMModel {
 		this.context = context;
 	}
 	
-	public String execute(String url, Request request) 	throws MalformedURLException, 
-																IOException, 
-																NetworkUnavailableException,
-																HttpException {
+	public String execute(String url, Request request) 	throws RTDException {
 		this.request = request;
 		NetworkInfo mobile = ((ConnectivityManager)context.getSystemService(Context.CONNECTIVITY_SERVICE)).getNetworkInfo(ConnectivityManager.TYPE_MOBILE);
 		NetworkInfo wifi = ((ConnectivityManager)context.getSystemService(Context.CONNECTIVITY_SERVICE)).getNetworkInfo(ConnectivityManager.TYPE_WIFI);
@@ -62,11 +58,11 @@ public class RTMModel {
 				return null;
 			} catch (MalformedURLException e) {
 				Log.e(Program.LOG, "Problem forming URL: " + request + "\n" + e.getMessage());
-				throw e;
+				throw new RTDException(Program.Error.MALFORMED_URL, R.string.error_default, true, e);
 			}
 		} else {
 			Log.e(Program.LOG, "Network is not available");
-			throw new NetworkUnavailableException("Network is not available");
+			throw new RTDException(Program.Error.NETWORK_UNAVAILABLE_EXCEPTION, R.string.error_network_unavailable, false);
 		}
 	}
 	
@@ -74,7 +70,7 @@ public class RTMModel {
 		while (Calendar.getInstance().getTimeInMillis() < lastAccess + wait);
 	}
 	
-	private InputStream openConnection(URL url) throws MalformedURLException, IOException, HttpException {
+	private InputStream openConnection(URL url) throws RTDException {
 		int response = -1;
 		
 		try {
@@ -90,18 +86,18 @@ public class RTMModel {
 				return (InputStream) connection.getInputStream();
 			} else {
 				Log.e(Program.LOG, "HTTP Error: " + response);
-				throw new HttpException();
+				throw new RTDException(Program.Error.HTTP_EXCEPTION, R.string.error_default, true);
 			}
 		} catch (MalformedURLException e) {
 			Log.e(Program.LOG, "Problem forming URL: " + request + "\n" + e.getMessage());
-			throw e;
+			throw new RTDException(Program.Error.MALFORMED_URL, R.string.error_default, true, e);
 		} catch (IOException e) {
 			Log.e(Program.LOG, "Problem opening the connection: " + e.getMessage());
-			throw e;
+			throw new RTDException(Program.Error.IO_EXCEPTION, R.string.error_default, true, e);
 		}
 	}
 	
-	private String readData(InputStream in) throws IOException {
+	private String readData(InputStream in) throws RTDException {
 		InputStreamReader reader = new InputStreamReader(in);
 		int charRead;
 		String data = "";
@@ -115,7 +111,7 @@ public class RTMModel {
 			in.close();
 		} catch (IOException e) {
 			Log.e(Program.LOG, e.getMessage());
-			throw e;
+			throw new RTDException(Program.Error.IO_EXCEPTION, R.string.error_default, true, e);
 		}
 		
 		return data;

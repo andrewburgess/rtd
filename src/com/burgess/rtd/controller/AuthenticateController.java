@@ -10,21 +10,14 @@
  */
 package com.burgess.rtd.controller;
 
-import java.io.IOException;
-import java.net.MalformedURLException;
-
-import org.apache.http.HttpException;
-import org.json.JSONException;
-
 import android.content.SharedPreferences;
 import android.os.Handler;
 import android.os.Message;
 
-import com.burgess.rtd.R;
 import com.burgess.rtd.constants.Program;
 import com.burgess.rtd.constants.RTM;
-import com.burgess.rtd.exceptions.NetworkUnavailableException;
 import com.burgess.rtd.exceptions.RTDError;
+import com.burgess.rtd.exceptions.RTDException;
 import com.burgess.rtd.interfaces.view.IAuthenticateView;
 import com.burgess.rtd.model.RTMModel;
 import com.burgess.rtd.model.Request;
@@ -106,33 +99,8 @@ public class AuthenticateController {
 				Request r = new Request(RTM.GET_FROB);
 				frob = new GetFrob();
 				frob.parse(rtm.execute(RTM.PATH, r));
-			} catch (MalformedURLException e) {
-				error = new RTDError(Program.Error.MALFORMED_URL, R.string.error_default, true);
-				m.what = ERROR;
-				handler.sendMessage(m);
-				return;
-			} catch (JSONException e) {
-				error = new RTDError(Program.Error.JSON_EXCEPTION, R.string.error_auth_getFrob, true);
-				m.what = ERROR;
-				handler.sendMessage(m);
-				return;
-			} catch (IOException e) {
-				error = new RTDError(Program.Error.IO_EXCEPTION, R.string.error_default, true);
-				m.what = ERROR;
-				handler.sendMessage(m);
-				return;
-			} catch (HttpException e) {
-				error = new RTDError(Program.Error.HTTP_EXCEPTION, R.string.error_default, true);
-				m.what = ERROR;
-				handler.sendMessage(m);
-				return;
-			} catch (NetworkUnavailableException e) {
-				error = new RTDError(Program.Error.NETWORK_UNAVAILABLE_EXCEPTION, R.string.error_network_unavailable, false);
-				m.what = ERROR;
-				handler.sendMessage(m);
-				return;
-			} catch (Exception e) {
-				error = new RTDError(Program.Error.EXCEPTION, R.string.error_default, true);
+			} catch (RTDException e) {
+				error = e.error;
 				m.what = ERROR;
 				handler.sendMessage(m);
 				return;
@@ -147,7 +115,6 @@ public class AuthenticateController {
 		public void run() {
 			Message m = new Message();
 			
-			String timelineData;
 			try {
 				Request request = new Request(RTM.GET_TOKEN);
 				request.setParameter("frob", frob.frob);
@@ -157,49 +124,12 @@ public class AuthenticateController {
 				request = new Request(RTM.TIMELINE_CREATE);
 				request.setParameter("auth_token", token.token);
 				
-				timelineData = rtm.execute(RTM.PATH, request);
-			} catch (MalformedURLException e) {
-				error = new RTDError(Program.Error.MALFORMED_URL, R.string.error_default, true);
+				Timeline timeline = new Timeline();
+				timeline.parse(rtm.execute(RTM.PATH, request));
+			} catch (RTDException e) {
+				error = e.error;
 				m.what = ERROR;
 				handler.sendMessage(m);
-				return;
-			} catch (JSONException e) {
-				error = new RTDError(Program.Error.JSON_EXCEPTION, R.string.error_auth_getToken, true);
-				m.what = ERROR;
-				handler.sendMessage(m);
-				return;
-			} catch (IOException e) {
-				error = new RTDError(Program.Error.IO_EXCEPTION, R.string.error_default, true);
-				m.what = ERROR;
-				handler.sendMessage(m);
-				return;
-			} catch (HttpException e) {
-				error = new RTDError(Program.Error.HTTP_EXCEPTION, R.string.error_default, true);
-				m.what = ERROR;
-				handler.sendMessage(m);
-				return;
-			} catch (NetworkUnavailableException e) {
-				error = new RTDError(Program.Error.NETWORK_UNAVAILABLE_EXCEPTION, R.string.error_network_unavailable, false);
-				m.what = ERROR;
-				handler.sendMessage(m);
-				return;
-			} catch (Exception e) {
-				error = new RTDError(Program.Error.EXCEPTION, R.string.error_default, true);
-				m.what = ERROR;
-				handler.sendMessage(m);
-				return;
-			}
-			
-			Timeline timeline = new Timeline();
-			try {
-				timeline.parse(timelineData);
-			} catch (JSONException e) {
-				error = new RTDError(Program.Error.JSON_EXCEPTION, R.string.error_timeline_create, true);
-				view.createErrorDialog(error);
-				return;
-			} catch (Exception e) {
-				error = new RTDError(Program.Error.EXCEPTION, R.string.error_default, true);
-				view.createErrorDialog(error);
 				return;
 			}
 			
