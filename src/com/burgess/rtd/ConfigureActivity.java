@@ -22,6 +22,7 @@ import android.widget.Button;
 import android.widget.Spinner;
 import android.widget.TextView;
 
+import com.burgess.rtd.R;
 import com.burgess.rtd.constants.Program;
 import com.burgess.rtd.controller.ConfigureController;
 import com.burgess.rtd.interfaces.view.IConfigureView;

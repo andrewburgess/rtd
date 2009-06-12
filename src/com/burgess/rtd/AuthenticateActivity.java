@@ -26,6 +26,7 @@ import android.webkit.WebViewClient;
 import android.widget.Button;
 import android.widget.TextView;
 
+import com.burgess.rtd.R;
 import com.burgess.rtd.constants.Program;
 import com.burgess.rtd.controller.AuthenticateController;
 import com.burgess.rtd.exceptions.RTDError;

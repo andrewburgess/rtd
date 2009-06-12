@@ -15,6 +15,7 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 
+import com.burgess.rtd.R;
 import com.burgess.rtd.constants.Program;
 import com.burgess.rtd.controller.InitialController;
 import com.burgess.rtd.interfaces.view.IInitialView;
