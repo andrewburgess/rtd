@@ -14,7 +14,7 @@ public class Timeline extends RtmObject {
 	public void parse(String data) throws RTDException {
 		try {
 			JSONObject json = new JSONObject(data).getJSONObject("rsp");
-			status = json.getString("status");
+			status = json.getString("stat");
 			if (status.equals("ok")) {
 				time = json.getLong("timeline");
 			} else {
