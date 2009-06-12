@@ -16,4 +16,6 @@ public interface IConfigureView {
 	public SharedPreferences getPreferences();
 	public void configureAuthentication(boolean isAuthenticated);
 	public void setAuthStatus(String status);
+	public int getSyncTime();
+	public void setSyncTime(int value);
 }

@@ -170,10 +170,10 @@ public class AuthenticateController {
 			return;
 		
 		SharedPreferences.Editor editor = view.getPreferences().edit();
-		editor.putString(Program.AUTH_TOKEN, token.token);
-		editor.putString(Program.FULLNAME, token.fullname);
-		editor.putString(Program.USERNAME, token.username);
-		editor.putLong(Program.ID, token.id);
+		editor.putString(Program.Config.AUTH_TOKEN, token.token);
+		editor.putString(Program.Config.FULLNAME, token.fullname);
+		editor.putString(Program.Config.USERNAME, token.username);
+		editor.putLong(Program.Config.ID, token.id);
 		editor.commit();
 	}
 }

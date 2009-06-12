@@ -117,8 +117,8 @@ public class AuthenticateActivity extends Activity implements IAuthenticateView 
 		wv.getSettings().setJavaScriptEnabled(true);
 		wv.setWebChromeClient(new AuthenticateWebChromeClient());
 		
-		Button authButton = (Button) findViewById(R.id.authbutton);
-		authButton.setOnClickListener(authButtonOnClickListener);
+		Button btn = (Button) findViewById(R.id.authbutton);
+		btn.setOnClickListener(authButtonOnClickListener);
 		
 		controller = new AuthenticateController(this);
 		controller.initializeView();

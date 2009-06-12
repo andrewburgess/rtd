@@ -20,9 +20,11 @@ public final class R {
     public static final class id {
         public static final int authbutton=0x7f060001;
         public static final int authstatus=0x7f060002;
-        public static final int error_button=0x7f060006;
-        public static final int error_text=0x7f060004;
-        public static final int issue_url=0x7f060005;
+        public static final int cancel=0x7f060005;
+        public static final int error_button=0x7f060008;
+        public static final int error_text=0x7f060006;
+        public static final int issue_url=0x7f060007;
+        public static final int save=0x7f060004;
         public static final int spinner=0x7f060003;
         public static final int webview=0x7f060000;
     }

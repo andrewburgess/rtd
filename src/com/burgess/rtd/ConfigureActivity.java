@@ -34,14 +34,30 @@ public class ConfigureActivity extends Activity implements IConfigureView {
 	
 	private ConfigureController controller;
 	private Context context = this;
-	private Button authenticateButton;
-	private TextView authstatus;
+	private Button btnAuthenticate;
+	private TextView tvAuthStatus;
+	private Spinner spinSync;
 	
 	private OnClickListener authenticateButtonOnClickListener = new OnClickListener() {
 		@Override
 		public void onClick(View v) {
 			Intent intent = new Intent(context, AuthenticateActivity.class);
 			startActivityForResult(intent, REQUEST_AUTHENTICATE);			
+		}
+	};
+	
+	private OnClickListener saveOnClickListener = new OnClickListener() {
+		@Override
+		public void onClick(View view) {
+			controller.saveConfiguration();
+			finish();
+		}
+	};
+	
+	private OnClickListener cancelOnClickListener = new OnClickListener() {
+		@Override
+		public void onClick(View view) {
+			finish();
 		}
 	};
 	
@@ -53,9 +69,15 @@ public class ConfigureActivity extends Activity implements IConfigureView {
 		
 		populateSpinner();
 		
-		authenticateButton = (Button) findViewById(R.id.authbutton);
-		authenticateButton.setOnClickListener(authenticateButtonOnClickListener);
-		authstatus = (TextView) findViewById(R.id.authstatus);
+		btnAuthenticate = (Button) findViewById(R.id.authbutton);
+		btnAuthenticate.setOnClickListener(authenticateButtonOnClickListener);
+		tvAuthStatus = (TextView) findViewById(R.id.authstatus);
+		
+		Button btn = (Button) findViewById(R.id.save);
+		btn.setOnClickListener(saveOnClickListener);
+		
+		btn = (Button) findViewById(R.id.cancel);
+		btn.setOnClickListener(cancelOnClickListener);
 
 		controller = new ConfigureController(this);
 		controller.initializeView();
@@ -85,7 +107,7 @@ public class ConfigureActivity extends Activity implements IConfigureView {
 		TextView authstatus = (TextView)findViewById(R.id.authstatus);
 		if (isAuthenticated) {
 			authbutton.setText("Re-authenticate");
-			authstatus.setText(getPreferences().getString(Program.AUTH_TOKEN, ""));
+			authstatus.setText(getPreferences().getString(Program.Config.AUTH_TOKEN, ""));
 		} else {
 			authbutton.setText("Authenticate");
 			authstatus.setText("Not authenticated");
@@ -93,16 +115,26 @@ public class ConfigureActivity extends Activity implements IConfigureView {
 	}
 	
 	private void populateSpinner() {
-		Spinner s = (Spinner) findViewById(R.id.spinner);
+		spinSync = (Spinner) findViewById(R.id.spinner);
 	    ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(
 	            this, R.array.sync_types, android.R.layout.simple_spinner_item);
 	    adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-	    s.setAdapter(adapter);
+	    spinSync.setAdapter(adapter);
 	}
 
 
 	@Override
 	public void setAuthStatus(String status) {
-		authstatus.setText(status);
+		tvAuthStatus.setText(status);
+	}
+
+	@Override
+	public int getSyncTime() {
+		return (int) spinSync.getSelectedItemId();
+	}
+
+	@Override
+	public void setSyncTime(int value) {
+		spinSync.setSelection(value);		
 	}
 }

@@ -26,18 +26,34 @@ public class ConfigureController {
 	}
 	
 	public void initializeView() {
+		preferences = view.getPreferences();
+		
 		refreshAuthStatus();
+		populateConfiguration();
 	}
 	
 	public void refreshAuthStatus() {
-		preferences = view.getPreferences();
-		token = preferences.getString(Program.AUTH_TOKEN, Program.DEFAULT_AUTH_TOKEN);
-		username = preferences.getString(Program.USERNAME, "");
+		token = preferences.getString(Program.Config.AUTH_TOKEN, Program.DEFAULT_AUTH_TOKEN);
+		username = preferences.getString(Program.Config.USERNAME, "");
 		
 		if (token == Program.DEFAULT_AUTH_TOKEN) {
 			view.setAuthStatus("Not authenticated");
 		} else {
 			view.setAuthStatus(username + " logged in");
 		}
+	}
+	
+	public void saveConfiguration() {
+		if (preferences == null) preferences = view.getPreferences();
+		
+		SharedPreferences.Editor editor = preferences.edit();
+		editor.putInt(Program.Config.SYNC_TIME, view.getSyncTime());
+		editor.commit();
+	}
+	
+	private void populateConfiguration() {
+		if (preferences == null) preferences = view.getPreferences();
+		
+		view.setSyncTime(preferences.getInt(Program.Config.SYNC_TIME, 0));
 	}
 }

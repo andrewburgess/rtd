@@ -4,67 +4,96 @@
 	android:layout_width="fill_parent" 
 	android:layout_height="fill_parent"
 	android:orientation="vertical"
-	android:padding="5px"
 	xmlns:android="http://schemas.android.com/apk/res/android">
-
-	<TextView
-		android:layout_height="wrap_content" 
-		android:layout_width="fill_parent" 
-		android:text="Configure RTD" 
-		android:textSize="24px" 
-		android:textStyle="bold" 
-		android:gravity="center_horizontal" 
-		android:layout_marginBottom="10px" />
-
-	<LinearLayout
-		android:layout_width="fill_parent"
-		android:layout_height="wrap_content"
-		android:orientation="horizontal">
-		
-		<TextView
-			android:layout_height="wrap_content"
-			android:layout_width="wrap_content"
-			android:textSize="16px"
-			android:text="Auth Status: "/>
-		<TextView android:id="@+id/authstatus"
-			android:layout_height="wrap_content"
-			android:layout_width="wrap_content"
-			android:textSize="16px"
-			android:layout_weight="1" />
-		
-	</LinearLayout>
 	
-	<Button android:id="@+id/authbutton"
+	<LinearLayout
+		android:layout_width="fill_parent" 
+		android:layout_height="fill_parent"
+		android:layout_weight="1"
+		android:layout_margin="5dp"
+		android:orientation="vertical">
+
+		<TextView
+			android:layout_height="wrap_content" 
+			android:layout_width="fill_parent" 
+			android:text="Configure RTD" 
+			android:textSize="24px" 
+			android:textStyle="bold" 
+			android:gravity="center_horizontal" 
+			android:layout_marginBottom="10px" />
+
+		<LinearLayout
+			android:layout_width="fill_parent"
+			android:layout_height="wrap_content"
+			android:orientation="horizontal">
+			
+			<TextView
+				android:layout_height="wrap_content"
+				android:layout_width="wrap_content"
+				android:textSize="16px"
+				android:text="Auth Status: "/>
+			<TextView android:id="@+id/authstatus"
+				android:layout_height="wrap_content"
+				android:layout_width="wrap_content"
+				android:textSize="16px"
+				android:layout_weight="1" />
+			
+		</LinearLayout>
+	
+		<Button android:id="@+id/authbutton"
+				android:layout_height="wrap_content"
+				android:layout_width="fill_parent"
+				android:textSize="16px"
+				android:text="Authenticate" 
+				android:layout_marginBottom="20px"/>
+			
+		<LinearLayout
+			android:layout_height="wrap_content"
+			android:layout_width="wrap_content"
+			android:orientation="horizontal">
+			
+			<TextView
+				android:layout_height="wrap_content"
+				android:layout_width="wrap_content"
+				android:textSize="16px"
+				android:text="Sync w/ RTM: " />
+			
+			<Spinner 
+		        android:id="@+id/spinner"
+		        android:layout_height="wrap_content"
+		        android:layout_width="fill_parent"
+		        android:drawSelectorOnTop="true"
+		        android:prompt="@string/sync_prompt"/>
+		        
+		</LinearLayout>
+	
+		<TextView
 			android:layout_height="wrap_content"
 			android:layout_width="fill_parent"
-			android:textSize="16px"
-			android:text="Authenticate" 
-			android:layout_marginBottom="20px"/>
-			
+			android:textSize="12px"
+			android:text="Syncing more often uses more battery" android:textStyle="italic"/>
+		
+	</LinearLayout>
+		
 	<LinearLayout
 		android:layout_height="wrap_content"
-		android:layout_width="wrap_content"
+		android:layout_width="fill_parent"
 		android:orientation="horizontal">
 		
-		<TextView
+		<Button android:id="@+id/save"
 			android:layout_height="wrap_content"
-			android:layout_width="wrap_content"
-			android:textSize="16px"
-			android:text="Sync w/ RTM: " />
+			android:layout_width="fill_parent"
+			android:text="Save" 
+			android:layout_margin="2dp"
+			android:layout_weight="1"/>
+			
+		<Button android:id="@+id/cancel"
+			android:layout_height="wrap_content"
+			android:layout_width="fill_parent"
+			android:text="Cancel" 
+			android:layout_margin="2dp"
+			android:layout_weight="1"/>
 		
-		<Spinner 
-	        android:id="@+id/spinner"
-	        android:layout_height="wrap_content"
-	        android:layout_width="fill_parent"
-	        android:drawSelectorOnTop="true"
-	        android:prompt="@string/sync_prompt"/>
-	        
 	</LinearLayout>
-	
-	<TextView
-		android:layout_height="wrap_content"
-		android:layout_width="fill_parent"
-		android:textSize="12px"
-		android:text="Syncing more often uses more battery" android:textStyle="italic"/>
 
 </LinearLayout>

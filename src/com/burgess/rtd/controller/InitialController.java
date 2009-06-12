@@ -35,7 +35,7 @@ public class InitialController {
 	 */
 	public void initializeView() {
 		preferences = view.getPreferences();
-		String token = preferences.getString(Program.AUTH_TOKEN, null);
+		String token = preferences.getString(Program.Config.AUTH_TOKEN, null);
 		
 		if (token == null) {
 			//Application needs to be configured
