@@ -96,7 +96,7 @@ public class AuthenticateController {
 			Message m = new Message();
 			
 			try {
-				Request r = new Request(RTM.GET_FROB);
+				Request r = new Request(RTM.Auth.GET_FROB);
 				frob = new GetFrob();
 				frob.parse(rtm.execute(RTM.PATH, r));
 			} catch (RTDException e) {
@@ -116,12 +116,12 @@ public class AuthenticateController {
 			Message m = new Message();
 			
 			try {
-				Request request = new Request(RTM.GET_TOKEN);
+				Request request = new Request(RTM.Auth.GET_TOKEN);
 				request.setParameter("frob", frob.frob);
 				token = new GetToken();
 				token.parse(rtm.execute(RTM.PATH, request));
 				
-				request = new Request(RTM.TIMELINE_CREATE);
+				request = new Request(RTM.Timelines.CREATE);
 				request.setParameter("auth_token", token.token);
 				
 				Timeline timeline = new Timeline();

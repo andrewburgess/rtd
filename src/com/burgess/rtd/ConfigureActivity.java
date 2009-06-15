@@ -11,6 +11,8 @@
 package com.burgess.rtd;
 
 import android.app.Activity;
+import android.app.Dialog;
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -22,7 +24,6 @@ import android.widget.Button;
 import android.widget.Spinner;
 import android.widget.TextView;
 
-import com.burgess.rtd.R;
 import com.burgess.rtd.constants.Program;
 import com.burgess.rtd.controller.ConfigureController;
 import com.burgess.rtd.interfaces.view.IConfigureView;
@@ -62,6 +63,27 @@ public class ConfigureActivity extends Activity implements IConfigureView {
 		}
 	};
 	
+	private OnClickListener syncOnClickListener = new OnClickListener() {
+		@Override
+		public void onClick(View view) {
+			controller.synchronize();
+		}
+	};
+	
+	@Override
+	protected Dialog onCreateDialog(int id) {
+		Dialog dialog;
+		switch (id) {
+			case Program.Dialog.SYNCHRONIZE:
+				dialog = new ProgressDialog(this);
+				((ProgressDialog)dialog).setMessage("Synchronizing");
+				dialog.setTitle("Hold Your Horses");
+				return dialog;
+			default:
+				return null;
+		}
+	}
+	
 	@Override
 	public void onCreate(Bundle savedInstance) {
 		super.onCreate(savedInstance);
@@ -79,6 +101,9 @@ public class ConfigureActivity extends Activity implements IConfigureView {
 		
 		btn = (Button) findViewById(R.id.cancel);
 		btn.setOnClickListener(cancelOnClickListener);
+		
+		btn = (Button) findViewById(R.id.sync);
+		btn.setOnClickListener(syncOnClickListener);
 
 		controller = new ConfigureController(this);
 		controller.initializeView();
@@ -137,5 +162,10 @@ public class ConfigureActivity extends Activity implements IConfigureView {
 	@Override
 	public void setSyncTime(int value) {
 		spinSync.setSelection(value);		
+	}
+
+	@Override
+	public Context getContext() {
+		return this;
 	}
 }

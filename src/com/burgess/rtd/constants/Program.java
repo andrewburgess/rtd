@@ -35,15 +35,16 @@ public class Program {
 		public static final int GET_FROB = 1;
 		public static final int GET_AUTH = 2;
 		public static final int ERROR = 3;
+		public static final int SYNCHRONIZE = 4;
 	}
 	
 	public static class Error {
-		public static final int EXCEPTION = 0;
-		public static final int JSON_EXCEPTION = 1;
+		public static final int EXCEPTION = 1;
 		public static final int MALFORMED_URL = 2;
 		public static final int IO_EXCEPTION = 3;
 		public static final int HTTP_EXCEPTION = 4;
 		public static final int NETWORK_UNAVAILABLE_EXCEPTION = 5;
 		public static final int SQL_EXCEPTION = 6;
+		public static final int JSON_EXCEPTION = 7;
 	}
 }

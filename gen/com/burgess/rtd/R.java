@@ -20,12 +20,13 @@ public final class R {
     public static final class id {
         public static final int authbutton=0x7f060001;
         public static final int authstatus=0x7f060002;
-        public static final int cancel=0x7f060005;
-        public static final int error_button=0x7f060008;
-        public static final int error_text=0x7f060006;
-        public static final int issue_url=0x7f060007;
-        public static final int save=0x7f060004;
+        public static final int cancel=0x7f060006;
+        public static final int error_button=0x7f060009;
+        public static final int error_text=0x7f060007;
+        public static final int issue_url=0x7f060008;
+        public static final int save=0x7f060005;
         public static final int spinner=0x7f060003;
+        public static final int sync=0x7f060004;
         public static final int webview=0x7f060000;
     }
     public static final class layout {
@@ -36,7 +37,7 @@ public final class R {
     }
     public static final class string {
         public static final int app_name=0x7f050001;
-        public static final int configure_not_synced=0x7f05000e;
+        public static final int configure_not_synced=0x7f05000f;
         public static final int dialog_get_auth_message=0x7f050005;
         public static final int dialog_get_auth_title=0x7f050004;
         public static final int dialog_get_frob_message=0x7f050003;
@@ -44,12 +45,13 @@ public final class R {
         public static final int error_auth_getFrob=0x7f050006;
         public static final int error_auth_getToken=0x7f050007;
         public static final int error_default=0x7f050008;
-        public static final int error_network_unavailable=0x7f05000b;
-        public static final int error_parse_default=0x7f050009;
+        public static final int error_list_sync=0x7f050009;
+        public static final int error_network_unavailable=0x7f05000a;
+        public static final int error_parse_default=0x7f05000b;
         public static final int error_sql=0x7f05000c;
-        public static final int error_timeline_create=0x7f05000a;
+        public static final int error_timeline_create=0x7f05000d;
         public static final int hello=0x7f050000;
-        public static final int issue_url=0x7f05000d;
-        public static final int sync_prompt=0x7f05000f;
+        public static final int issue_url=0x7f05000e;
+        public static final int sync_prompt=0x7f050010;
     }
 }

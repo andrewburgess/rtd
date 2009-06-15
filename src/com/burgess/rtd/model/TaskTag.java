@@ -14,6 +14,10 @@ package com.burgess.rtd.model;
  * Represents a TaskTag object in the database
  */
 public class TaskTag {
+	public static final String ID = "id";
+	public static final String TASK_ID = "task_id";
+	public static final String TAG_ID = "tag_id";
+	
 	public static final String CREATE = "create table task_tags (" +
 										  "id integer primary key autoincrement, " +
 										  "task_id integer, " +

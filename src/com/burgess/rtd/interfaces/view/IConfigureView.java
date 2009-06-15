@@ -11,6 +11,7 @@
 package com.burgess.rtd.interfaces.view;
 
 import android.content.SharedPreferences;
+import android.content.Context;
 
 public interface IConfigureView {
 	public SharedPreferences getPreferences();
@@ -18,4 +19,7 @@ public interface IConfigureView {
 	public void setAuthStatus(String status);
 	public int getSyncTime();
 	public void setSyncTime(int value);
+	public Context getContext();
+	public void showDialog(int id);
+	public void removeDialog(int id);
 }

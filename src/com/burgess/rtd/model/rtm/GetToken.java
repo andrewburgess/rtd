@@ -20,7 +20,7 @@ import com.burgess.rtd.exceptions.RTDException;
 /**
  *
  */
-public class GetToken extends RtmObject {
+public class GetToken extends RTMObject {
 	public String username;
 	public String fullname;
 	public String token;
