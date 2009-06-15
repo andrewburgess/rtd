@@ -26,6 +26,7 @@ import com.burgess.rtd.model.List;
 import com.burgess.rtd.model.RTMModel;
 import com.burgess.rtd.model.Request;
 import com.burgess.rtd.model.rtm.GetLists;
+import com.burgess.rtd.model.rtm.GetTasks;
 
 /**
  *
@@ -82,6 +83,7 @@ public class SyncService extends Service {
 	public void synchorinze() {
 		try {
 			synchronizeLists();
+			synchronizeTasks();
 		} catch (RTDException e) {
 			//TODO: Figure out how to show the user the error
 		}
@@ -109,6 +111,17 @@ public class SyncService extends Service {
 			cv.put(List.SMART, (Boolean)lists.lists.get(key).get("smart"));
 			cv.put(List.SYNCED, true);
 			dbHelper.getDb().insert(List.TABLE, null, cv);
+		}
+	}
+	
+	private void synchronizeTasks() throws RTDException {
+		GetTasks tasks = new GetTasks();
+		Request r = new Request(RTM.Tasks.GET_LIST);
+		r.setParameter("auth_token", token);
+		try {
+			tasks.parse(rtm.execute(RTM.PATH, r));
+		} catch (RTDException e) {
+			return;
 		}
 	}
 }
