@@ -14,7 +14,9 @@ import android.content.SharedPreferences;
 import android.util.Log;
 
 import com.burgess.rtd.constants.Program;
+import com.burgess.rtd.exceptions.RTDException;
 import com.burgess.rtd.interfaces.view.IInitialView;
+import com.burgess.rtd.model.Database;
 
 public class InitialController {
 	private IInitialView view;
@@ -38,7 +40,9 @@ public class InitialController {
 		String token = preferences.getString(Program.Config.AUTH_TOKEN, null);
 		
 		if (token == null) {
-			//Application needs to be configured
+			//Assume first run
+			buildDatabase();
+			
 			Log.d(Program.LOG, "Needs configuring");
 			view.launchConfigureActivity();
 		} else {
@@ -46,5 +50,15 @@ public class InitialController {
 			Log.d(Program.LOG, "All set up");
 			view.launchConfigureActivity();
 		}
+	}
+	
+	private void buildDatabase() {
+		Database db = new Database(view.getContext());
+		try {
+			db.open();
+		} catch (RTDException e) {
+			view.createErrorDialog(e.error);
+		}
+		db.close();
 	}
 }

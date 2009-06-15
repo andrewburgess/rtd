@@ -86,7 +86,6 @@ public class AuthenticateActivity extends Activity implements IAuthenticateView 
 				return dialog;
 			case Program.Dialog.ERROR:
 				dialog = new Dialog(this);
-				dialog.setOwnerActivity(this);
 				dialog.setContentView(R.layout.error_dialog);
 				dialog.setTitle("Error #" + error.errorCode + " occurred");
 				

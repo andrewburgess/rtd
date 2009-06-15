@@ -14,18 +14,13 @@ package com.burgess.rtd.model;
  * Represents a Note stored in the database
  */
 public class Note {
-	public static String getDBCreateString() {
-		return "create table notes (" +
-				"id integer primary key autoincrement, " +
-				"task_id integer, " +
-				"title text default '', " +
-				"body text default '', " +
-				"created datetime default NULL, " +
-				"modified datetime default NULL, " +
-				"synced boolean default 0);";			
-	}
-	
-	public static String getDBDestroyString() {
-		return "drop table if exists notes";
-	}
+	public static final String CREATE = "create table notes (" +
+										   "id integer primary key autoincrement, " +
+										   "task_id integer, " +
+										   "title text default '', " +
+										   "body text default '', " +
+										   "created datetime default NULL, " +
+										   "modified datetime default NULL, " +
+										   "synced boolean default 0);";
+	public static final String DESTROY = "drop table if exists notes";
 }

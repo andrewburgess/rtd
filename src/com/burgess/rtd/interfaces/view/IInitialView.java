@@ -10,6 +10,9 @@
  */
 package com.burgess.rtd.interfaces.view;
 
+import com.burgess.rtd.exceptions.RTDError;
+
+import android.content.Context;
 import android.content.SharedPreferences;
 
 /**
@@ -20,4 +23,6 @@ import android.content.SharedPreferences;
 public interface IInitialView {
 	public SharedPreferences getPreferences();
 	public void launchConfigureActivity();
+	public Context getContext();
+	public void createErrorDialog(RTDError error);
 }

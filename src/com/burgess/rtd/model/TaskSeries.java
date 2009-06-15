@@ -14,20 +14,16 @@ package com.burgess.rtd.model;
  * Represents a TaskSeries object in the database
  */
 public class TaskSeries {
-	public static String getDBCreateString() {
-		return "create table task_series (" +
-				"id integer primary key autoincrement, " +
-				"created datetime default NULL, " +
-				"modified datetime default NULL, " +
-				"name text default '', " +
-				"list_id int, " +
-				"source text default '', " +
-				"url text default '', " +
-				"location_id int default NULL," +
-				"synced boolean default 0);";				
-	}
+	public static final String CREATE = "create table task_series (" + 
+										  "id integer primary key autoincrement, " +
+										  "created datetime default NULL, " +
+										  "modified datetime default NULL, " +
+										  "name text default '', " +
+										  "list_id int, " +
+										  "source text default '', " +
+										  "url text default '', " +
+										  "location_id int default NULL," +
+										  "synced boolean default 0);";				
 	
-	public static String getDBDestroyString() {
-		return "drop table if exists task_series";
-	}
+	public static final String DESTROY = "drop table if exists task_series";
 }

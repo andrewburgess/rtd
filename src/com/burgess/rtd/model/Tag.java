@@ -14,13 +14,8 @@ package com.burgess.rtd.model;
  * Represents a Tag stored in the database
  */
 public class Tag {
-	public static String getDBCreateString() {
-		return "create table tags (" +
-				"id integer primary key autoincrement, " +
-				"name text default '');";
-	}
-	
-	public static String getDBDestroyString() {
-		return "drop table if exists tags";
-	}
+	public static final String CREATE = "create table tags (" +
+										  "id integer primary key autoincrement, " +
+										  "name text default '');";
+	public static final String DESTROY = "drop table if exists tags";
 }

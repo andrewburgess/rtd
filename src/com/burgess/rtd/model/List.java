@@ -14,18 +14,13 @@ package com.burgess.rtd.model;
  * Represents a List object in the database
  */
 public class List {
-	public static String getDBCreateString() {
-		return "create table lists (" +
-				"id integer primary key autoincrement, " +
-				"name text default, " +
-				"deleted boolean default 0," +
-				"archived boolean default 0," +
-				"position integer default 0," +
-				"smart boolean default 0," +
-				"synced boolean default 0);";
-	}
-	
-	public static String getDBDestroyString() {
-		return "drop table if exists lists";
-	}
+	public static final String CREATE = "create table lists (" +
+										   "id integer primary key autoincrement, " +
+										   "name text, " +
+										   "deleted boolean default 0, " +
+										   "archived boolean default 0, " +
+										   "position integer default 0, " +
+										   "smart boolean default 0, " +
+										   "synced boolean default 0);";
+	public static final String DESTROY = "drop table if exists lists";
 }

@@ -14,14 +14,9 @@ package com.burgess.rtd.model;
  * Represents a TaskTag object in the database
  */
 public class TaskTag {
-	public static String getDBCreateString() {
-		return "create table task_tags (" +
-				"id integer primary key autoincrement, " +
-				"task_id integer, " +
-				"tag_id integer);";
-	}
-	
-	public static String getDBDestroyString() {
-		return "drop table if exists task_tags";
-	}
+	public static final String CREATE = "create table task_tags (" +
+										  "id integer primary key autoincrement, " +
+										  "task_id integer, " +
+										  "tag_id integer);";
+	public static final String DESTROY = "drop table if exists task_tags";
 }

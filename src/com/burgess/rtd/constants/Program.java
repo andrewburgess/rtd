@@ -44,5 +44,6 @@ public class Program {
 		public static final int IO_EXCEPTION = 3;
 		public static final int HTTP_EXCEPTION = 4;
 		public static final int NETWORK_UNAVAILABLE_EXCEPTION = 5;
+		public static final int SQL_EXCEPTION = 6;
 	}
 }
