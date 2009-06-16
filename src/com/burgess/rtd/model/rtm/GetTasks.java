@@ -18,8 +18,7 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import android.util.Log;
-
+import com.burgess.rtd.R;
 import com.burgess.rtd.constants.Program;
 import com.burgess.rtd.exceptions.RTDException;
 
@@ -72,10 +71,9 @@ public class GetTasks extends RTMObject {
 				}
 			}
 		} catch (JSONException e) {
-			Log.e(Program.LOG, e.getMessage());
-			
+			throw new RTDException(Program.Error.JSON_EXCEPTION, R.string.error_task_sync, true, e);			
 		} catch (ParseException e) {
-			
+			throw new RTDException(Program.Error.PARSE_EXCEPTION, R.string.error_date_parse, true, e);
 		}
 	}
 	

@@ -46,5 +46,6 @@ public class Program {
 		public static final int NETWORK_UNAVAILABLE_EXCEPTION = 5;
 		public static final int SQL_EXCEPTION = 6;
 		public static final int JSON_EXCEPTION = 7;
+		public static final int PARSE_EXCEPTION = 8;
 	}
 }
