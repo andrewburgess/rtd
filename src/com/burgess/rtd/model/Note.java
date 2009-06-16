@@ -22,6 +22,8 @@ public class Note {
 	public static final String MODIFIED = "modified";
 	public static final String SYNCED = "synced";
 	
+	public static final String TABLE = "notes";
+	
 	public static final String CREATE = "create table notes (" +
 										   "id integer primary key autoincrement, " +
 										   "task_id integer, " +

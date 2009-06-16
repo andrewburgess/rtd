@@ -24,6 +24,8 @@ public class TaskSeries {
 	public static final String LOCATION_ID = "location_id";
 	public static final String SYNCED = "synced";
 	
+	public static final String TABLE = "task_series";
+	
 	public static final String CREATE = "create table task_series (" + 
 										  "id integer primary key autoincrement, " +
 										  "created datetime default NULL, " +

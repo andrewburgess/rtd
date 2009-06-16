@@ -26,7 +26,7 @@ import com.burgess.rtd.exceptions.RTDException;
  *
  */
 public class GetTasks extends RTMObject {
-	private Hashtable<Integer, Hashtable<String, Object>> tasks;
+	public Hashtable<Integer, Hashtable<String, Object>> tasks;
 	
 	public GetTasks() {
 		tasks = new Hashtable<Integer, Hashtable<String, Object>>();
@@ -55,6 +55,7 @@ public class GetTasks extends RTMObject {
 								ts = ((JSONArray)taskseries).getJSONObject(j);
 								id = ts.getInt("id");
 								tasks.put(id, new Hashtable<String, Object>());
+								tasks.get(id).put("list_id", list.getInt("id"));
 								tasks.get(id).put("created", Program.DATE_FORMAT.parse(ts.getString("created")));
 								tasks.get(id).put("modified", Program.DATE_FORMAT.parse(ts.getString("modified")));
 								tasks.get(id).put("name", ts.getString("name"));
@@ -146,6 +147,11 @@ public class GetTasks extends RTMObject {
 					ht.put("deleted", Program.DATE_FORMAT.parse(n.getString("deleted")));
 				else
 					ht.put("deleted", "");
+				
+				if (n.getString("due").length() > 0)
+					ht.put("due", Program.DATE_FORMAT.parse(n.getString("due")));
+				else
+					ht.put("due", "");
 				
 				ht.put("has_due_time", n.getInt("has_due_time") > 0);
 				ht.put("priority", n.getString("priority"));
