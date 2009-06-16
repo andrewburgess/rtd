@@ -64,6 +64,8 @@ public class GetTasks extends RTMObject {
 								Integer loc = ts.getString("location_id").length() > 0 ? ts.getInt("location_id") : -1;
 								tasks.get(id).put("location_id", loc);
 								tasks.get(id).put("notes", getNotes(ts.get("notes")));
+								tasks.get(id).put("tags", getTags(ts.get("tags")));
+								tasks.get(id).put("tasks", getTasks(ts.get("task")));
 							}
 						}
 					}
@@ -77,13 +79,13 @@ public class GetTasks extends RTMObject {
 		}
 	}
 	
-	private ArrayList<Hashtable<String, Object>> getNotes(Object notes) throws JSONException, ParseException {
+	private ArrayList<Hashtable<String, Object>> getNotes(Object json) throws JSONException, ParseException {
 		ArrayList<Hashtable<String, Object>> notelist = new ArrayList<Hashtable<String, Object>>();
 		Hashtable<String, Object> ht;
 		
-		if (notes.getClass().equals(JSONObject.class)) {
+		if (json.getClass().equals(JSONObject.class)) {
 			JSONObject n;
-			Object x = ((JSONObject)notes).get("note");
+			Object x = ((JSONObject)json).get("note");
 			if (x.getClass().equals(JSONArray.class)) {
 				for (int i = 0; i < ((JSONArray)x).length(); i++) {
 					n = ((JSONArray)x).getJSONObject(i);
@@ -108,6 +110,77 @@ public class GetTasks extends RTMObject {
 		}
 		
 		return notelist;
+	}
+	
+	private ArrayList<String> getTags(Object json) throws JSONException {
+		ArrayList<String> tags = new ArrayList<String>();
+		if (!json.getClass().equals((JSONObject.class)))
+			return tags;
+		
+		Object t = ((JSONObject)json).get("tag");
+		if (t.getClass().equals(JSONArray.class)) {
+			for (int i = 0; i < ((JSONArray)t).length(); i++) {
+				tags.add(((JSONArray)t).getString(i));
+			}
+		} else {
+			tags.add((String)t);
+		}
+		return tags;
+	}
+	
+	private ArrayList<Hashtable<String, Object>> getTasks(Object json) throws JSONException, ParseException {
+		ArrayList<Hashtable<String, Object>> tasks = new ArrayList<Hashtable<String, Object>>();
+		Hashtable<String, Object> ht;
+		JSONObject n;
+		if (json.getClass().equals(JSONArray.class)) {
+			for (int i = 0; i < ((JSONArray)json).length(); i++) {
+				n = ((JSONArray)json).getJSONObject(i);
+				ht = new Hashtable<String, Object>();
+				
+				ht.put("id", n.getInt("id"));
+				ht.put("added", Program.DATE_FORMAT.parse(n.getString("added")));
+				if (n.getString("completed").length() > 0)
+					ht.put("completed", Program.DATE_FORMAT.parse(n.getString("completed")));
+				else
+					ht.put("completed", "");
+				
+				if (n.getString("deleted").length() > 0)
+					ht.put("deleted", Program.DATE_FORMAT.parse(n.getString("deleted")));
+				else
+					ht.put("deleted", "");
+				
+				ht.put("has_due_time", n.getInt("has_due_time") > 0);
+				ht.put("priority", n.getString("priority"));
+				ht.put("postponed", n.getInt("postponed"));
+				ht.put("estimate", n.getString("estimate"));
+				
+				tasks.add(ht);
+			}
+		} else {
+			n = ((JSONObject)json);
+			ht = new Hashtable<String, Object>();
+			
+			ht.put("id", n.getInt("id"));
+			ht.put("added", Program.DATE_FORMAT.parse(n.getString("added")));
+			if (n.getString("completed").length() > 0)
+				ht.put("completed", Program.DATE_FORMAT.parse(n.getString("completed")));
+			else
+				ht.put("completed", "");
+			
+			if (n.getString("deleted").length() > 0)
+				ht.put("deleted", Program.DATE_FORMAT.parse(n.getString("deleted")));
+			else
+				ht.put("deleted", "");
+			
+			ht.put("has_due_time", n.getInt("has_due_time") > 0);
+			ht.put("priority", n.getString("priority"));
+			ht.put("postponed", n.getInt("postponed"));
+			ht.put("estimate", n.getString("estimate"));
+			
+			tasks.add(ht);
+		}
+		
+		return tasks;
 	}
 
 }
