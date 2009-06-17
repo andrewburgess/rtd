@@ -67,6 +67,21 @@ public class GetTasks extends RTMObject {
 								tasks.get(id).put("tags", getTags(ts.get("tags")));
 								tasks.get(id).put("tasks", getTasks(ts.get("task")));
 							}
+						} else {
+							ts = (JSONObject)taskseries;
+							id = ts.getInt("id");
+							tasks.put(id, new Hashtable<String, Object>());
+							tasks.get(id).put("list_id", list.getInt("id"));
+							tasks.get(id).put("created", Program.DATE_FORMAT.parse(ts.getString("created")));
+							tasks.get(id).put("modified", Program.DATE_FORMAT.parse(ts.getString("modified")));
+							tasks.get(id).put("name", ts.getString("name"));
+							tasks.get(id).put("source", ts.getString("source"));
+							tasks.get(id).put("url", ts.getString("url"));
+							Integer loc = ts.getString("location_id").length() > 0 ? ts.getInt("location_id") : -1;
+							tasks.get(id).put("location_id", loc);
+							tasks.get(id).put("notes", getNotes(ts.get("notes")));
+							tasks.get(id).put("tags", getTags(ts.get("tags")));
+							tasks.get(id).put("tasks", getTasks(ts.get("task")));
 						}
 					}
 				}

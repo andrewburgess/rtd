@@ -11,13 +11,16 @@
 package com.burgess.rtd.service;
 
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.Hashtable;
+import java.util.TimeZone;
 
 import android.app.Service;
 import android.content.ContentValues;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Binder;
@@ -51,6 +54,8 @@ public class SyncService extends Service {
 	private Database dbHelper;
 	private SQLiteDatabase db;
 	private Cursor cursor;
+	private String lastSync;
+	private Context context;
 	
 	public class SyncBinder extends Binder {
 		public SyncService getService() {
@@ -59,8 +64,10 @@ public class SyncService extends Service {
 	}
 	
 	public SyncService() {
+		context = this;
 		rtm = new RTMModel(this);
 		token = getSharedPreferences(Program.APPLICATION, 0).getString(Program.Config.AUTH_TOKEN, Program.DEFAULT_AUTH_TOKEN);
+		lastSync = getSharedPreferences(Program.APPLICATION, 0).getString(Program.Config.LAST_SYNC, "");
 		dbHelper = new Database(this);
 		
 		try {
@@ -72,8 +79,10 @@ public class SyncService extends Service {
 	}
 	
 	public SyncService(Context context) {
+		this.context = context;
 		rtm = new RTMModel(context);
 		token = context.getSharedPreferences(Program.APPLICATION, 0).getString(Program.Config.AUTH_TOKEN, Program.DEFAULT_AUTH_TOKEN);
+		lastSync = context.getSharedPreferences(Program.APPLICATION, 0).getString(Program.Config.LAST_SYNC, "");
 		dbHelper = new Database(context);
 		
 		try {
@@ -98,6 +107,8 @@ public class SyncService extends Service {
 	}
 	
 	public void synchorinze() {
+		Log.i(Program.LOG, "Last Sync: " + lastSync);
+		
 		try {
 			synchronizeLists();
 			synchronizeTasks();
@@ -105,6 +116,12 @@ public class SyncService extends Service {
 		} catch (RTDException e) {
 			//TODO: Figure out how to show the user the error
 		}
+		
+		long time = Calendar.getInstance().getTime().getTime();
+		time = time - TimeZone.getDefault().getOffset(time);
+		SharedPreferences.Editor editor = context.getSharedPreferences(Program.APPLICATION, 0).edit();
+		editor.putString(Program.Config.LAST_SYNC, Program.DATE_FORMAT.format(time));
+		editor.commit();
 	}
 	
 	private void synchronizeLists() throws RTDException {
@@ -146,6 +163,10 @@ public class SyncService extends Service {
 		GetTasks tasks = new GetTasks();
 		Request r = new Request(RTM.Tasks.GET_LIST);
 		r.setParameter("auth_token", token);
+		if (lastSync.length() > 0) {
+			r.setParameter("last_sync", lastSync);
+		}
+
 		try {
 			tasks.parse(rtm.execute(RTM.PATH, r));
 		} catch (RTDException e) {

@@ -10,9 +10,12 @@
  */
 package com.burgess.rtd.controller;
 
+import java.lang.Thread.State;
+
 import android.content.SharedPreferences;
 import android.os.Handler;
 import android.os.Message;
+import android.util.Log;
 
 import com.burgess.rtd.constants.Program;
 import com.burgess.rtd.interfaces.view.IConfigureView;
@@ -36,7 +39,8 @@ public class ConfigureController {
 		}
 	};
 	
-	private Thread syncThread = new Thread() {
+	private class SyncThread extends Thread {
+		@Override
 		public void run() {
 			SyncService service = new SyncService(view.getContext());
 			service.synchorinze();
@@ -45,7 +49,9 @@ public class ConfigureController {
 			m.what = FINISHED_SYNC;
 			handler.sendMessage(m);
 		}
-	};
+	}
+	
+	private SyncThread syncThread;
 	
 	public ConfigureController(IConfigureView view) {
 		this.view = view;
@@ -79,6 +85,7 @@ public class ConfigureController {
 	
 	public void synchronize() {
 		view.showDialog(Program.Dialog.SYNCHRONIZE);
+		syncThread = new SyncThread();
 		syncThread.start();
 	}
 	
