@@ -15,14 +15,18 @@ import android.app.TabActivity;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.database.Cursor;
 import android.os.Bundle;
+import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.ViewGroup;
 import android.view.View.OnClickListener;
-import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.CursorAdapter;
 import android.widget.ListView;
+import android.widget.SimpleCursorAdapter;
 import android.widget.TabHost;
 import android.widget.TextView;
 
@@ -30,6 +34,8 @@ import com.burgess.rtd.constants.Program;
 import com.burgess.rtd.controller.InitialController;
 import com.burgess.rtd.exceptions.RTDError;
 import com.burgess.rtd.interfaces.view.IInitialView;
+import com.burgess.rtd.model.Task;
+import com.burgess.rtd.model.TaskSeries;
 
 /**
  * Initial activity which allows the controller to determine whether the app
@@ -46,6 +52,37 @@ public class InitialActivity extends TabActivity implements IInitialView {
 			finish();
 		}
 	};
+	
+	private class TaskCursorAdapter extends CursorAdapter {
+
+		public TaskCursorAdapter(Context context, Cursor c) {
+			super(context, c);
+		}
+
+		@Override
+		public void bindView(View view, Context context, Cursor c) {
+			String name = c.getString(c.getColumnIndex(TaskSeries.NAME));
+			String due = c.getString(c.getColumnIndex(Task.DUE_DATE));
+			
+			TextView tv = (TextView) view.findViewById(R.id.name);
+			tv.setText(name);
+		}
+
+		@Override
+		public View newView(Context context, Cursor c, ViewGroup parent) {
+			LayoutInflater inflater = (LayoutInflater)context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+			View view = inflater.inflate(R.layout.initial_row, parent, false);
+			
+			String name = c.getString(c.getColumnIndex(TaskSeries.NAME));
+			String due = c.getString(c.getColumnIndex(Task.DUE_DATE));
+			
+			TextView tv = (TextView) view.findViewById(R.id.name);
+			tv.setText(name);
+			
+			return view;
+		}
+		
+	}
 	
 	@Override
 	protected Dialog onCreateDialog(int id) {
@@ -87,6 +124,17 @@ public class InitialActivity extends TabActivity implements IInitialView {
         controller.initializeView();
     }
     
+    @Override
+	public void onActivityResult(int requestCode, int resultCode, Intent data) {
+		switch (requestCode) {
+			case 0:
+				controller.initializeView();
+				break;
+			default:
+				break;
+		}
+	}
+    
     public boolean onCreateOptionsMenu(Menu menu) {
     	menu.add(0, Program.Menu.CONFIGURE, 0, "Configure");
     	
@@ -111,7 +159,7 @@ public class InitialActivity extends TabActivity implements IInitialView {
 	@Override
 	public void launchConfigureActivity() {
 		Intent intent = new Intent(this, ConfigureActivity.class);
-		startActivity(intent);	
+		startActivityForResult(intent, 0);	
 	}
 	
 	@Override
@@ -123,5 +171,11 @@ public class InitialActivity extends TabActivity implements IInitialView {
 	public void createErrorDialog(RTDError error) {
 		this.error = error;
 		showDialog(Program.Dialog.ERROR);
+	}
+
+	@Override
+	public void setTasksDueToday(Cursor tasks) {
+		ListView view = (ListView) findViewById(R.id.tab1);
+		view.setAdapter(new TaskCursorAdapter(this, tasks));
 	}
 }

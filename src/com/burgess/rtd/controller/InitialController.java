@@ -10,17 +10,29 @@
  */
 package com.burgess.rtd.controller;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.TimeZone;
+
 import android.content.SharedPreferences;
+import android.database.sqlite.SQLiteDatabase;
 import android.util.Log;
 
+import com.burgess.rtd.R;
 import com.burgess.rtd.constants.Program;
+import com.burgess.rtd.exceptions.RTDError;
 import com.burgess.rtd.exceptions.RTDException;
 import com.burgess.rtd.interfaces.view.IInitialView;
 import com.burgess.rtd.model.Database;
+import com.burgess.rtd.model.Task;
+import com.burgess.rtd.model.TaskSeries;
 
 public class InitialController {
 	private IInitialView view;
 	private SharedPreferences preferences;
+	private Database dbHelper;
+	private SQLiteDatabase db;
 	
 	/**
 	 * Constructor for InitialController. Saves a view, and works from there
@@ -46,18 +58,58 @@ public class InitialController {
 			Log.d(Program.LOG, "Needs configuring");
 			view.launchConfigureActivity();
 		} else {
-			//Application has been set up, start main program
-			Log.d(Program.LOG, "All set up");
+			dbHelper = new Database(view.getContext());
+			try {
+				db = dbHelper.open().getDb();
+			} catch (RTDException e) {
+				view.createErrorDialog(e.error);
+			}
+			
+			getTasksDueToday();
+			getTasksDueTomorrow();
+			getTasksOverdue();
 		}
 	}
 	
 	private void buildDatabase() {
-		Database db = new Database(view.getContext());
+		dbHelper = new Database(view.getContext());
 		try {
-			db.open();
+			dbHelper.open();
 		} catch (RTDException e) {
 			view.createErrorDialog(e.error);
 		}
-		db.close();
+		dbHelper.close();
+	}
+	
+	private void getTasksDueToday() {
+		SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd");
+		long time = Calendar.getInstance().getTimeInMillis();
+		time = time - TimeZone.getDefault().getRawOffset();
+		String dstart = df.format(time);
+		
+		Calendar cal = Calendar.getInstance();
+		try {
+			cal.setTimeInMillis(df.parse(df.format(time)).getTime());
+		} catch (ParseException e) {
+			RTDError error = new RTDError(Program.Error.PARSE_EXCEPTION, R.string.error_parse_default, true);
+			view.createErrorDialog(error);
+		}
+		cal.add(Calendar.DATE, 1);
+		String dend = df.format(cal.getTimeInMillis());
+		
+		view.setTasksDueToday(db.query(TaskSeries.TABLE + ", " + Task.TABLE,
+									   new String[] {TaskSeries.TABLE + "." + TaskSeries.ID, TaskSeries.NAME, Task.DUE_DATE},
+									   Task.DUE_DATE + ">=? AND " + Task.DUE_DATE + "<? AND " +
+									   Task.COMPLETED + " is NULL AND " + 
+									   TaskSeries.TABLE + "." + TaskSeries.ID + "=" + Task.TABLE + "." + Task.TASK_SERIES_ID,
+									   new String[] {dstart, dend}, null, null, Task.DUE_DATE + " ASC"));
+	}
+	
+	private void getTasksDueTomorrow() {
+		
+	}
+	
+	private void getTasksOverdue() {
+		
 	}
 }

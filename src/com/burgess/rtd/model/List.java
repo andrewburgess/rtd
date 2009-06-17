@@ -14,7 +14,7 @@ package com.burgess.rtd.model;
  * Represents a List object in the database
  */
 public class List {
-	public static final String ID = "id";
+	public static final String ID = "_id";
 	public static final String NAME = "name";
 	public static final String DELETED = "deleted";
 	public static final String ARCHIVED = "archived";
@@ -25,7 +25,7 @@ public class List {
 	public static final String TABLE = "lists";
 	
 	public static final String CREATE = "create table lists (" +
-										   "id integer primary key autoincrement, " +
+										   "_id integer primary key autoincrement, " +
 										   "name text, " +
 										   "deleted boolean default 0, " +
 										   "archived boolean default 0, " +

@@ -14,7 +14,7 @@ package com.burgess.rtd.model;
  * Represents a Location object in the database
  */
 public class Location {
-	public static final String ID = "id";
+	public static final String ID = "_id";
 	public static final String NAME = "name";
 	public static final String LONGITUDE = "longitude";
 	public static final String LATITUDE = "latitude";
@@ -26,7 +26,7 @@ public class Location {
 	public static final String TABLE = "locations";
 	
 	public static final String CREATE = "create table locations (" +
-										   "id integer primary key autoincrement, " +
+										   "_id integer primary key autoincrement, " +
 										   "name text default '', " +
 										   "longitude real default 0.0, " +
 										   "latitude real default 0.0, " +

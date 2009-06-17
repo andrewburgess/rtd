@@ -14,14 +14,14 @@ package com.burgess.rtd.model;
  * Represents a TaskTag object in the database
  */
 public class TaskTag {
-	public static final String ID = "id";
+	public static final String ID = "_id";
 	public static final String TASK_ID = "task_id";
 	public static final String TAG_ID = "tag_id";
 	
 	public static final String TABLE = "task_tags";
 	
 	public static final String CREATE = "create table task_tags (" +
-										  "id integer primary key autoincrement, " +
+										  "_id integer primary key autoincrement, " +
 										  "task_id integer, " +
 										  "tag_id integer);";
 	public static final String DESTROY = "drop table if exists task_tags";

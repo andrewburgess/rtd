@@ -10,10 +10,11 @@
  */
 package com.burgess.rtd.interfaces.view;
 
-import com.burgess.rtd.exceptions.RTDError;
-
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.database.Cursor;
+
+import com.burgess.rtd.exceptions.RTDError;
 
 /**
  * Interface to an InitialView activity for starting an application
@@ -25,4 +26,6 @@ public interface IInitialView {
 	public void launchConfigureActivity();
 	public Context getContext();
 	public void createErrorDialog(RTDError error);
+	
+	public void setTasksDueToday(Cursor tasks);
 }

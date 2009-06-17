@@ -14,7 +14,7 @@ package com.burgess.rtd.model;
  * Represents a TaskSeries object in the database
  */
 public class TaskSeries {
-	public static final String ID = "id";
+	public static final String ID = "_id";
 	public static final String CREATED = "created";
 	public static final String MODIFIED = "modified";
 	public static final String NAME = "name";
@@ -27,7 +27,7 @@ public class TaskSeries {
 	public static final String TABLE = "task_series";
 	
 	public static final String CREATE = "create table task_series (" + 
-										  "id integer primary key autoincrement, " +
+										  "_id integer primary key autoincrement, " +
 										  "created datetime default NULL, " +
 										  "modified datetime default NULL, " +
 										  "name text default '', " +

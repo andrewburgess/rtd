@@ -14,7 +14,7 @@ package com.burgess.rtd.model;
  * Represents a Note stored in the database
  */
 public class Note {
-	public static final String ID = "id";
+	public static final String ID = "_id";
 	public static final String TASK_ID = "task_id";
 	public static final String TITLE = "title";
 	public static final String BODY = "body";
@@ -25,7 +25,7 @@ public class Note {
 	public static final String TABLE = "notes";
 	
 	public static final String CREATE = "create table notes (" +
-										   "id integer primary key autoincrement, " +
+										   "_id integer primary key autoincrement, " +
 										   "task_id integer, " +
 										   "title text default '', " +
 										   "body text default '', " +

@@ -186,6 +186,11 @@ public class GetTasks extends RTMObject {
 			else
 				ht.put("completed", "");
 			
+			if (n.getString("due").length() > 0)
+				ht.put("due", Program.DATE_FORMAT.parse(n.getString("due")));
+			else
+				ht.put("due", "");
+			
 			if (n.getString("deleted").length() > 0)
 				ht.put("deleted", Program.DATE_FORMAT.parse(n.getString("deleted")));
 			else

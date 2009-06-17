@@ -24,6 +24,7 @@ public final class R {
         public static final int error_button=0x7f060009;
         public static final int error_text=0x7f060007;
         public static final int issue_url=0x7f060008;
+        public static final int name=0x7f06000d;
         public static final int save=0x7f060005;
         public static final int spinner=0x7f060003;
         public static final int sync=0x7f060004;
@@ -37,7 +38,8 @@ public final class R {
         public static final int configure=0x7f030001;
         public static final int error_dialog=0x7f030002;
         public static final int initial=0x7f030003;
-        public static final int lists=0x7f030004;
+        public static final int initial_row=0x7f030004;
+        public static final int lists=0x7f030005;
     }
     public static final class string {
         public static final int app_name=0x7f050001;
