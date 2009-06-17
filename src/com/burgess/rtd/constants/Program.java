@@ -48,4 +48,8 @@ public class Program {
 		public static final int JSON_EXCEPTION = 7;
 		public static final int PARSE_EXCEPTION = 8;
 	}
+	
+	public static class Menu {
+		public static final int CONFIGURE = 0;
+	}
 }

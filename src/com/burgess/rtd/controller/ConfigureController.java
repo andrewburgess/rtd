@@ -10,12 +10,9 @@
  */
 package com.burgess.rtd.controller;
 
-import java.lang.Thread.State;
-
 import android.content.SharedPreferences;
 import android.os.Handler;
 import android.os.Message;
-import android.util.Log;
 
 import com.burgess.rtd.constants.Program;
 import com.burgess.rtd.interfaces.view.IConfigureView;

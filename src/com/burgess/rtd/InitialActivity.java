@@ -10,15 +10,20 @@
  */
 package com.burgess.rtd;
 
-import android.app.Activity;
 import android.app.Dialog;
+import android.app.TabActivity;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.ListView;
+import android.widget.TabHost;
 import android.widget.TextView;
 
 import com.burgess.rtd.constants.Program;
@@ -30,7 +35,7 @@ import com.burgess.rtd.interfaces.view.IInitialView;
  * Initial activity which allows the controller to determine whether the app
  * needs to be configured or just continue on to the main activity.
  */
-public class InitialActivity extends Activity implements IInitialView {
+public class InitialActivity extends TabActivity implements IInitialView {
 	private InitialController controller;
 	private RTDError error;
 	
@@ -73,8 +78,29 @@ public class InitialActivity extends Activity implements IInitialView {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.initial);
         
+        TabHost th = getTabHost();
+        th.addTab(th.newTabSpec("tab_today").setIndicator("Today").setContent(R.id.tab1));
+        th.addTab(th.newTabSpec("tab_tomorrow").setIndicator("Tomorrow").setContent(R.id.tab2));
+        th.addTab(th.newTabSpec("tab_overdue").setIndicator("Overdue").setContent(R.id.tab3));
+        
         controller = new InitialController(this);
         controller.initializeView();
+    }
+    
+    public boolean onCreateOptionsMenu(Menu menu) {
+    	menu.add(0, Program.Menu.CONFIGURE, 0, "Configure");
+    	
+    	return true;
+    }
+    
+    public boolean onOptionsItemSelected(MenuItem item) {
+    	switch (item.getItemId()) {
+    		case Program.Menu.CONFIGURE:
+    			launchConfigureActivity();
+    			return true;
+    		default:
+    			return false;
+    	}
     }
 
 	@Override
@@ -86,7 +112,6 @@ public class InitialActivity extends Activity implements IInitialView {
 	public void launchConfigureActivity() {
 		Intent intent = new Intent(this, ConfigureActivity.class);
 		startActivity(intent);	
-		finish();
 	}
 	
 	@Override
