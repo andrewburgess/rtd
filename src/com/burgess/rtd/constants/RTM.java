@@ -25,6 +25,10 @@ public class RTM {
 		public static final String ADD = "rtm.lists.add";
 	}
 	
+	public static class Locations {
+		public static final String GET_LIST = "rtm.locations.getList";
+	}
+	
 	public static class Tasks {
 		public static final String GET_LIST = "rtm.tasks.getList";
 	}

@@ -29,6 +29,7 @@ import com.burgess.rtd.constants.RTM;
 import com.burgess.rtd.exceptions.RTDException;
 import com.burgess.rtd.model.Database;
 import com.burgess.rtd.model.List;
+import com.burgess.rtd.model.Location;
 import com.burgess.rtd.model.Note;
 import com.burgess.rtd.model.RTMModel;
 import com.burgess.rtd.model.Request;
@@ -37,6 +38,7 @@ import com.burgess.rtd.model.Task;
 import com.burgess.rtd.model.TaskSeries;
 import com.burgess.rtd.model.TaskTag;
 import com.burgess.rtd.model.rtm.GetLists;
+import com.burgess.rtd.model.rtm.GetLocations;
 import com.burgess.rtd.model.rtm.GetTasks;
 
 /**
@@ -47,6 +49,7 @@ public class SyncService extends Service {
 	private RTMModel rtm;
 	private String token;
 	private Database dbHelper;
+	private SQLiteDatabase db;
 	private Cursor cursor;
 	
 	public class SyncBinder extends Binder {
@@ -62,6 +65,7 @@ public class SyncService extends Service {
 		
 		try {
 			dbHelper.open();
+			db = dbHelper.getDb();
 		} catch (RTDException e) {
 			//TODO: Figure out how to show the user the error
 		}
@@ -74,6 +78,7 @@ public class SyncService extends Service {
 		
 		try {
 			dbHelper.open();
+			db = dbHelper.getDb();
 		} catch (RTDException e) {
 			//TODO: Figure out how to show the user the error
 		}
@@ -96,6 +101,7 @@ public class SyncService extends Service {
 		try {
 			synchronizeLists();
 			synchronizeTasks();
+			synchronizeLocations();
 		} catch (RTDException e) {
 			//TODO: Figure out how to show the user the error
 		}
@@ -122,7 +128,16 @@ public class SyncService extends Service {
 			cv.put(List.POSITION, (Integer)lists.lists.get(key).get("position"));
 			cv.put(List.SMART, (Boolean)lists.lists.get(key).get("smart"));
 			cv.put(List.SYNCED, true);
-			dbHelper.getDb().insert(List.TABLE, null, cv);
+			
+			cursor = db.query(List.TABLE, new String[] {List.ID}, List.ID + "=?", 
+							  new String[] {key.toString()}, null, null, null);
+			cursor.moveToFirst();
+			if (cursor.getCount() == 0) {
+				db.insert(List.TABLE, null, cv);
+			} else {
+				db.update(List.TABLE, cv, List.ID + "=?", new String[] {key.toString()});
+			}
+			cursor.close();
 		}
 	}
 	
@@ -139,7 +154,6 @@ public class SyncService extends Service {
 		}
 		
 		ContentValues cv;
-		SQLiteDatabase db = dbHelper.getDb();
 		ArrayList<Hashtable<String, Object>> x;
 		ArrayList<String> y;
 		for (Integer key : tasks.tasks.keySet()) {
@@ -157,13 +171,24 @@ public class SyncService extends Service {
 			else
 				cv.putNull(TaskSeries.LOCATION_ID);
 			cv.put(TaskSeries.SYNCED, true);
-			db.insert(TaskSeries.TABLE, null, cv);
+			
+			cursor = db.query(TaskSeries.TABLE, new String[] {TaskSeries.ID}, TaskSeries.ID + "=?", 
+							  new String[] {key.toString()}, null, null, null);
+			cursor.moveToFirst();
+			if (cursor.getCount() == 0) {
+				db.insert(TaskSeries.TABLE, null, cv);
+			} else {
+				db.update(TaskSeries.TABLE, cv, TaskSeries.ID + "=?", new String[] {key.toString()});
+			}
+			
+			cursor.close();
 			
 			x = (ArrayList<Hashtable<String, Object>>)tasks.tasks.get(key).get("notes");
 			
 			for (int i = 0; i < x.size(); i++) {
 				cv = new ContentValues();
-				cv.put(Note.ID, (Integer)x.get(i).get("id"));
+				Integer id = (Integer)x.get(i).get("id");
+				cv.put(Note.ID, id);
 				cv.put(Note.BODY, (String)x.get(i).get("body"));
 				cv.put(Note.CREATED, Program.DATE_FORMAT.format((Date)x.get(i).get("created")));
 				cv.put(Note.MODIFIED, Program.DATE_FORMAT.format((Date)x.get(i).get("modified")));
@@ -171,7 +196,16 @@ public class SyncService extends Service {
 				cv.put(Note.SYNCED, true);
 				cv.put(Note.TASK_ID, key);
 				
-				db.insert(Note.TABLE, null, cv);
+				cursor = db.query(Note.TABLE, new String[] {Note.ID}, Note.ID + "=?", 
+						  new String[] {id.toString()}, null, null, null);
+				cursor.moveToFirst();
+				if (cursor.getCount() == 0) {
+					db.insert(Note.TABLE, null, cv);
+				} else {
+					db.update(Note.TABLE, cv, Note.ID + "=?", new String[] {id.toString()});
+				}
+				
+				cursor.close();
 			}
 			
 			y = (ArrayList<String>)tasks.tasks.get(key).get("tags");
@@ -211,7 +245,8 @@ public class SyncService extends Service {
 			
 			for (int i = 0; i < x.size(); i++) {
 				cv = new ContentValues();
-				cv.put(Task.ID, (Integer)x.get(i).get("id"));
+				Integer id = (Integer)x.get(i).get("id");
+				cv.put(Task.ID, id);
 				if ((Boolean)x.get(i).get("has_due_time"))
 					cv.put(Task.DUE_DATE, Program.DATE_FORMAT.format((Date)x.get(i).get("due")));
 				else
@@ -233,8 +268,52 @@ public class SyncService extends Service {
 				cv.put(Task.ESTIMATE, (String)x.get(i).get("estimate"));
 				cv.put(Task.TASK_SERIES_ID, key);
 				
-				db.insert(Task.TABLE, null, cv);
+				cursor = db.query(Task.TABLE, new String[] {Task.ID}, Task.ID + "=?", 
+						  new String[] {id.toString()}, null, null, null);
+				cursor.moveToFirst();
+				if (cursor.getCount() == 0) {
+					db.insert(Task.TABLE, null, cv);
+				} else {
+					db.update(Task.TABLE, cv, Task.ID + "=?", new String[] {id.toString()});
+				}
+				cursor.close();
 			}
+		}
+	}
+	
+	private void synchronizeLocations() {
+		GetLocations locations = new GetLocations();
+		Request r = new Request(RTM.Locations.GET_LIST);
+		r.setParameter("auth_token", token);
+		try {
+			locations.parse(rtm.execute(RTM.PATH, r));
+		} catch (RTDException e) {
+			//TODO: Figure out how to show the user the error
+			return;
+		}
+		
+		ContentValues cv;
+		for (Integer key : locations.locations.keySet()) {
+			cv = new ContentValues();
+			cv.put(Location.ID, key);
+			cv.put(Location.ADDRESS, (String)locations.locations.get(key).get("address"));
+			cv.put(Location.LATITUDE, (Double)locations.locations.get(key).get("latitude"));
+			cv.put(Location.LONGITUDE, (Double)locations.locations.get(key).get("longitude"));
+			cv.put(Location.NAME, (String)locations.locations.get(key).get("name"));
+			cv.put(Location.SYNCED, true);
+			cv.put(Location.VIEWABLE, (Boolean)locations.locations.get(key).get("viewable"));
+			cv.put(Location.ZOOM, (Integer)locations.locations.get(key).get("zoom"));
+			
+			cursor = db.query(Location.TABLE, new String[] {Location.ID}, Location.ID + "=?", 
+							  new String[] {key.toString()}, null, null, null);
+			cursor.moveToFirst();
+			if (cursor.getCount() == 0) {
+				db.insert(Location.TABLE, null, cv);
+			} else {
+				db.update(Location.TABLE, cv, Location.ID + "=?", new String[] {key.toString()});
+			}
+			
+			cursor.close();
 		}
 	}
 }

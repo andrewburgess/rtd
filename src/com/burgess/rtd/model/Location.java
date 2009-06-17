@@ -23,6 +23,8 @@ public class Location {
 	public static final String VIEWABLE = "viewable";
 	public static final String SYNCED = "synced";
 	
+	public static final String TABLE = "locations";
+	
 	public static final String CREATE = "create table locations (" +
 										   "id integer primary key autoincrement, " +
 										   "name text default '', " +
