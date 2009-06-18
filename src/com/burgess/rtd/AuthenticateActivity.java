@@ -32,6 +32,9 @@ import com.burgess.rtd.controller.AuthenticateController;
 import com.burgess.rtd.exceptions.RTDError;
 import com.burgess.rtd.interfaces.view.IAuthenticateView;
 
+/**
+ * Activity which allows the user to authenticate with the RTM service
+ */
 public class AuthenticateActivity extends Activity implements IAuthenticateView {	
 	private AuthenticateController controller;
 	private Context context = this;
