@@ -16,15 +16,13 @@ import java.util.Date;
 import java.util.Hashtable;
 import java.util.TimeZone;
 
-import android.app.Service;
+import android.content.BroadcastReceiver;
 import android.content.ContentValues;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
-import android.os.Binder;
-import android.os.IBinder;
 import android.util.Log;
 
 import com.burgess.rtd.constants.Program;
@@ -45,10 +43,9 @@ import com.burgess.rtd.model.rtm.GetLocations;
 import com.burgess.rtd.model.rtm.GetTasks;
 
 /**
- *
+ * Provides the background synchronization service for the system.
  */
-public class SyncService extends Service {
-	private IBinder binder = new SyncBinder();	
+public class SyncService extends BroadcastReceiver {
 	private RTMModel rtm;
 	private String token;
 	private Database dbHelper;
@@ -57,25 +54,8 @@ public class SyncService extends Service {
 	private String lastSync;
 	private Context context;
 	
-	public class SyncBinder extends Binder {
-		public SyncService getService() {
-			return SyncService.this;
-		}
-	}
-	
 	public SyncService() {
-		context = this;
-		rtm = new RTMModel(this);
-		token = getSharedPreferences(Program.APPLICATION, 0).getString(Program.Config.AUTH_TOKEN, Program.DEFAULT_AUTH_TOKEN);
-		lastSync = getSharedPreferences(Program.APPLICATION, 0).getString(Program.Config.LAST_SYNC, "");
-		dbHelper = new Database(this);
 		
-		try {
-			dbHelper.open();
-			db = dbHelper.getDb();
-		} catch (RTDException e) {
-			//TODO: Figure out how to show the user the error
-		}
 	}
 	
 	public SyncService(Context context) {
@@ -94,19 +74,26 @@ public class SyncService extends Service {
 	}
 	
 	@Override
-	public void onCreate() {
-		Log.i(Program.LOG, "Service started");
-	}
-
-	/* (non-Javadoc)
-	 * @see android.app.Service#onBind(android.content.Intent)
-	 */
-	@Override
-	public IBinder onBind(Intent arg0) {
-		return binder;
+	public void onReceive(Context context, Intent intent) {
+		Log.i(Program.LOG, "Broadcast received");
+		
+		this.context = context;
+		rtm = new RTMModel(context);
+		token = context.getSharedPreferences(Program.APPLICATION, 0).getString(Program.Config.AUTH_TOKEN, Program.DEFAULT_AUTH_TOKEN);
+		lastSync = context.getSharedPreferences(Program.APPLICATION, 0).getString(Program.Config.LAST_SYNC, "");
+		dbHelper = new Database(context);
+		
+		try {
+			dbHelper.open();
+			db = dbHelper.getDb();
+		} catch (RTDException e) {
+			//TODO: Figure out how to show the user the error
+		}
+		
+		synchronize();
 	}
 	
-	public void synchorinze() {
+	public void synchronize() {
 		Log.i(Program.LOG, "Last Sync: " + lastSync);
 		
 		try {

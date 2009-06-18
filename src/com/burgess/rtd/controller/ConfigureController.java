@@ -10,9 +10,14 @@
  */
 package com.burgess.rtd.controller;
 
+import android.app.AlarmManager;
+import android.app.PendingIntent;
+import android.content.Context;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Handler;
 import android.os.Message;
+import android.util.Log;
 
 import com.burgess.rtd.constants.Program;
 import com.burgess.rtd.interfaces.view.IConfigureView;
@@ -25,6 +30,8 @@ public class ConfigureController {
 	private String token;
 	private String username;
 	private SharedPreferences preferences;
+	
+	private int oldSyncValue;
 	
 	private Handler handler = new Handler() {
 		public void handleMessage(Message msg) {
@@ -40,7 +47,7 @@ public class ConfigureController {
 		@Override
 		public void run() {
 			SyncService service = new SyncService(view.getContext());
-			service.synchorinze();
+			service.synchronize();
 			
 			Message m = new Message();
 			m.what = FINISHED_SYNC;
@@ -56,6 +63,8 @@ public class ConfigureController {
 	
 	public void initializeView() {
 		preferences = view.getPreferences();
+		
+		oldSyncValue = preferences.getInt(Program.Config.SYNC_TIME, Program.Config.SyncValues.MANUALLY);
 		
 		refreshAuthStatus();
 		populateConfiguration();
@@ -78,6 +87,38 @@ public class ConfigureController {
 		SharedPreferences.Editor editor = preferences.edit();
 		editor.putInt(Program.Config.SYNC_TIME, view.getSyncTime());
 		editor.commit();
+		
+		//Set a new sync time, start up a new alarm
+		if (oldSyncValue != view.getSyncTime() && view.getSyncTime() != Program.Config.SyncValues.MANUALLY) {
+			AlarmManager alarm = (AlarmManager)view.getContext().getSystemService(Context.ALARM_SERVICE);
+			long interval;
+			switch (view.getSyncTime()) {
+				case Program.Config.SyncValues.DAY:
+					interval = 3600 * 1000;
+					break;
+				case Program.Config.SyncValues.HOUR:
+					interval = 20 * 1000;
+					break;
+				case Program.Config.SyncValues.SIX_HOURS:
+					interval = 120 * 1000;
+					break;
+				case Program.Config.SyncValues.TWELVE_HOURS:
+					interval = 60 * 1000;
+					break;
+				case Program.Config.SyncValues.WEEK:
+					interval = 60 * 1000;
+					break;
+				default:
+					return;
+			}
+			
+			Log.i(Program.LOG, "Going off every: " + interval / 1000 + " seconds");
+			
+			Intent i = new Intent(view.getContext(), SyncService.class);
+			PendingIntent intent = PendingIntent.getBroadcast(view.getContext(), Program.Request.SYNC, i, PendingIntent.FLAG_CANCEL_CURRENT);
+			alarm.cancel(intent);
+			alarm.setInexactRepeating(AlarmManager.RTC_WAKEUP, System.currentTimeMillis() + interval, interval, intent);
+		}
 	}
 	
 	public void synchronize() {
@@ -89,6 +130,6 @@ public class ConfigureController {
 	private void populateConfiguration() {
 		if (preferences == null) preferences = view.getPreferences();
 		
-		view.setSyncTime(preferences.getInt(Program.Config.SYNC_TIME, 0));
+		view.setSyncTime(preferences.getInt(Program.Config.SYNC_TIME, Program.Config.SyncValues.MANUALLY));
 	}
 }

@@ -25,6 +25,15 @@ public class Program {
 		public static final String FULLNAME = "fullname";
 		public static final String ID = "id";
 		public static final String SYNC_TIME = "synctime";
+		
+		public static class SyncValues {
+			public static final int HOUR = 0;
+			public static final int SIX_HOURS = 1;
+			public static final int TWELVE_HOURS = 2;
+			public static final int DAY = 3;
+			public static final int WEEK = 4;
+			public static final int MANUALLY = 5;
+		}
 	}
 	
 	//Default values
@@ -51,5 +60,9 @@ public class Program {
 	
 	public static class Menu {
 		public static final int CONFIGURE = 0;
+	}
+	
+	public static class Request {
+		public static final int SYNC = 0;
 	}
 }
