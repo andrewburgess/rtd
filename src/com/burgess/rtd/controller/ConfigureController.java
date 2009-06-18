@@ -31,8 +31,6 @@ public class ConfigureController {
 	private String username;
 	private SharedPreferences preferences;
 	
-	private int oldSyncValue;
-	
 	private Handler handler = new Handler() {
 		public void handleMessage(Message msg) {
 			switch (msg.what) {
@@ -64,8 +62,6 @@ public class ConfigureController {
 	public void initializeView() {
 		preferences = view.getPreferences();
 		
-		oldSyncValue = preferences.getInt(Program.Config.SYNC_TIME, Program.Config.SyncValues.MANUALLY);
-		
 		refreshAuthStatus();
 		populateConfiguration();
 	}
@@ -89,24 +85,24 @@ public class ConfigureController {
 		editor.commit();
 		
 		//Set a new sync time, start up a new alarm
-		if (oldSyncValue != view.getSyncTime() && view.getSyncTime() != Program.Config.SyncValues.MANUALLY) {
+		if (view.getSyncTime() != Program.Config.SyncValues.MANUALLY) {
 			AlarmManager alarm = (AlarmManager)view.getContext().getSystemService(Context.ALARM_SERVICE);
 			long interval;
 			switch (view.getSyncTime()) {
 				case Program.Config.SyncValues.DAY:
-					interval = 3600 * 1000;
+					interval = 24 * 3600 * 1000;
 					break;
 				case Program.Config.SyncValues.HOUR:
-					interval = 20 * 1000;
+					interval = 3600 * 1000;
 					break;
 				case Program.Config.SyncValues.SIX_HOURS:
-					interval = 120 * 1000;
+					interval = 6 * 3600 * 1000;
 					break;
 				case Program.Config.SyncValues.TWELVE_HOURS:
-					interval = 60 * 1000;
+					interval = 12 * 3600 * 1000;
 					break;
 				case Program.Config.SyncValues.WEEK:
-					interval = 60 * 1000;
+					interval = 7 * 24 * 3600 * 1000;
 					break;
 				default:
 					return;
