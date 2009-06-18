@@ -122,6 +122,8 @@ public class SyncService extends Service {
 		SharedPreferences.Editor editor = context.getSharedPreferences(Program.APPLICATION, 0).edit();
 		editor.putString(Program.Config.LAST_SYNC, Program.DATE_FORMAT.format(time));
 		editor.commit();
+		
+		dbHelper.close();
 	}
 	
 	private void synchronizeLists() throws RTDException {
@@ -268,10 +270,10 @@ public class SyncService extends Service {
 				cv = new ContentValues();
 				Integer id = (Integer)x.get(i).get("id");
 				cv.put(Task.ID, id);
-				if ((Boolean)x.get(i).get("has_due_time"))
-					cv.put(Task.DUE_DATE, Program.DATE_FORMAT.format((Date)x.get(i).get("due")));
-				else
+				if (x.get(i).get("due").getClass().equals(String.class))
 					cv.putNull(Task.DUE_DATE);
+				else
+					cv.put(Task.DUE_DATE, Program.DATE_FORMAT.format((Date)x.get(i).get("due")));
 				
 				if (x.get(i).get("completed").getClass().equals(String.class))
 					cv.putNull(Task.COMPLETED);
@@ -287,6 +289,7 @@ public class SyncService extends Service {
 				cv.put(Task.PRIORITY, (String)x.get(i).get("priority"));
 				cv.put(Task.POSTPONED, (Integer)x.get(i).get("postponed"));
 				cv.put(Task.ESTIMATE, (String)x.get(i).get("estimate"));
+				cv.put(Task.HAS_DUE_TIME, (Boolean)x.get(i).get("has_due_time"));
 				cv.put(Task.TASK_SERIES_ID, key);
 				
 				cursor = db.query(Task.TABLE, new String[] {Task.ID}, Task.ID + "=?", 

@@ -26,7 +26,6 @@ import android.view.View.OnClickListener;
 import android.widget.Button;
 import android.widget.CursorAdapter;
 import android.widget.ListView;
-import android.widget.SimpleCursorAdapter;
 import android.widget.TabHost;
 import android.widget.TextView;
 
@@ -34,7 +33,6 @@ import com.burgess.rtd.constants.Program;
 import com.burgess.rtd.controller.InitialController;
 import com.burgess.rtd.exceptions.RTDError;
 import com.burgess.rtd.interfaces.view.IInitialView;
-import com.burgess.rtd.model.Task;
 import com.burgess.rtd.model.TaskSeries;
 
 /**
@@ -42,6 +40,8 @@ import com.burgess.rtd.model.TaskSeries;
  * needs to be configured or just continue on to the main activity.
  */
 public class InitialActivity extends TabActivity implements IInitialView {
+	private static final int CONFIGURE_ACTIVITY = 0;
+	
 	private InitialController controller;
 	private RTDError error;
 	
@@ -62,7 +62,7 @@ public class InitialActivity extends TabActivity implements IInitialView {
 		@Override
 		public void bindView(View view, Context context, Cursor c) {
 			String name = c.getString(c.getColumnIndex(TaskSeries.NAME));
-			String due = c.getString(c.getColumnIndex(Task.DUE_DATE));
+			//String due = c.getString(c.getColumnIndex(Task.DUE_DATE));
 			
 			TextView tv = (TextView) view.findViewById(R.id.name);
 			tv.setText(name);
@@ -74,7 +74,7 @@ public class InitialActivity extends TabActivity implements IInitialView {
 			View view = inflater.inflate(R.layout.initial_row, parent, false);
 			
 			String name = c.getString(c.getColumnIndex(TaskSeries.NAME));
-			String due = c.getString(c.getColumnIndex(Task.DUE_DATE));
+			//String due = c.getString(c.getColumnIndex(Task.DUE_DATE));
 			
 			TextView tv = (TextView) view.findViewById(R.id.name);
 			tv.setText(name);
@@ -127,7 +127,7 @@ public class InitialActivity extends TabActivity implements IInitialView {
     @Override
 	public void onActivityResult(int requestCode, int resultCode, Intent data) {
 		switch (requestCode) {
-			case 0:
+			case CONFIGURE_ACTIVITY:
 				controller.initializeView();
 				break;
 			default:
@@ -159,7 +159,7 @@ public class InitialActivity extends TabActivity implements IInitialView {
 	@Override
 	public void launchConfigureActivity() {
 		Intent intent = new Intent(this, ConfigureActivity.class);
-		startActivityForResult(intent, 0);	
+		startActivityForResult(intent, CONFIGURE_ACTIVITY);	
 	}
 	
 	@Override
@@ -176,6 +176,18 @@ public class InitialActivity extends TabActivity implements IInitialView {
 	@Override
 	public void setTasksDueToday(Cursor tasks) {
 		ListView view = (ListView) findViewById(R.id.tab1);
+		view.setAdapter(new TaskCursorAdapter(this, tasks));
+	}
+	
+	@Override
+	public void setTasksDueTomorrow(Cursor tasks) {
+		ListView view = (ListView) findViewById(R.id.tab2);
+		view.setAdapter(new TaskCursorAdapter(this, tasks));
+	}
+	
+	@Override
+	public void setTasksOverdue(Cursor tasks) {
+		ListView view = (ListView) findViewById(R.id.tab3);
 		view.setAdapter(new TaskCursorAdapter(this, tasks));
 	}
 }

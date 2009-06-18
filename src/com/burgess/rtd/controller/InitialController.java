@@ -58,16 +58,23 @@ public class InitialController {
 			Log.d(Program.LOG, "Needs configuring");
 			view.launchConfigureActivity();
 		} else {
+			SharedPreferences.Editor edit = preferences.edit();
+			edit.putString(Program.Config.LAST_SYNC, "");
+			edit.commit();
+			
 			dbHelper = new Database(view.getContext());
 			try {
 				db = dbHelper.open().getDb();
 			} catch (RTDException e) {
 				view.createErrorDialog(e.error);
+				return;
 			}
 			
 			getTasksDueToday();
 			getTasksDueTomorrow();
 			getTasksOverdue();
+			
+			dbHelper.close();
 		}
 	}
 	
@@ -106,10 +113,47 @@ public class InitialController {
 	}
 	
 	private void getTasksDueTomorrow() {
+		SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd");
+		long time = Calendar.getInstance().getTimeInMillis();
+		time = time - TimeZone.getDefault().getRawOffset();
+		Calendar cal = Calendar.getInstance();
+		try {
+			cal.setTimeInMillis(df.parse(df.format(time)).getTime());
+		} catch (ParseException e) {
+			RTDError error = new RTDError(Program.Error.PARSE_EXCEPTION, R.string.error_parse_default, true);
+			view.createErrorDialog(error);
+		}
+		cal.add(Calendar.DATE, 1);
+		String dstart = df.format(cal.getTimeInMillis());
+		cal.add(Calendar.DATE, 1);
+		String dend = df.format(cal.getTimeInMillis());
 		
+		view.setTasksDueTomorrow(db.query(TaskSeries.TABLE + ", " + Task.TABLE,
+									   new String[] {TaskSeries.TABLE + "." + TaskSeries.ID, TaskSeries.NAME, Task.DUE_DATE},
+									   Task.DUE_DATE + ">=? AND " + Task.DUE_DATE + "<? AND " +
+									   Task.COMPLETED + " is NULL AND " + 
+									   TaskSeries.TABLE + "." + TaskSeries.ID + "=" + Task.TABLE + "." + Task.TASK_SERIES_ID,
+									   new String[] {dstart, dend}, null, null, Task.DUE_DATE + " ASC"));
 	}
 	
 	private void getTasksOverdue() {
+		SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd");
+		long time = Calendar.getInstance().getTimeInMillis();
+		time = time - TimeZone.getDefault().getRawOffset();
+
+		Calendar cal = Calendar.getInstance();
+		try {
+			cal.setTimeInMillis(df.parse(df.format(time)).getTime());
+		} catch (ParseException e) {
+			RTDError error = new RTDError(Program.Error.PARSE_EXCEPTION, R.string.error_parse_default, true);
+			view.createErrorDialog(error);
+		}
+		String dend = df.format(cal.getTimeInMillis());
 		
+		view.setTasksOverdue(db.query(TaskSeries.TABLE + ", " + Task.TABLE,
+									   new String[] {TaskSeries.TABLE + "." + TaskSeries.ID, TaskSeries.NAME, Task.DUE_DATE},
+									   Task.DUE_DATE + "<? AND " + Task.COMPLETED + " is NULL AND " + 
+									   TaskSeries.TABLE + "." + TaskSeries.ID + "=" + Task.TABLE + "." + Task.TASK_SERIES_ID,
+									   new String[] {dend}, null, null, Task.DUE_DATE + " ASC"));
 	}
 }

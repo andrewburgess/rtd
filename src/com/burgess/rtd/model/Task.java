@@ -18,6 +18,7 @@ public class Task {
 	public static final String TASK_SERIES_ID = "task_series_id";
 	public static final String ADDED = "added";
 	public static final String DUE_DATE = "due_date";
+	public static final String HAS_DUE_TIME = "has_due_time";
 	public static final String CREATED = "created";
 	public static final String COMPLETED = "completed";
 	public static final String DELETED = "deleted";
@@ -33,6 +34,7 @@ public class Task {
 										  "task_series_id integer, " +
 										  "added datetime, " +
 										  "due_date datetime default NULL, " +
+										  "has_due_time boolean default 0, " +
 										  "created datetime default NULL, " +
 										  "completed datetime default NULL, " +
 										  "deleted datetime default NULL, " +

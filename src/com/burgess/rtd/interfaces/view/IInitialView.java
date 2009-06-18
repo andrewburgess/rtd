@@ -28,4 +28,6 @@ public interface IInitialView {
 	public void createErrorDialog(RTDError error);
 	
 	public void setTasksDueToday(Cursor tasks);
+	public void setTasksDueTomorrow(Cursor tasks);
+	public void setTasksOverdue(Cursor tasks);
 }
