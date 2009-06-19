@@ -114,6 +114,8 @@ public class SyncService extends BroadcastReceiver {
 	}
 	
 	private void synchronizeLists() throws RTDException {
+		markAllListsUnsynced();
+		
 		GetLists lists = new GetLists();
 		Request r = new Request(RTM.Lists.GET_LIST);
 		r.setParameter("auth_token", token);
@@ -145,6 +147,8 @@ public class SyncService extends BroadcastReceiver {
 			}
 			cursor.close();
 		}
+		
+		deleteAllUnsyncedLists();
 	}
 	
 	@SuppressWarnings("unchecked")
@@ -292,16 +296,11 @@ public class SyncService extends BroadcastReceiver {
 		}
 	}
 	
-	private void synchronizeLocations() {
+	private void synchronizeLocations() throws RTDException {
 		GetLocations locations = new GetLocations();
 		Request r = new Request(RTM.Locations.GET_LIST);
 		r.setParameter("auth_token", token);
-		try {
-			locations.parse(rtm.execute(RTM.PATH, r));
-		} catch (RTDException e) {
-			//TODO: Figure out how to show the user the error
-			return;
-		}
+		locations.parse(rtm.execute(RTM.PATH, r));
 		
 		ContentValues cv;
 		for (Integer key : locations.locations.keySet()) {
@@ -326,5 +325,22 @@ public class SyncService extends BroadcastReceiver {
 			
 			cursor.close();
 		}
+	}
+	
+	private void markAllListsUnsynced() {
+		ContentValues cv = new ContentValues();
+		cv.put(List.SYNCED, false);
+		db.update(List.TABLE, cv, "1=1", null);
+	}
+	
+	private void deleteAllUnsyncedLists() {
+		Cursor cursor = db.query(List.TABLE, new String[] {List.ID}, List.SYNCED + "=0", null, null, null, null);
+		cursor.moveToFirst();
+		while (!cursor.isAfterLast()) {
+			int id = cursor.getInt(0);
+			db.delete(List.TABLE, List.ID + "=" + id, null);
+			cursor.moveToNext();
+		}
+		cursor.close();
 	}
 }
