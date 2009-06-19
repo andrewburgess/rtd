@@ -153,12 +153,11 @@ public class SyncService extends BroadcastReceiver {
 	
 	@SuppressWarnings("unchecked")
 	private void synchronizeTasks() throws RTDException {
+		markAllTasksUnsynced();
+		
 		GetTasks tasks = new GetTasks();
 		Request r = new Request(RTM.Tasks.GET_LIST);
 		r.setParameter("auth_token", token);
-		if (lastSync.length() > 0) {
-			r.setParameter("last_sync", lastSync);
-		}
 
 		try {
 			tasks.parse(rtm.execute(RTM.PATH, r));
@@ -294,9 +293,13 @@ public class SyncService extends BroadcastReceiver {
 				cursor.close();
 			}
 		}
+		
+		deleteAllUnsyncedTasks();
 	}
 	
 	private void synchronizeLocations() throws RTDException {
+		markAllLocationsUnsynced();
+		
 		GetLocations locations = new GetLocations();
 		Request r = new Request(RTM.Locations.GET_LIST);
 		r.setParameter("auth_token", token);
@@ -325,6 +328,8 @@ public class SyncService extends BroadcastReceiver {
 			
 			cursor.close();
 		}
+		
+		deleteAllUnsyncedLocations();
 	}
 	
 	private void markAllListsUnsynced() {
@@ -339,6 +344,47 @@ public class SyncService extends BroadcastReceiver {
 		while (!cursor.isAfterLast()) {
 			int id = cursor.getInt(0);
 			db.delete(List.TABLE, List.ID + "=" + id, null);
+			cursor.moveToNext();
+		}
+		cursor.close();
+	}
+
+	private void markAllTasksUnsynced() {
+		ContentValues cv = new ContentValues();
+		cv.put(TaskSeries.SYNCED, false);
+		db.update(TaskSeries.TABLE, cv, "1=1", null);
+	}
+	
+	private void deleteAllUnsyncedTasks() {
+		int taskId;
+		Cursor cursor = db.query(TaskSeries.TABLE, new String[] {TaskSeries.ID}, Task.SYNCED + "=0", null, null, null, null);
+		cursor.moveToFirst();
+		while (!cursor.isAfterLast()) {
+			taskId = cursor.getInt(0);
+			
+			db.delete(Task.TABLE, Task.TASK_SERIES_ID + "=" + taskId, null);
+			db.delete(TaskSeries.TABLE, TaskSeries.ID + "=" + taskId, null);
+			db.delete(Note.TABLE, Note.TASK_ID + "=" + taskId, null);
+			db.delete(TaskTag.TABLE, TaskTag.TASK_ID + "=" + taskId, null);
+			
+			cursor.moveToNext();
+		}
+		
+		cursor.close();
+	}
+	
+	private void markAllLocationsUnsynced() {
+		ContentValues cv = new ContentValues();
+		cv.put(Location.SYNCED, false);
+		db.update(Location.TABLE, cv, "1=1", null);
+	}
+	
+	private void deleteAllUnsyncedLocations() {
+		Cursor cursor = db.query(Location.TABLE, new String[] {Location.ID}, List.SYNCED + "=0", null, null, null, null);
+		cursor.moveToFirst();
+		while (!cursor.isAfterLast()) {
+			int id = cursor.getInt(0);
+			db.delete(Location.TABLE, Location.ID + "=" + id, null);
 			cursor.moveToNext();
 		}
 		cursor.close();
