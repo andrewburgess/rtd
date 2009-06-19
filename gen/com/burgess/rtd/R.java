@@ -13,25 +13,32 @@ public final class R {
     }
     public static final class attr {
     }
+    public static final class color {
+        public static final int high_priority=0x7f050000;
+        public static final int low_priority=0x7f050002;
+        public static final int medium_priority=0x7f050001;
+    }
     public static final class drawable {
         public static final int error=0x7f020000;
         public static final int icon=0x7f020001;
     }
     public static final class id {
-        public static final int authbutton=0x7f060001;
-        public static final int authstatus=0x7f060002;
-        public static final int cancel=0x7f060006;
-        public static final int error_button=0x7f060009;
-        public static final int error_text=0x7f060007;
-        public static final int issue_url=0x7f060008;
-        public static final int name=0x7f06000d;
-        public static final int save=0x7f060005;
-        public static final int spinner=0x7f060003;
-        public static final int sync=0x7f060004;
-        public static final int tab1=0x7f06000a;
-        public static final int tab2=0x7f06000b;
-        public static final int tab3=0x7f06000c;
-        public static final int webview=0x7f060000;
+        public static final int authbutton=0x7f070001;
+        public static final int authstatus=0x7f070002;
+        public static final int cancel=0x7f070006;
+        public static final int due=0x7f07000f;
+        public static final int error_button=0x7f070009;
+        public static final int error_text=0x7f070007;
+        public static final int issue_url=0x7f070008;
+        public static final int name=0x7f07000e;
+        public static final int priority=0x7f07000d;
+        public static final int save=0x7f070005;
+        public static final int spinner=0x7f070003;
+        public static final int sync=0x7f070004;
+        public static final int tab1=0x7f07000a;
+        public static final int tab2=0x7f07000b;
+        public static final int tab3=0x7f07000c;
+        public static final int webview=0x7f070000;
     }
     public static final class layout {
         public static final int authenticate=0x7f030000;
@@ -42,24 +49,24 @@ public final class R {
         public static final int lists=0x7f030005;
     }
     public static final class string {
-        public static final int app_name=0x7f050001;
-        public static final int configure_not_synced=0x7f050011;
-        public static final int dialog_get_auth_message=0x7f050005;
-        public static final int dialog_get_auth_title=0x7f050004;
-        public static final int dialog_get_frob_message=0x7f050003;
-        public static final int dialog_get_frob_title=0x7f050002;
-        public static final int error_auth_getFrob=0x7f050006;
-        public static final int error_auth_getToken=0x7f050007;
-        public static final int error_date_parse=0x7f050008;
-        public static final int error_default=0x7f050009;
-        public static final int error_list_sync=0x7f05000a;
-        public static final int error_network_unavailable=0x7f05000b;
-        public static final int error_parse_default=0x7f05000c;
-        public static final int error_sql=0x7f05000d;
-        public static final int error_task_sync=0x7f05000e;
-        public static final int error_timeline_create=0x7f05000f;
-        public static final int hello=0x7f050000;
-        public static final int issue_url=0x7f050010;
-        public static final int sync_prompt=0x7f050012;
+        public static final int app_name=0x7f060001;
+        public static final int configure_not_synced=0x7f060011;
+        public static final int dialog_get_auth_message=0x7f060005;
+        public static final int dialog_get_auth_title=0x7f060004;
+        public static final int dialog_get_frob_message=0x7f060003;
+        public static final int dialog_get_frob_title=0x7f060002;
+        public static final int error_auth_getFrob=0x7f060006;
+        public static final int error_auth_getToken=0x7f060007;
+        public static final int error_date_parse=0x7f060008;
+        public static final int error_default=0x7f060009;
+        public static final int error_list_sync=0x7f06000a;
+        public static final int error_network_unavailable=0x7f06000b;
+        public static final int error_parse_default=0x7f06000c;
+        public static final int error_sql=0x7f06000d;
+        public static final int error_task_sync=0x7f06000e;
+        public static final int error_timeline_create=0x7f06000f;
+        public static final int hello=0x7f060000;
+        public static final int issue_url=0x7f060010;
+        public static final int sync_prompt=0x7f060012;
     }
 }

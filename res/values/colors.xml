@@ -1,0 +1,7 @@
+<resources>
+	
+	<color name="high_priority">#ea5200</color>
+	<color name="medium_priority">#0060bf</color>
+	<color name="low_priority">#359aff</color>
+	
+</resources>

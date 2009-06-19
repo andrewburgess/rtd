@@ -16,6 +16,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.database.Cursor;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -33,6 +34,7 @@ import com.burgess.rtd.constants.Program;
 import com.burgess.rtd.controller.InitialController;
 import com.burgess.rtd.exceptions.RTDError;
 import com.burgess.rtd.interfaces.view.IInitialView;
+import com.burgess.rtd.model.Task;
 import com.burgess.rtd.model.TaskSeries;
 
 /**
@@ -62,10 +64,22 @@ public class InitialActivity extends TabActivity implements IInitialView {
 		@Override
 		public void bindView(View view, Context context, Cursor c) {
 			String name = c.getString(c.getColumnIndex(TaskSeries.NAME));
-			//String due = c.getString(c.getColumnIndex(Task.DUE_DATE));
+			String due = c.getString(c.getColumnIndex(Task.DUE_DATE));
+			String priority = c.getString(c.getColumnIndex(Task.PRIORITY));
 			
 			TextView tv = (TextView) view.findViewById(R.id.name);
 			tv.setText(name);
+			
+			tv = (TextView) view.findViewById(R.id.due);
+			tv.setText(due);
+			
+			tv = (TextView) view.findViewById(R.id.priority);
+			if (priority.equals("1"))
+				tv.setBackgroundColor(Color.parseColor(getString(R.color.high_priority)));
+			else if (priority.equals("2"))
+				tv.setBackgroundColor(Color.parseColor(getString(R.color.medium_priority)));
+			else if (priority.equals("3"))
+				tv.setBackgroundColor(Color.parseColor(getString(R.color.low_priority)));
 		}
 
 		@Override
@@ -74,10 +88,22 @@ public class InitialActivity extends TabActivity implements IInitialView {
 			View view = inflater.inflate(R.layout.initial_row, parent, false);
 			
 			String name = c.getString(c.getColumnIndex(TaskSeries.NAME));
-			//String due = c.getString(c.getColumnIndex(Task.DUE_DATE));
+			String due = c.getString(c.getColumnIndex(Task.DUE_DATE));
+			String priority = c.getString(c.getColumnIndex(Task.PRIORITY));
 			
 			TextView tv = (TextView) view.findViewById(R.id.name);
 			tv.setText(name);
+			
+			tv = (TextView) view.findViewById(R.id.due);
+			tv.setText(due);
+			
+			tv = (TextView) view.findViewById(R.id.priority);
+			if (priority.equals("1"))
+				tv.setBackgroundColor(Color.parseColor(getString(R.color.high_priority)));
+			else if (priority.equals("2"))
+				tv.setBackgroundColor(Color.parseColor(getString(R.color.medium_priority)));
+			else if (priority.equals("3"))
+				tv.setBackgroundColor(Color.parseColor(getString(R.color.low_priority)));
 			
 			return view;
 		}

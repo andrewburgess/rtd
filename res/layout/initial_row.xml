@@ -4,8 +4,26 @@
 	android:layout_width="fill_parent"
 	android:layout_height="fill_parent">
 	
-	<TextView android:id="@+id/name"
+	<TextView android:id="@+id/priority"
 		android:layout_width="wrap_content"
-		android:layout_height="wrap_content" />
+		android:layout_height="fill_parent"
+		android:paddingLeft = "10dp"
+		android:paddingRight = "10dp" />
+	
+	<TextView android:id="@+id/name"
+		android:layout_width="fill_parent"
+		android:layout_height="wrap_content"
+		android:layout_marginLeft="3dp"
+		android:layout_marginRight="5dp"
+		android:paddingTop="5dp"
+		android:paddingBottom="5dp"
+		android:textSize="16px"
+		android:layout_weight="1" />
+		
+	<TextView android:id="@+id/due"
+		android:layout_width="wrap_content"
+		android:layout_height="wrap_content"
+		android:layout_gravity="bottom"
+		android:textSize="10px" />
 	
 </LinearLayout>
