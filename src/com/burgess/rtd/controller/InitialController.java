@@ -108,7 +108,8 @@ public class InitialController {
 									   new String[] {
 														TaskSeries.TABLE + "." + TaskSeries.ID, 
 														TaskSeries.NAME, Task.DUE_DATE,
-														Task.PRIORITY
+														Task.PRIORITY,
+														Task.HAS_DUE_TIME
 													},
 									   Task.DUE_DATE + ">=? AND " + Task.DUE_DATE + "<? AND " +
 									   Task.COMPLETED + " is NULL AND " + 
@@ -136,7 +137,8 @@ public class InitialController {
 										  new String[] {
 															TaskSeries.TABLE + "." + TaskSeries.ID, 
 															TaskSeries.NAME, Task.DUE_DATE,
-															Task.PRIORITY
+															Task.PRIORITY,
+															Task.HAS_DUE_TIME
 													   },
 									   Task.DUE_DATE + ">=? AND " + Task.DUE_DATE + "<? AND " +
 									   Task.COMPLETED + " is NULL AND " + 
@@ -162,7 +164,8 @@ public class InitialController {
 									  new String[] {
 												   		TaskSeries.TABLE + "." + TaskSeries.ID, 
 												   		TaskSeries.NAME, Task.DUE_DATE,
-												   		Task.PRIORITY
+												   		Task.PRIORITY,
+												   		Task.HAS_DUE_TIME
 												   },
 									   Task.DUE_DATE + "<? AND " + Task.COMPLETED + " is NULL AND " + 
 									   TaskSeries.TABLE + "." + TaskSeries.ID + "=" + Task.TABLE + "." + Task.TASK_SERIES_ID,

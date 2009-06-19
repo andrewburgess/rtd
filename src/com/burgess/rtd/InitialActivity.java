@@ -10,6 +10,11 @@
  */
 package com.burgess.rtd;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.TimeZone;
+
 import android.app.Dialog;
 import android.app.TabActivity;
 import android.content.Context;
@@ -70,8 +75,22 @@ public class InitialActivity extends TabActivity implements IInitialView {
 			TextView tv = (TextView) view.findViewById(R.id.name);
 			tv.setText(name);
 			
-			tv = (TextView) view.findViewById(R.id.due);
-			tv.setText(due);
+			if (c.getInt(c.getColumnIndex(Task.HAS_DUE_TIME)) > 0) {
+				SimpleDateFormat df = new SimpleDateFormat("h:mma");
+				Date date = new Date();
+				try {
+					date = Program.DATE_FORMAT.parse(due);
+				} catch (ParseException e) {
+					
+				}
+				
+				long time = date.getTime();
+				time = time + TimeZone.getDefault().getOffset(time);
+				date.setTime(time);
+				
+				tv = (TextView) view.findViewById(R.id.due);
+				tv.setText(df.format(date));
+			}
 			
 			tv = (TextView) view.findViewById(R.id.priority);
 			if (priority.equals("1"))
@@ -94,8 +113,22 @@ public class InitialActivity extends TabActivity implements IInitialView {
 			TextView tv = (TextView) view.findViewById(R.id.name);
 			tv.setText(name);
 			
-			tv = (TextView) view.findViewById(R.id.due);
-			tv.setText(due);
+			if (c.getInt(c.getColumnIndex(Task.HAS_DUE_TIME)) > 0) {
+				SimpleDateFormat df = new SimpleDateFormat("h:mma");
+				Date date = new Date();
+				try {
+					date = Program.DATE_FORMAT.parse(due);
+				} catch (ParseException e) {
+					
+				}
+				
+				long time = date.getTime();
+				time = time + TimeZone.getDefault().getOffset(time);
+				date.setTime(time);
+				
+				tv = (TextView) view.findViewById(R.id.due);
+				tv.setText(df.format(date));
+			}
 			
 			tv = (TextView) view.findViewById(R.id.priority);
 			if (priority.equals("1"))
