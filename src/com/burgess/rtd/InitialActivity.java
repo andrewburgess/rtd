@@ -196,7 +196,7 @@ public class InitialActivity extends TabActivity implements IInitialView {
     
     public boolean onCreateOptionsMenu(Menu menu) {
     	menu.add(0, Program.Menu.CONFIGURE, 0, "Configure");
-    	
+    	menu.add(0, Program.Menu.LISTS, 0, "Go to Tasks");
     	return true;
     }
     
@@ -204,6 +204,10 @@ public class InitialActivity extends TabActivity implements IInitialView {
     	switch (item.getItemId()) {
     		case Program.Menu.CONFIGURE:
     			launchConfigureActivity();
+    			return true;
+    		case Program.Menu.LISTS:
+    			Intent intent = new Intent(this, ListsActivity.class);
+    			startActivity(intent);
     			return true;
     		default:
     			return false;

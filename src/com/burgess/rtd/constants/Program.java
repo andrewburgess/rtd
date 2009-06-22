@@ -60,6 +60,7 @@ public class Program {
 	
 	public static class Menu {
 		public static final int CONFIGURE = 0;
+		public static final int LISTS = 1;
 	}
 	
 	public static class Request {

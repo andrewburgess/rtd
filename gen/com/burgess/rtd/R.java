@@ -30,6 +30,7 @@ public final class R {
         public static final int error_button=0x7f070009;
         public static final int error_text=0x7f070007;
         public static final int issue_url=0x7f070008;
+        public static final int lists=0x7f070010;
         public static final int name=0x7f07000e;
         public static final int priority=0x7f07000d;
         public static final int save=0x7f070005;
