@@ -23,17 +23,20 @@ import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.graphics.Color;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.View.OnClickListener;
+import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.CursorAdapter;
 import android.widget.ListView;
 import android.widget.TabHost;
 import android.widget.TextView;
+import android.widget.AdapterView.OnItemClickListener;
 
 import com.burgess.rtd.constants.Program;
 import com.burgess.rtd.controller.InitialController;
@@ -57,6 +60,14 @@ public class InitialActivity extends TabActivity implements IInitialView {
 		public void onClick(View view) {
 			dismissDialog(Program.Dialog.ERROR);
 			finish();
+		}
+	};
+	
+	private OnItemClickListener taskOnItemClickListener = new OnItemClickListener() {
+
+		@Override
+		public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+			Log.i(Program.LOG, "Clicked task: " + id);			
 		}
 	};
 	
@@ -106,37 +117,7 @@ public class InitialActivity extends TabActivity implements IInitialView {
 			LayoutInflater inflater = (LayoutInflater)context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 			View view = inflater.inflate(R.layout.initial_row, parent, false);
 			
-			String name = c.getString(c.getColumnIndex(TaskSeries.NAME));
-			String due = c.getString(c.getColumnIndex(Task.DUE_DATE));
-			String priority = c.getString(c.getColumnIndex(Task.PRIORITY));
-			
-			TextView tv = (TextView) view.findViewById(R.id.name);
-			tv.setText(name);
-			
-			if (c.getInt(c.getColumnIndex(Task.HAS_DUE_TIME)) > 0) {
-				SimpleDateFormat df = new SimpleDateFormat("h:mma");
-				Date date = new Date();
-				try {
-					date = Program.DATE_FORMAT.parse(due);
-				} catch (ParseException e) {
-					
-				}
-				
-				long time = date.getTime();
-				time = time + TimeZone.getDefault().getOffset(time);
-				date.setTime(time);
-				
-				tv = (TextView) view.findViewById(R.id.due);
-				tv.setText(df.format(date));
-			}
-			
-			tv = (TextView) view.findViewById(R.id.priority);
-			if (priority.equals("1"))
-				tv.setBackgroundColor(Color.parseColor(getString(R.color.high_priority)));
-			else if (priority.equals("2"))
-				tv.setBackgroundColor(Color.parseColor(getString(R.color.medium_priority)));
-			else if (priority.equals("3"))
-				tv.setBackgroundColor(Color.parseColor(getString(R.color.low_priority)));
+			view.setId(c.getInt(c.getColumnIndex(TaskSeries.ID)));
 			
 			return view;
 		}
@@ -173,6 +154,8 @@ public class InitialActivity extends TabActivity implements IInitialView {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.initial);
+        
+        setTitle("Remember the Droid :: Overview");
         
         TabHost th = getTabHost();
         th.addTab(th.newTabSpec("tab_today").setIndicator("Today").setContent(R.id.tab1));
@@ -240,17 +223,20 @@ public class InitialActivity extends TabActivity implements IInitialView {
 	public void setTasksDueToday(Cursor tasks) {
 		ListView view = (ListView) findViewById(R.id.tab1);
 		view.setAdapter(new TaskCursorAdapter(this, tasks));
+		view.setOnItemClickListener(taskOnItemClickListener);
 	}
 	
 	@Override
 	public void setTasksDueTomorrow(Cursor tasks) {
 		ListView view = (ListView) findViewById(R.id.tab2);
 		view.setAdapter(new TaskCursorAdapter(this, tasks));
+		view.setOnItemClickListener(taskOnItemClickListener);
 	}
 	
 	@Override
 	public void setTasksOverdue(Cursor tasks) {
 		ListView view = (ListView) findViewById(R.id.tab3);
 		view.setAdapter(new TaskCursorAdapter(this, tasks));
+		view.setOnItemClickListener(taskOnItemClickListener);
 	}
 }

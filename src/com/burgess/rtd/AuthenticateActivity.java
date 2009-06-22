@@ -115,6 +115,8 @@ public class AuthenticateActivity extends Activity implements IAuthenticateView 
 		requestWindowFeature(Window.FEATURE_PROGRESS);
 		setContentView(R.layout.authenticate);
 		
+		setTitle("Remember the Droid :: Authenticate");
+		
 		wv = (WebView) findViewById(R.id.webview);
 		wv.setWebViewClient(new AuthenticateWebViewClient());
 		wv.getSettings().setJavaScriptEnabled(true);
