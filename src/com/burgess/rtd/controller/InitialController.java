@@ -13,6 +13,7 @@ package com.burgess.rtd.controller;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
+import java.util.GregorianCalendar;
 import java.util.TimeZone;
 
 import android.content.SharedPreferences;
@@ -90,19 +91,19 @@ public class InitialController {
 	
 	private void getTasksDueToday() {
 		SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd");
-		long time = Calendar.getInstance().getTimeInMillis();
-		time = time - TimeZone.getDefault().getRawOffset();
-		String dstart = df.format(time);
-		
-		Calendar cal = Calendar.getInstance();
+		GregorianCalendar cal = new GregorianCalendar();
 		try {
-			cal.setTimeInMillis(df.parse(df.format(time)).getTime());
+			cal.setTime(df.parse(df.format(Calendar.getInstance().getTime())));
 		} catch (ParseException e) {
 			RTDError error = new RTDError(Program.Error.PARSE_EXCEPTION, R.string.error_parse_default, true);
 			view.createErrorDialog(error);
 		}
+		
+		cal.add(Calendar.MILLISECOND, -1 * TimeZone.getDefault().getOffset(cal.getTimeInMillis()));
+		
+		String dstart = Program.DATE_FORMAT.format(cal.getTime());
 		cal.add(Calendar.DATE, 1);
-		String dend = df.format(cal.getTimeInMillis());
+		String dend = Program.DATE_FORMAT.format(cal.getTime());
 		
 		view.setTasksDueToday(db.query(TaskSeries.TABLE + ", " + Task.TABLE,
 									   new String[] {
@@ -119,19 +120,20 @@ public class InitialController {
 	
 	private void getTasksDueTomorrow() {
 		SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd");
-		long time = Calendar.getInstance().getTimeInMillis();
-		time = time - TimeZone.getDefault().getRawOffset();
-		Calendar cal = Calendar.getInstance();
+		GregorianCalendar cal = new GregorianCalendar();
 		try {
-			cal.setTimeInMillis(df.parse(df.format(time)).getTime());
+			cal.setTime(df.parse(df.format(Calendar.getInstance().getTime())));
 		} catch (ParseException e) {
 			RTDError error = new RTDError(Program.Error.PARSE_EXCEPTION, R.string.error_parse_default, true);
 			view.createErrorDialog(error);
 		}
+		
+		cal.add(Calendar.MILLISECOND, -1 * TimeZone.getDefault().getOffset(cal.getTimeInMillis()));
+		
 		cal.add(Calendar.DATE, 1);
-		String dstart = df.format(cal.getTimeInMillis());
+		String dstart = Program.DATE_FORMAT.format(cal.getTime());
 		cal.add(Calendar.DATE, 1);
-		String dend = df.format(cal.getTimeInMillis());
+		String dend = Program.DATE_FORMAT.format(cal.getTime());
 		
 		view.setTasksDueTomorrow(db.query(TaskSeries.TABLE + ", " + Task.TABLE,
 										  new String[] {
@@ -148,17 +150,17 @@ public class InitialController {
 	
 	private void getTasksOverdue() {
 		SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd");
-		long time = Calendar.getInstance().getTimeInMillis();
-		time = time - TimeZone.getDefault().getRawOffset();
-
-		Calendar cal = Calendar.getInstance();
+		GregorianCalendar cal = new GregorianCalendar();
 		try {
-			cal.setTimeInMillis(df.parse(df.format(time)).getTime());
+			cal.setTime(df.parse(df.format(Calendar.getInstance().getTime())));
 		} catch (ParseException e) {
 			RTDError error = new RTDError(Program.Error.PARSE_EXCEPTION, R.string.error_parse_default, true);
 			view.createErrorDialog(error);
 		}
-		String dend = df.format(cal.getTimeInMillis());
+		
+		cal.add(Calendar.MILLISECOND, -1 * TimeZone.getDefault().getOffset(cal.getTimeInMillis()));
+		
+		String dend = Program.DATE_FORMAT.format(cal.getTime());
 		
 		view.setTasksOverdue(db.query(TaskSeries.TABLE + ", " + Task.TABLE,
 									  new String[] {

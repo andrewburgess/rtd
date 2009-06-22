@@ -72,9 +72,11 @@ public class InitialActivity extends TabActivity implements IInitialView {
 	};
 	
 	private class TaskCursorAdapter extends CursorAdapter {
-
-		public TaskCursorAdapter(Context context, Cursor c) {
+		private boolean overdue;
+		public TaskCursorAdapter(Context context, Cursor c, boolean overdue) {
 			super(context, c);
+			
+			this.overdue = overdue;
 		}
 
 		@Override
@@ -86,8 +88,25 @@ public class InitialActivity extends TabActivity implements IInitialView {
 			TextView tv = (TextView) view.findViewById(R.id.name);
 			tv.setText(name);
 			
-			if (c.getInt(c.getColumnIndex(Task.HAS_DUE_TIME)) > 0) {
+			if (c.getInt(c.getColumnIndex(Task.HAS_DUE_TIME)) > 0 && !overdue) {
 				SimpleDateFormat df = new SimpleDateFormat("h:mma");
+				Date date = new Date();
+				try {
+					date = Program.DATE_FORMAT.parse(due);
+				} catch (ParseException e) {
+					
+				}
+				
+				long time = date.getTime();
+				time = time + TimeZone.getDefault().getOffset(time);
+				date.setTime(time);
+				
+				tv = (TextView) view.findViewById(R.id.due);
+				tv.setText(df.format(date));
+			}
+			
+			if (overdue) {
+				SimpleDateFormat df = new SimpleDateFormat("M/dd");
 				Date date = new Date();
 				try {
 					date = Program.DATE_FORMAT.parse(due);
@@ -222,21 +241,21 @@ public class InitialActivity extends TabActivity implements IInitialView {
 	@Override
 	public void setTasksDueToday(Cursor tasks) {
 		ListView view = (ListView) findViewById(R.id.tab1);
-		view.setAdapter(new TaskCursorAdapter(this, tasks));
+		view.setAdapter(new TaskCursorAdapter(this, tasks, false));
 		view.setOnItemClickListener(taskOnItemClickListener);
 	}
 	
 	@Override
 	public void setTasksDueTomorrow(Cursor tasks) {
 		ListView view = (ListView) findViewById(R.id.tab2);
-		view.setAdapter(new TaskCursorAdapter(this, tasks));
+		view.setAdapter(new TaskCursorAdapter(this, tasks, false));
 		view.setOnItemClickListener(taskOnItemClickListener);
 	}
 	
 	@Override
 	public void setTasksOverdue(Cursor tasks) {
 		ListView view = (ListView) findViewById(R.id.tab3);
-		view.setAdapter(new TaskCursorAdapter(this, tasks));
+		view.setAdapter(new TaskCursorAdapter(this, tasks, true));
 		view.setOnItemClickListener(taskOnItemClickListener);
 	}
 }
