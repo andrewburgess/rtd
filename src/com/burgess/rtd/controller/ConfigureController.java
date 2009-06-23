@@ -127,5 +127,6 @@ public class ConfigureController {
 		if (preferences == null) preferences = view.getPreferences();
 		
 		view.setSyncTime(preferences.getInt(Program.Config.SYNC_TIME, Program.Config.SyncValues.MANUALLY));
+		view.setLastSync(preferences.getString(Program.Config.LAST_SYNC, null));
 	}
 }

@@ -54,10 +54,6 @@ public class SyncService extends BroadcastReceiver {
 	private String lastSync;
 	private Context context;
 	
-	public SyncService() {
-		
-	}
-	
 	public SyncService(Context context) {
 		this.context = context;
 		rtm = new RTMModel(context);
@@ -69,7 +65,7 @@ public class SyncService extends BroadcastReceiver {
 			dbHelper.open();
 			db = dbHelper.getDb();
 		} catch (RTDException e) {
-			//TODO: Figure out how to show the user the error
+			return;
 		}
 	}
 	
@@ -87,7 +83,7 @@ public class SyncService extends BroadcastReceiver {
 			dbHelper.open();
 			db = dbHelper.getDb();
 		} catch (RTDException e) {
-			//TODO: Figure out how to show the user the error
+			return;
 		}
 		
 		synchronize();
@@ -101,7 +97,7 @@ public class SyncService extends BroadcastReceiver {
 			synchronizeTasks();
 			synchronizeLocations();
 		} catch (RTDException e) {
-			//TODO: Figure out how to show the user the error
+			return;
 		}
 		
 		long time = Calendar.getInstance().getTime().getTime();
@@ -122,7 +118,6 @@ public class SyncService extends BroadcastReceiver {
 		try {
 			lists.parse(rtm.execute(RTM.PATH, r));
 		} catch (RTDException e) {
-			//TODO: Figure out how to show the user the error
 			return;
 		}
 		

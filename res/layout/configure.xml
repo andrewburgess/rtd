@@ -77,6 +77,12 @@
 			android:layout_width="fill_parent"
 			android:text="Synchronize Now" />
 		
+		<TextView android:id="@+id/lastsync"
+			android:layout_height="wrap_content"
+			android:layout_width="fill_parent"
+			android:textSize="14px" />
+			
+		
 	</LinearLayout>
 		
 	<LinearLayout

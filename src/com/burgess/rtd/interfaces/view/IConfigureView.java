@@ -18,6 +18,7 @@ public interface IConfigureView {
 	public void configureAuthentication(boolean isAuthenticated);
 	public void setAuthStatus(String status);
 	public int getSyncTime();
+	public void setLastSync(String lastSync);
 	public void setSyncTime(int value);
 	public Context getContext();
 	public void showDialog(int id);

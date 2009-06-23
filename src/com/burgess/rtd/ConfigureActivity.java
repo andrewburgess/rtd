@@ -10,6 +10,11 @@
  */
 package com.burgess.rtd;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.TimeZone;
+
 import android.app.Activity;
 import android.app.Dialog;
 import android.app.ProgressDialog;
@@ -163,6 +168,28 @@ public class ConfigureActivity extends Activity implements IConfigureView {
 	@Override
 	public void setSyncTime(int value) {
 		spinSync.setSelection(value);		
+	}
+	
+	@Override
+	public void setLastSync(String lastSync) {
+		TextView tv = (TextView) findViewById(R.id.lastsync);
+		if (lastSync == null) {
+			tv.setText("Last Sync: Never");
+		} else {
+			SimpleDateFormat df = new SimpleDateFormat("MMM. dd, yyyy @ hh:mm a");
+			Date date = new Date();
+			try {
+				date = Program.DATE_FORMAT.parse(lastSync);
+			} catch (ParseException e) {
+				
+			}
+			
+			long time = date.getTime();
+			time = time + TimeZone.getDefault().getOffset(time);
+			date.setTime(time);
+			
+			tv.setText("Last Sync: " + df.format(date));
+		}
 	}
 
 	@Override
