@@ -38,7 +38,13 @@ public class ListsController {
 	}
 	
 	public void initializeView() {
-		Cursor cursor = db.query(List.TABLE, new String[] {List.ID, List.NAME}, null, null, null, null, List.POSITION + ", " + List.NAME);
+		Cursor cursor = db.query(List.TABLE, 
+								new String[] {
+									List.ID, 
+									List.NAME
+								}, 
+								null, null, null, null, 
+								List.POSITION + ", " + List.NAME);
 		
 		view.setListsCursor(cursor);
 	}
