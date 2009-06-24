@@ -13,6 +13,8 @@
     <activity android:name="ConfigureActivity"></activity>
 <activity android:name="AuthenticateActivity"></activity>
 
+<activity android:name="ListTasksActivity"></activity>
+
 <activity android:name="ListsActivity"></activity>
 </application>
     <uses-sdk android:minSdkVersion="3" />

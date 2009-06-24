@@ -13,15 +13,18 @@ package com.burgess.rtd;
 import android.app.Dialog;
 import android.app.ListActivity;
 import android.content.Context;
+import android.content.Intent;
 import android.database.Cursor;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.View.OnClickListener;
+import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.CursorAdapter;
 import android.widget.TextView;
+import android.widget.AdapterView.OnItemClickListener;
 
 import com.burgess.rtd.constants.Program;
 import com.burgess.rtd.controller.ListsController;
@@ -35,6 +38,19 @@ import com.burgess.rtd.model.List;
 public class ListsActivity extends ListActivity implements IListsView {
 	private ListsController controller;
 	private RTDError error;
+	private Context context = this;
+	
+	private OnItemClickListener itemClickListener = new OnItemClickListener() {
+
+		@Override
+		public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+			Intent intent = new Intent(context, ListTasksActivity.class);
+			intent.putExtra("com.burgess.rtd.listId", id);
+			
+			startActivityForResult(intent, 0);
+		}
+	
+	};
 	
 	private OnClickListener errorButtonOnClickListener = new OnClickListener() {
 		@Override
@@ -52,7 +68,7 @@ public class ListsActivity extends ListActivity implements IListsView {
 
 		@Override
 		public void bindView(View view, Context context, Cursor c) {
-			String name = c.getString(c.getColumnIndex(List.NAME));
+			String name = c.getString(1);
 			
 			TextView tv = (TextView) view.findViewById(R.id.name);
 			tv.setText(name);
@@ -75,6 +91,8 @@ public class ListsActivity extends ListActivity implements IListsView {
 		super.onCreate(savedInstanceState);
 		
 		setTitle("Remember the Droid :: Lists");
+		
+		getListView().setOnItemClickListener(itemClickListener);
 		
 		controller = new ListsController(this);
 		controller.initializeView();

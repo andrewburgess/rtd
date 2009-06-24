@@ -35,6 +35,7 @@ public class ConfigureController {
 		public void handleMessage(Message msg) {
 			switch (msg.what) {
 				case FINISHED_SYNC:
+					view.setLastSync(preferences.getString(Program.Config.LAST_SYNC, null));
 					view.removeDialog(Program.Dialog.SYNCHRONIZE);
 					break;
 			}
