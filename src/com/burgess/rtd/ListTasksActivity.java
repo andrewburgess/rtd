@@ -10,21 +10,30 @@
  */
 package com.burgess.rtd;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.TimeZone;
+
 import android.app.ListActivity;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.database.Cursor;
+import android.graphics.Color;
+import android.graphics.Typeface;
 import android.os.Bundle;
+import android.text.format.DateUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.CheckBox;
 import android.widget.CursorAdapter;
 import android.widget.TextView;
 
 import com.burgess.rtd.constants.Program;
 import com.burgess.rtd.controller.ListTasksController;
 import com.burgess.rtd.interfaces.view.IListTasksView;
-import com.burgess.rtd.model.List;
 
 /**
  *
@@ -41,9 +50,49 @@ public class ListTasksActivity extends ListActivity implements IListTasksView {
 		@Override
 		public void bindView(View view, Context context, Cursor c) {
 			String name = c.getString(1);
+			String priority = c.getString(4);
+			String due = c.getString(2);
 			
-			TextView tv = (TextView) view.findViewById(R.id.name);
-			tv.setText(name);
+			CheckBox cb = (CheckBox) view.findViewById(R.id.checkbox);
+			cb.setText(name);
+			
+			TextView tv = (TextView) view.findViewById(R.id.priority);
+			if (priority.equals("1"))
+				tv.setBackgroundColor(Color.parseColor(getString(R.color.high_priority)));
+			else if (priority.equals("2"))
+				tv.setBackgroundColor(Color.parseColor(getString(R.color.medium_priority)));
+			else if (priority.equals("3"))
+				tv.setBackgroundColor(Color.parseColor(getString(R.color.low_priority)));
+			
+			if (due != null) {
+				Date date = new Date();
+				try {
+					date = Program.DATE_FORMAT.parse(due);
+				} catch (ParseException e) {}
+				
+				long time = date.getTime();
+				time = time + TimeZone.getDefault().getOffset(time);
+				date.setTime(time);
+				
+				tv = (TextView) view.findViewById(R.id.due);
+				
+				if (DateUtils.isToday(date.getTime())) {
+					tv.setTypeface(tv.getTypeface(), Typeface.BOLD);
+					if (c.getInt(3) > 0) {
+						SimpleDateFormat df = new SimpleDateFormat("h:mm a");
+						tv.setText(df.format(date));
+					} else {
+						tv.setText("Today");
+					}
+				} else {
+					SimpleDateFormat df = new SimpleDateFormat("MMM dd");
+					tv.setText(df.format(date));
+					if (date.before(Calendar.getInstance().getTime())) {
+						tv.setTypeface(tv.getTypeface(), Typeface.BOLD);
+						tv.setTextColor(Color.rgb(180, 10, 10));
+					}
+				}
+			}
 		}
 
 		@Override

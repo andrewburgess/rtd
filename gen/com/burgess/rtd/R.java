@@ -26,6 +26,7 @@ public final class R {
         public static final int authbutton=0x7f070001;
         public static final int authstatus=0x7f070002;
         public static final int cancel=0x7f070007;
+        public static final int checkbox=0x7f070011;
         public static final int due=0x7f070010;
         public static final int error_button=0x7f07000a;
         public static final int error_text=0x7f070008;

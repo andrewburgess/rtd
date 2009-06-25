@@ -1,10 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
-<TableLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
 	android:layout_width="fill_parent"
 	android:layout_height="fill_parent"
-	android:stretchColumns="1">
-	
-	<TableRow>
+	android:orientation="horizontal">
 	
 		<TextView android:id="@+id/priority"
 			android:layout_width="wrap_content"
@@ -12,23 +10,21 @@
 			android:paddingLeft = "10dp"
 			android:paddingRight = "10dp" />
 			
-		<TextView android:id="@+id/name"
+		<CheckBox android:id="@+id/checkbox"
 			android:layout_width="fill_parent"
 			android:layout_height="wrap_content"
-			android:layout_marginLeft="3dp"
-			android:layout_marginRight="5dp"
-			android:paddingTop="10dp"
-			android:paddingBottom="10dp"
-			android:textSize="20px"
-			android:layout_weight="1" />
+			android:layout_weight="1"
+			android:textColor="@android:color/primary_text_dark"
+			android:textSize="20px" />
 		
 		<TextView android:id="@+id/due"
 			android:layout_width="wrap_content"
 			android:layout_height="wrap_content"
 			android:layout_gravity="center"
 			android:gravity="right"
-			android:textSize="14px" />
-			
-	</TableRow>
-	
-</TableLayout>
+			android:layout_marginLeft="10dp"
+			android:layout_marginRight="10dp"
+			android:minWidth="60dp"
+			android:textSize="12px" />
+
+</LinearLayout>
