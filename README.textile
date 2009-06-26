@@ -1,0 +1,10 @@
+Remember the Droid is an Android application that allows full utilization of
+the Remember the Milk web application.
+
+To Build:
+# Create file at src/com/burgess/rtd/constants/API.java
+# Enter information:
+public class API {
+  public static final String API_KEY = "YOUR_KEY_HERE";
+  public static final String SHARED_SECRET = "YOUR_SHARED_SECRET_HERE";
+ }
