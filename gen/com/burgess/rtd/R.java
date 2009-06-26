@@ -26,12 +26,12 @@ public final class R {
         public static final int authbutton=0x7f070001;
         public static final int authstatus=0x7f070002;
         public static final int cancel=0x7f070007;
-        public static final int checkbox=0x7f070011;
         public static final int due=0x7f070010;
         public static final int error_button=0x7f07000a;
         public static final int error_text=0x7f070008;
         public static final int issue_url=0x7f070009;
         public static final int lastsync=0x7f070005;
+        public static final int lists=0x7f070011;
         public static final int name=0x7f07000f;
         public static final int priority=0x7f07000e;
         public static final int save=0x7f070006;
@@ -49,7 +49,8 @@ public final class R {
         public static final int initial=0x7f030003;
         public static final int initial_row=0x7f030004;
         public static final int list_tasks_row=0x7f030005;
-        public static final int lists_row=0x7f030006;
+        public static final int lists=0x7f030006;
+        public static final int lists_row=0x7f030007;
     }
     public static final class string {
         public static final int app_name=0x7f060001;

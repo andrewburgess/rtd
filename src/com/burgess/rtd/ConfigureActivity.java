@@ -31,6 +31,7 @@ import android.widget.TextView;
 
 import com.burgess.rtd.constants.Program;
 import com.burgess.rtd.controller.ConfigureController;
+import com.burgess.rtd.exceptions.RTDError;
 import com.burgess.rtd.interfaces.view.IConfigureView;
 
 /**
@@ -44,6 +45,8 @@ public class ConfigureActivity extends Activity implements IConfigureView {
 	private Button btnAuthenticate;
 	private TextView tvAuthStatus;
 	private Spinner spinSync;
+	
+	private RTDError error;
 	
 	private OnClickListener authenticateButtonOnClickListener = new OnClickListener() {
 		@Override
@@ -75,6 +78,14 @@ public class ConfigureActivity extends Activity implements IConfigureView {
 		}
 	};
 	
+	private OnClickListener errorButtonOnClickListener = new OnClickListener() {
+		@Override
+		public void onClick(View view) {
+			dismissDialog(Program.Dialog.ERROR);
+			finish();
+		}
+	};
+	
 	@Override
 	protected Dialog onCreateDialog(int id) {
 		Dialog dialog;
@@ -83,6 +94,23 @@ public class ConfigureActivity extends Activity implements IConfigureView {
 				dialog = new ProgressDialog(this);
 				((ProgressDialog)dialog).setMessage("Synchronizing");
 				dialog.setTitle("Hold Your Horses");
+				return dialog;
+			case Program.Dialog.ERROR:
+				dialog = new Dialog(this);
+				dialog.setContentView(R.layout.error_dialog);
+				dialog.setTitle("Error #" + error.errorCode + " occurred");
+				
+				TextView tv = (TextView) dialog.findViewById(R.id.error_text);
+				tv.setText(error.errorMessageId);
+				
+				if (!error.showIssueUrl) {
+					TextView url = (TextView) dialog.findViewById(R.id.issue_url);
+					url.setVisibility(View.INVISIBLE);
+				}
+				
+				Button btn = (Button) dialog.findViewById(R.id.error_button);
+				btn.setOnClickListener(errorButtonOnClickListener);
+				
 				return dialog;
 			default:
 				return null;
@@ -195,5 +223,11 @@ public class ConfigureActivity extends Activity implements IConfigureView {
 	@Override
 	public Context getContext() {
 		return this;
+	}
+	
+	@Override
+	public void createErrorDialog(RTDError error) {
+		this.error = error;
+		showDialog(Program.Dialog.ERROR);
 	}
 }

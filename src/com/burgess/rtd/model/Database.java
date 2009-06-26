@@ -66,6 +66,9 @@ public class Database {
 	}
 	
 	public Database open() throws RTDException {
+		if (db != null && db.isOpen()) {
+			close();
+		}
 		try {
 			dbHelper = new DatabaseHelper(context);
 			db = dbHelper.getWritableDatabase();
@@ -83,7 +86,7 @@ public class Database {
 		if (db.isOpen())
 			return db;
 		else {
-			this.open();
+			open();
 			return db;
 		}
 	}

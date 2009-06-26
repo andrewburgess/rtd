@@ -27,7 +27,6 @@ import android.text.format.DateUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.CheckBox;
 import android.widget.CursorAdapter;
 import android.widget.TextView;
 
@@ -53,16 +52,18 @@ public class ListTasksActivity extends ListActivity implements IListTasksView {
 			String priority = c.getString(4);
 			String due = c.getString(2);
 			
-			CheckBox cb = (CheckBox) view.findViewById(R.id.checkbox);
-			cb.setText(name);
+			TextView tv = (TextView) view.findViewById(R.id.name);
+			tv.setText(name);
 			
-			TextView tv = (TextView) view.findViewById(R.id.priority);
+			tv = (TextView) view.findViewById(R.id.priority);
 			if (priority.equals("1"))
 				tv.setBackgroundColor(Color.parseColor(getString(R.color.high_priority)));
 			else if (priority.equals("2"))
 				tv.setBackgroundColor(Color.parseColor(getString(R.color.medium_priority)));
 			else if (priority.equals("3"))
 				tv.setBackgroundColor(Color.parseColor(getString(R.color.low_priority)));
+			else
+				tv.setBackgroundColor(Color.TRANSPARENT);
 			
 			if (due != null) {
 				Date date = new Date();
@@ -92,6 +93,9 @@ public class ListTasksActivity extends ListActivity implements IListTasksView {
 						tv.setTextColor(Color.rgb(180, 10, 10));
 					}
 				}
+			} else {
+				tv = (TextView) view.findViewById(R.id.due);
+				tv.setText("");
 			}
 		}
 

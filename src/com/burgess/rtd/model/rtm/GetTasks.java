@@ -198,7 +198,10 @@ public class GetTasks extends RTMObject {
 			
 			ht.put("has_due_time", n.getInt("has_due_time") > 0);
 			ht.put("priority", n.getString("priority"));
-			ht.put("postponed", n.getInt("postponed"));
+			if (n.getString("postponed").length() > 0)
+				ht.put("postponed", n.getInt("postponed"));
+			else
+				ht.put("postponed", -1);
 			ht.put("estimate", n.getString("estimate"));
 			
 			tasks.add(ht);

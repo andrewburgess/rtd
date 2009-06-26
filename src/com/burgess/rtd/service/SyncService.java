@@ -27,6 +27,7 @@ import android.util.Log;
 
 import com.burgess.rtd.constants.Program;
 import com.burgess.rtd.constants.RTM;
+import com.burgess.rtd.exceptions.RTDError;
 import com.burgess.rtd.exceptions.RTDException;
 import com.burgess.rtd.model.Database;
 import com.burgess.rtd.model.List;
@@ -89,7 +90,7 @@ public class SyncService extends BroadcastReceiver {
 		synchronize();
 	}
 	
-	public void synchronize() {
+	public RTDError synchronize() {
 		Log.i(Program.LOG, "Last Sync: " + lastSync);
 		
 		try {
@@ -97,7 +98,7 @@ public class SyncService extends BroadcastReceiver {
 			synchronizeTasks();
 			synchronizeLocations();
 		} catch (RTDException e) {
-			return;
+			return e.error;
 		}
 		
 		long time = Calendar.getInstance().getTime().getTime();
@@ -107,6 +108,8 @@ public class SyncService extends BroadcastReceiver {
 		editor.commit();
 		
 		dbHelper.close();
+		
+		return null;
 	}
 	
 	private void synchronizeLists() throws RTDException {
@@ -115,11 +118,8 @@ public class SyncService extends BroadcastReceiver {
 		GetLists lists = new GetLists();
 		Request r = new Request(RTM.Lists.GET_LIST);
 		r.setParameter("auth_token", token);
-		try {
-			lists.parse(rtm.execute(RTM.PATH, r));
-		} catch (RTDException e) {
-			return;
-		}
+		
+		lists.parse(rtm.execute(RTM.PATH, r));
 		
 		ContentValues cv;
 		for (Integer key : lists.lists.keySet()) {
@@ -154,12 +154,7 @@ public class SyncService extends BroadcastReceiver {
 		Request r = new Request(RTM.Tasks.GET_LIST);
 		r.setParameter("auth_token", token);
 
-		try {
-			tasks.parse(rtm.execute(RTM.PATH, r));
-		} catch (RTDException e) {
-			//TODO: Figure out how to show the user the error
-			return;
-		}
+		tasks.parse(rtm.execute(RTM.PATH, r));
 		
 		ContentValues cv;
 		ArrayList<Hashtable<String, Object>> x;
@@ -272,7 +267,10 @@ public class SyncService extends BroadcastReceiver {
 				
 				cv.put(Task.ADDED, Program.DATE_FORMAT.format((Date)x.get(i).get("added")));
 				cv.put(Task.PRIORITY, (String)x.get(i).get("priority"));
-				cv.put(Task.POSTPONED, (Integer)x.get(i).get("postponed"));
+				if ((Integer)x.get(i).get("postponed") == -1)
+					cv.putNull(Task.POSTPONED);
+				else
+					cv.put(Task.POSTPONED, (Integer)x.get(i).get("postponed"));
 				cv.put(Task.ESTIMATE, (String)x.get(i).get("estimate"));
 				cv.put(Task.HAS_DUE_TIME, (Boolean)x.get(i).get("has_due_time"));
 				cv.put(Task.TASK_SERIES_ID, key);

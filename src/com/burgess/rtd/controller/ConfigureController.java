@@ -20,6 +20,7 @@ import android.os.Message;
 import android.util.Log;
 
 import com.burgess.rtd.constants.Program;
+import com.burgess.rtd.exceptions.RTDError;
 import com.burgess.rtd.interfaces.view.IConfigureView;
 import com.burgess.rtd.service.SyncService;
 
@@ -30,14 +31,20 @@ public class ConfigureController {
 	private String token;
 	private String username;
 	private SharedPreferences preferences;
+	private RTDError error;
 	
 	private Handler handler = new Handler() {
 		public void handleMessage(Message msg) {
 			switch (msg.what) {
 				case FINISHED_SYNC:
-					view.setLastSync(preferences.getString(Program.Config.LAST_SYNC, null));
-					view.removeDialog(Program.Dialog.SYNCHRONIZE);
-					break;
+					if (error == null) {
+						view.setLastSync(preferences.getString(Program.Config.LAST_SYNC, null));
+						view.removeDialog(Program.Dialog.SYNCHRONIZE);
+						break;
+					} else {
+						view.createErrorDialog(error);
+						return;
+					}
 			}
 		}
 	};
@@ -46,7 +53,7 @@ public class ConfigureController {
 		@Override
 		public void run() {
 			SyncService service = new SyncService(view.getContext());
-			service.synchronize();
+			error = service.synchronize();
 			
 			Message m = new Message();
 			m.what = FINISHED_SYNC;

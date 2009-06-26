@@ -10,8 +10,10 @@
  */
 package com.burgess.rtd.interfaces.view;
 
-import android.content.SharedPreferences;
 import android.content.Context;
+import android.content.SharedPreferences;
+
+import com.burgess.rtd.exceptions.RTDError;
 
 public interface IConfigureView {
 	public SharedPreferences getPreferences();
@@ -23,4 +25,5 @@ public interface IConfigureView {
 	public Context getContext();
 	public void showDialog(int id);
 	public void removeDialog(int id);
+	public void createErrorDialog(RTDError error);
 }
