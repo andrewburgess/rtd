@@ -240,21 +240,24 @@ public class InitialActivity extends TabActivity implements IInitialView {
 
 	@Override
 	public void setTasksDueToday(Cursor tasks) {
-		ListView view = (ListView) findViewById(R.id.tab1);
+		ListView view = (ListView) findViewById(R.id.today);
+		view.setEmptyView(findViewById(R.id.tab1).findViewById(android.R.id.empty));
 		view.setAdapter(new TaskCursorAdapter(this, tasks, false));
 		view.setOnItemClickListener(taskOnItemClickListener);
 	}
-	
+
 	@Override
 	public void setTasksDueTomorrow(Cursor tasks) {
-		ListView view = (ListView) findViewById(R.id.tab2);
+		ListView view = (ListView) findViewById(R.id.tomorrow);
+		view.setEmptyView(findViewById(R.id.tab2).findViewById(android.R.id.empty));
 		view.setAdapter(new TaskCursorAdapter(this, tasks, false));
 		view.setOnItemClickListener(taskOnItemClickListener);
 	}
 	
 	@Override
 	public void setTasksOverdue(Cursor tasks) {
-		ListView view = (ListView) findViewById(R.id.tab3);
+		ListView view = (ListView) findViewById(R.id.overdue);
+		view.setEmptyView(findViewById(R.id.tab3).findViewById(android.R.id.empty));
 		view.setAdapter(new TaskCursorAdapter(this, tasks, true));
 		view.setOnItemClickListener(taskOnItemClickListener);
 	}

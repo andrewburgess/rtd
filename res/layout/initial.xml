@@ -18,20 +18,61 @@
 			android:layout_width="fill_parent"
 			android:layout_height="fill_parent">
 			
-			<ListView 
-				android:id="@+id/tab1"
+			<LinearLayout android:id="@+id/tab1"
 				android:layout_width="fill_parent"
-				android:layout_height="fill_parent" />
-			<ListView 
-				android:id="@+id/tab2"
+				android:layout_height="fill_parent">
+				
+				<ListView 
+					android:id="@+id/today"
+					android:layout_width="fill_parent"
+					android:layout_height="fill_parent" />
+					
+				<TextView android:id="@android:id/empty"
+					android:layout_width="fill_parent"
+					android:layout_height="wrap_content"
+					android:gravity="center"
+					android:textSize="20px"
+					android:textStyle="italic"
+					android:text="No tasks due today" />
+					
+			</LinearLayout>
+			
+			<LinearLayout android:id="@+id/tab2"
 				android:layout_width="fill_parent"
-				android:layout_height="fill_parent" 
-				android:text="this is another tab" />
-			<ListView 
-				android:id="@+id/tab3"
+				android:layout_height="fill_parent">
+				
+				<ListView 
+					android:id="@+id/tomorrow"
+					android:layout_width="fill_parent"
+					android:layout_height="fill_parent" />
+				<TextView android:id="@android:id/empty"
+					android:layout_width="fill_parent"
+					android:layout_height="wrap_content"
+					android:gravity="center"
+					android:textSize="20px"
+					android:textStyle="italic"
+					android:text="No tasks due tomorrow" />
+					
+			</LinearLayout>
+			
+			<LinearLayout android:id="@+id/tab3"
 				android:layout_width="fill_parent"
-				android:layout_height="fill_parent" 
-				android:text="this is a third tab" />
+				android:layout_height="fill_parent">
+				
+				<ListView 
+					android:id="@+id/overdue"
+					android:layout_width="fill_parent"
+					android:layout_height="fill_parent" />
+					
+				<TextView android:id="@android:id/empty"
+					android:layout_width="fill_parent"
+					android:layout_height="wrap_content"
+					android:gravity="center"
+					android:textSize="20px"
+					android:textStyle="italic"
+					android:text="No overdue tasks. Good job!" />
+					
+			</LinearLayout>
 			
 		</FrameLayout>
 		
