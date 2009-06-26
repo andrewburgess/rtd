@@ -6,9 +6,9 @@ To Build:
 # Create file at src/com/burgess/rtd/constants/API.java
 # Enter information:
 
-<code>
+<pre>
 public class API {
   public static final String API_KEY = "YOUR_KEY_HERE";
   public static final String SHARED_SECRET = "YOUR_SHARED_SECRET_HERE";
 }
-</code>
+</pre>
