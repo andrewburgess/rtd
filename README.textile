@@ -2,9 +2,13 @@ Remember the Droid is an Android application that allows full utilization of
 the Remember the Milk web application.
 
 To Build:
+# Obtain an API key from Remember the Milk
 # Create file at src/com/burgess/rtd/constants/API.java
 # Enter information:
+
+<code>
 public class API {
   public static final String API_KEY = "YOUR_KEY_HERE";
   public static final String SHARED_SECRET = "YOUR_SHARED_SECRET_HERE";
- }
+}
+</code>
