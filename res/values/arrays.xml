@@ -1,10 +1,10 @@
 <resources>
 	<string-array name="sync_types">
+		<item>every 1/2 hour</item>
 		<item>every hour</item>
-		<item>every 6 hours</item>
-		<item>every 12 hours</item>
+		<item>every 2 hours</item>
+		<item>twice a day</item>
 		<item>once a day</item>
-		<item>once a week</item>
 		<item>manually</item>
 	
 </string-array>

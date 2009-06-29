@@ -59,10 +59,6 @@ public class InitialController {
 			Log.d(Program.LOG, "Needs configuring");
 			view.launchConfigureActivity();
 		} else {
-			/*SharedPreferences.Editor edit = preferences.edit();
-			edit.putString(Program.Config.LAST_SYNC, "");
-			edit.commit();*/
-			
 			dbHelper = new Database(view.getContext());
 			try {
 				db = dbHelper.open().getDb();

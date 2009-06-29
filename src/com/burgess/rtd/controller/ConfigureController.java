@@ -10,14 +10,9 @@
  */
 package com.burgess.rtd.controller;
 
-import android.app.AlarmManager;
-import android.app.PendingIntent;
-import android.content.Context;
-import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Handler;
 import android.os.Message;
-import android.util.Log;
 
 import com.burgess.rtd.constants.Program;
 import com.burgess.rtd.exceptions.RTDError;
@@ -92,37 +87,7 @@ public class ConfigureController {
 		editor.putInt(Program.Config.SYNC_TIME, view.getSyncTime());
 		editor.commit();
 		
-		//Set a new sync time, start up a new alarm
-		if (view.getSyncTime() != Program.Config.SyncValues.MANUALLY) {
-			AlarmManager alarm = (AlarmManager)view.getContext().getSystemService(Context.ALARM_SERVICE);
-			long interval;
-			switch (view.getSyncTime()) {
-				case Program.Config.SyncValues.DAY:
-					interval = 24 * 3600 * 1000;
-					break;
-				case Program.Config.SyncValues.HOUR:
-					interval = 3600 * 1000;
-					break;
-				case Program.Config.SyncValues.SIX_HOURS:
-					interval = 6 * 3600 * 1000;
-					break;
-				case Program.Config.SyncValues.TWELVE_HOURS:
-					interval = 12 * 3600 * 1000;
-					break;
-				case Program.Config.SyncValues.WEEK:
-					interval = 7 * 24 * 3600 * 1000;
-					break;
-				default:
-					return;
-			}
-			
-			Log.i(Program.LOG, "Going off every: " + interval / 1000 + " seconds");
-			
-			Intent i = new Intent(view.getContext(), SyncService.class);
-			PendingIntent intent = PendingIntent.getBroadcast(view.getContext(), Program.Request.SYNC, i, PendingIntent.FLAG_CANCEL_CURRENT);
-			alarm.cancel(intent);
-			alarm.setInexactRepeating(AlarmManager.RTC_WAKEUP, System.currentTimeMillis() + interval, interval, intent);
-		}
+		SyncService.updateAlarmManager(view.getContext());
 	}
 	
 	public void synchronize() {

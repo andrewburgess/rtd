@@ -1,16 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:orientation="vertical"
-    android:layout_height="fill_parent" android:layout_width="fill_parent">
-    
-    <TextView
-    	android:layout_height="wrap_content"
-    	android:layout_width="fill_parent"
-    	android:text="Let's Authenticate!"
-    	android:gravity="center"
-    	android:textSize="16px"
-    	android:textStyle="bold" />
-    
+    android:layout_height="fill_parent"
+    android:layout_width="fill_parent">
+
     <WebView android:id="@+id/webview"
     	android:layout_height="fill_parent"
     	android:layout_width="fill_parent"
@@ -26,6 +19,7 @@
     	<Button android:id="@+id/authbutton"
     		android:layout_height="fill_parent"
     		android:layout_width="fill_parent"
+    		android:layout_marginBottom="5dp"
     		android:text="Complete Authorization" />
     	
     </FrameLayout>

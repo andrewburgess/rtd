@@ -27,11 +27,11 @@ public class Program {
 		public static final String SYNC_TIME = "synctime";
 		
 		public static class SyncValues {
-			public static final int HOUR = 0;
-			public static final int SIX_HOURS = 1;
-			public static final int TWELVE_HOURS = 2;
-			public static final int DAY = 3;
-			public static final int WEEK = 4;
+			public static final int HALF_HOUR = 0;
+			public static final int HOUR = 1;
+			public static final int TWO_HOURS = 2;
+			public static final int TWICE_DAILY = 3;
+			public static final int DAILY = 4;
 			public static final int MANUALLY = 5;
 		}
 	}

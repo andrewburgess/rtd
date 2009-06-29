@@ -16,6 +16,8 @@ import java.util.Date;
 import java.util.Hashtable;
 import java.util.TimeZone;
 
+import android.app.AlarmManager;
+import android.app.PendingIntent;
 import android.content.BroadcastReceiver;
 import android.content.ContentValues;
 import android.content.Context;
@@ -23,6 +25,7 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
+import android.os.SystemClock;
 import android.util.Log;
 
 import com.burgess.rtd.constants.Program;
@@ -88,6 +91,8 @@ public class SyncService extends BroadcastReceiver {
 		}
 		
 		synchronize();
+		
+		updateAlarmManager(context);
 	}
 	
 	public RTDError synchronize() {
@@ -381,5 +386,39 @@ public class SyncService extends BroadcastReceiver {
 			cursor.moveToNext();
 		}
 		cursor.close();
+	}
+	
+	public static void updateAlarmManager(Context context) {
+		int syncTime = context.getSharedPreferences(Program.APPLICATION, 0).getInt(Program.Config.SYNC_TIME, Program.Config.SyncValues.MANUALLY);
+		if (syncTime != Program.Config.SyncValues.MANUALLY) {
+			AlarmManager alarm = (AlarmManager)context.getSystemService(Context.ALARM_SERVICE);
+			long interval;
+			switch (syncTime) {
+				case Program.Config.SyncValues.TWICE_DAILY:
+					interval = 90 * 1000;
+					break;
+				case Program.Config.SyncValues.HALF_HOUR:
+					interval = 15 * 1000;
+					break;
+				case Program.Config.SyncValues.HOUR:
+					interval = 30 * 1000;
+					break;
+				case Program.Config.SyncValues.TWO_HOURS:
+					interval = 60 * 1000;
+					break;
+				case Program.Config.SyncValues.DAILY:
+					interval = 180 * 1000;
+					break;
+				default:
+					return;
+			}
+			
+			Log.i(Program.LOG, "Going off every: " + interval / 1000 + " seconds");
+			
+			Intent i = new Intent(context, SyncService.class);
+			PendingIntent intent = PendingIntent.getBroadcast(context, Program.Request.SYNC, i, PendingIntent.FLAG_CANCEL_CURRENT);
+			alarm.cancel(intent);
+			alarm.set(AlarmManager.ELAPSED_REALTIME_WAKEUP, SystemClock.elapsedRealtime() + interval, intent);
+		}
 	}
 }
