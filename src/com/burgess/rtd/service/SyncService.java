@@ -58,6 +58,18 @@ public class SyncService extends BroadcastReceiver {
 	private String lastSync;
 	private Context context;
 	
+	private Thread syncThread = new Thread() {
+		public void run() {
+			synchronize();
+			
+			updateAlarmManager(context);
+		}
+	};
+	
+	public SyncService() {
+		
+	}
+	
 	public SyncService(Context context) {
 		this.context = context;
 		rtm = new RTMModel(context);
@@ -69,6 +81,7 @@ public class SyncService extends BroadcastReceiver {
 			dbHelper.open();
 			db = dbHelper.getDb();
 		} catch (RTDException e) {
+			Log.e(Program.LOG, "Database open error: " + e.getMessage());
 			return;
 		}
 	}
@@ -87,12 +100,11 @@ public class SyncService extends BroadcastReceiver {
 			dbHelper.open();
 			db = dbHelper.getDb();
 		} catch (RTDException e) {
+			Log.e(Program.LOG, "Database open error: " + e.getMessage());
 			return;
 		}
 		
-		synchronize();
-		
-		updateAlarmManager(context);
+		syncThread.start();
 	}
 	
 	public RTDError synchronize() {
@@ -103,6 +115,7 @@ public class SyncService extends BroadcastReceiver {
 			synchronizeTasks();
 			synchronizeLocations();
 		} catch (RTDException e) {
+			Log.e(Program.LOG, "Problem synchronizing: " + e.getMessage());
 			return e.error;
 		}
 		
@@ -125,6 +138,8 @@ public class SyncService extends BroadcastReceiver {
 		r.setParameter("auth_token", token);
 		
 		lists.parse(rtm.execute(RTM.PATH, r));
+		
+		Log.i(Program.LOG, "Found " + lists.lists.size() + " lists");
 		
 		ContentValues cv;
 		for (Integer key : lists.lists.keySet()) {
@@ -160,6 +175,8 @@ public class SyncService extends BroadcastReceiver {
 		r.setParameter("auth_token", token);
 
 		tasks.parse(rtm.execute(RTM.PATH, r));
+		
+		Log.i(Program.LOG, "Found " + tasks.tasks.size() + " tasks");
 		
 		ContentValues cv;
 		ArrayList<Hashtable<String, Object>> x;
@@ -303,6 +320,8 @@ public class SyncService extends BroadcastReceiver {
 		r.setParameter("auth_token", token);
 		locations.parse(rtm.execute(RTM.PATH, r));
 		
+		Log.i(Program.LOG, "Found " + locations.locations.size() + " locations");
+		
 		ContentValues cv;
 		for (Integer key : locations.locations.keySet()) {
 			cv = new ContentValues();
@@ -341,6 +360,7 @@ public class SyncService extends BroadcastReceiver {
 		cursor.moveToFirst();
 		while (!cursor.isAfterLast()) {
 			int id = cursor.getInt(0);
+			Log.d(Program.LOG, "Deleting list " + id);
 			db.delete(List.TABLE, List.ID + "=" + id, null);
 			cursor.moveToNext();
 		}
@@ -359,6 +379,8 @@ public class SyncService extends BroadcastReceiver {
 		cursor.moveToFirst();
 		while (!cursor.isAfterLast()) {
 			taskId = cursor.getInt(0);
+			
+			Log.d(Program.LOG, "Deleting task " + taskId);
 			
 			db.delete(Task.TABLE, Task.TASK_SERIES_ID + "=" + taskId, null);
 			db.delete(TaskSeries.TABLE, TaskSeries.ID + "=" + taskId, null);
@@ -382,6 +404,7 @@ public class SyncService extends BroadcastReceiver {
 		cursor.moveToFirst();
 		while (!cursor.isAfterLast()) {
 			int id = cursor.getInt(0);
+			Log.d(Program.LOG, "Deleting location " + id);
 			db.delete(Location.TABLE, Location.ID + "=" + id, null);
 			cursor.moveToNext();
 		}
@@ -395,29 +418,28 @@ public class SyncService extends BroadcastReceiver {
 			long interval;
 			switch (syncTime) {
 				case Program.Config.SyncValues.TWICE_DAILY:
-					interval = 90 * 1000;
+					interval = 12 * 3600 * 1000;
 					break;
 				case Program.Config.SyncValues.HALF_HOUR:
-					interval = 15 * 1000;
+					interval = 1800 * 1000;
 					break;
 				case Program.Config.SyncValues.HOUR:
-					interval = 30 * 1000;
+					interval = 3600 * 1000;
 					break;
 				case Program.Config.SyncValues.TWO_HOURS:
-					interval = 60 * 1000;
+					interval = 2 * 3600 * 1000;
 					break;
 				case Program.Config.SyncValues.DAILY:
-					interval = 180 * 1000;
+					interval = 24 * 3600 * 1000;
 					break;
 				default:
 					return;
 			}
 			
-			Log.i(Program.LOG, "Going off every: " + interval / 1000 + " seconds");
+			Log.i(Program.LOG, "Synchronizing every " + interval / 1000 + " seconds");
 			
 			Intent i = new Intent(context, SyncService.class);
-			PendingIntent intent = PendingIntent.getBroadcast(context, Program.Request.SYNC, i, PendingIntent.FLAG_CANCEL_CURRENT);
-			alarm.cancel(intent);
+			PendingIntent intent = PendingIntent.getBroadcast(context, Program.Request.SYNC, i, PendingIntent.FLAG_UPDATE_CURRENT);
 			alarm.set(AlarmManager.ELAPSED_REALTIME_WAKEUP, SystemClock.elapsedRealtime() + interval, intent);
 		}
 	}
