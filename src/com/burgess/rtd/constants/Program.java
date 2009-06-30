@@ -66,4 +66,13 @@ public class Program {
 	public static class Request {
 		public static final int SYNC = 0;
 	}
+	
+	public static class DATA {
+		public static final int LIST = 0;
+		public static final int LOCATION = 1;
+		public static final int NOTE = 2;
+		public static final int TAG = 3;
+		public static final int TASK = 4;
+		public static final int TASK_SERIES = 5;
+	}
 }

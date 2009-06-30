@@ -204,7 +204,7 @@ public class ConfigureActivity extends Activity implements IConfigureView {
 		if (lastSync == null) {
 			tv.setText("Last Sync: Never");
 		} else {
-			SimpleDateFormat df = new SimpleDateFormat("MMM. dd, yyyy @ hh:mm a");
+			SimpleDateFormat df = new SimpleDateFormat("MMM. dd, yyyy h:mm a");
 			Date date = new Date();
 			try {
 				date = Program.DATE_FORMAT.parse(lastSync);

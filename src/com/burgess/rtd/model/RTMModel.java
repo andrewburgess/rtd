@@ -48,10 +48,12 @@ public class RTMModel {
 			pause();
 			
 			try {
+				Log.i(Program.LOG, "Request: " + url + request.toString());
 				URL u = new URL(url + request.toString());
 				String data = readData(openConnection(u));
 				lastAccess = Calendar.getInstance().getTimeInMillis();
 				if (data != null) {
+					Log.d(Program.LOG, "Response: " + data);
 					return data;
 				}
 				

@@ -25,7 +25,7 @@ import com.burgess.rtd.exceptions.RTDException;
  */
 public class Database {
 	private static final String DATABASE_NAME = "rtd.db";
-	private static final int DATABASE_VERSION = 4;
+	private static final int DATABASE_VERSION = 6;
 	
 	private static class DatabaseHelper extends SQLiteOpenHelper {
 		public DatabaseHelper(Context context) {
@@ -42,6 +42,7 @@ public class Database {
 			db.execSQL(Task.CREATE);
 			db.execSQL(TaskSeries.CREATE);
 			db.execSQL(TaskTag.CREATE);
+			db.execSQL(Request.CREATE);
 		}
 		
 		@Override
@@ -53,6 +54,7 @@ public class Database {
 			db.execSQL(Task.DESTROY);
 			db.execSQL(TaskSeries.DESTROY);
 			db.execSQL(TaskTag.DESTROY);
+			db.execSQL(Request.DESTROY);
 			onCreate(db);
 		}
 	}

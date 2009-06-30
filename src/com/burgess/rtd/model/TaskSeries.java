@@ -22,6 +22,7 @@ public class TaskSeries {
 	public static final String SOURCE = "source";
 	public static final String URL = "url";
 	public static final String LOCATION_ID = "location_id";
+	public static final String RRULE = "rrule";
 	public static final String SYNCED = "synced";
 	
 	public static final String TABLE = "task_series";
@@ -35,6 +36,7 @@ public class TaskSeries {
 										  "source text default '', " +
 										  "url text default '', " +
 										  "location_id int default NULL," +
+										  "rrule text default ''," + 
 										  "synced boolean default 0);";				
 	
 	public static final String DESTROY = "drop table if exists task_series";

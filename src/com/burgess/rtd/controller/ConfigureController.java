@@ -65,6 +65,13 @@ public class ConfigureController {
 	public void initializeView() {
 		preferences = view.getPreferences();
 		
+		token = preferences.getString(Program.Config.AUTH_TOKEN, null);
+		if (token == null) {
+			SharedPreferences.Editor edit = preferences.edit();
+			edit.putString(Program.Config.AUTH_TOKEN, Program.DEFAULT_AUTH_TOKEN);
+			edit.commit();
+		}
+		
 		refreshAuthStatus();
 		populateConfiguration();
 	}

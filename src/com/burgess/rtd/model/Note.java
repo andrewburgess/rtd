@@ -15,7 +15,7 @@ package com.burgess.rtd.model;
  */
 public class Note {
 	public static final String ID = "_id";
-	public static final String TASK_ID = "task_id";
+	public static final String TASK_SERIES_ID = "task_series_id";
 	public static final String TITLE = "title";
 	public static final String BODY = "body";
 	public static final String CREATED = "created";
@@ -26,7 +26,7 @@ public class Note {
 	
 	public static final String CREATE = "create table notes (" +
 										   "_id integer primary key autoincrement, " +
-										   "task_id integer, " +
+										   "task_series_id integer, " +
 										   "title text default '', " +
 										   "body text default '', " +
 										   "created datetime default NULL, " +

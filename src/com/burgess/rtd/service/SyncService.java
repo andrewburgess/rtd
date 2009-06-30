@@ -168,11 +168,10 @@ public class SyncService extends BroadcastReceiver {
 	
 	@SuppressWarnings("unchecked")
 	private void synchronizeTasks() throws RTDException {
-		markAllTasksUnsynced();
-		
 		GetTasks tasks = new GetTasks();
 		Request r = new Request(RTM.Tasks.GET_LIST);
 		r.setParameter("auth_token", token);
+		r.setParameter("last_sync", lastSync);
 
 		tasks.parse(rtm.execute(RTM.PATH, r));
 		
@@ -219,7 +218,7 @@ public class SyncService extends BroadcastReceiver {
 				cv.put(Note.MODIFIED, Program.DATE_FORMAT.format((Date)x.get(i).get("modified")));
 				cv.put(Note.TITLE, (String)x.get(i).get("title"));
 				cv.put(Note.SYNCED, true);
-				cv.put(Note.TASK_ID, key);
+				cv.put(Note.TASK_SERIES_ID, key);
 				
 				cursor = db.query(Note.TABLE, new String[] {Note.ID}, Note.ID + "=?", 
 						  new String[] {id.toString()}, null, null, null);
@@ -244,7 +243,7 @@ public class SyncService extends BroadcastReceiver {
 					cv.put(Tag.NAME, y.get(i));
 					long tagId = db.insert(Tag.TABLE, null, cv);
 					cv = new ContentValues();
-					cv.put(TaskTag.TASK_ID, key);
+					cv.put(TaskTag.TASK_SERIES_ID, key);
 					cv.put(TaskTag.TAG_ID, tagId);
 					db.insert(TaskTag.TABLE, null, cv);
 					cursor.close();
@@ -252,13 +251,13 @@ public class SyncService extends BroadcastReceiver {
 					int tagId = cursor.getInt(0);
 					cursor.close();
 					cursor = db.query(TaskTag.TABLE, new String[] {TaskTag.ID},
-									  TaskTag.TAG_ID + "=? AND " + TaskTag.TASK_ID + "=?",
+									  TaskTag.TAG_ID + "=? AND " + TaskTag.TASK_SERIES_ID + "=?",
 									  new String[] {tagId + "", key + ""}, null, null, null);
 					cursor.moveToFirst();
 					if (cursor.getCount() == 0) {
 						cv = new ContentValues();
 						cv.put(TaskTag.TAG_ID, tagId);
-						cv.put(TaskTag.TASK_ID, key);
+						cv.put(TaskTag.TASK_SERIES_ID, key);
 						db.insert(TaskTag.TABLE, null, cv);
 					}
 					cursor.close();
@@ -309,7 +308,27 @@ public class SyncService extends BroadcastReceiver {
 			}
 		}
 		
-		deleteAllUnsyncedTasks();
+		deleteTasks(tasks.deletedTasks);
+	}
+	
+	private void deleteTasks(ArrayList<Integer> taskIds) {
+		String whereTS = "";
+		String whereT = "";
+		for (int i = 0; i < taskIds.size(); i++) {
+			whereTS = whereTS + TaskSeries.ID + "=" + taskIds.get(i) + " OR ";
+			whereT = whereT + Task.TASK_SERIES_ID + "=" + taskIds.get(i) + " OR ";
+		}
+		whereTS = whereTS + "0=1";
+		whereT = whereT + "0=1";
+		
+		int rows = db.delete(Task.TABLE, whereT, null);
+		Log.d(Program.LOG, "Deleted " + rows + " tasks");
+		rows = db.delete(TaskSeries.TABLE, whereTS, null);
+		Log.d(Program.LOG, "Deleted " + rows + " task series");
+		rows = db.delete(Note.TABLE, whereT, null);
+		Log.d(Program.LOG, "Deleted " + rows + " notes");
+		rows = db.delete(TaskTag.TABLE, whereT, null);
+		Log.d(Program.LOG, "Deleted " + rows + " task/tags");
 	}
 	
 	private void synchronizeLocations() throws RTDException {
@@ -384,8 +403,8 @@ public class SyncService extends BroadcastReceiver {
 			
 			db.delete(Task.TABLE, Task.TASK_SERIES_ID + "=" + taskId, null);
 			db.delete(TaskSeries.TABLE, TaskSeries.ID + "=" + taskId, null);
-			db.delete(Note.TABLE, Note.TASK_ID + "=" + taskId, null);
-			db.delete(TaskTag.TABLE, TaskTag.TASK_ID + "=" + taskId, null);
+			db.delete(Note.TABLE, Note.TASK_SERIES_ID + "=" + taskId, null);
+			db.delete(TaskTag.TABLE, TaskTag.TASK_SERIES_ID + "=" + taskId, null);
 			
 			cursor.moveToNext();
 		}

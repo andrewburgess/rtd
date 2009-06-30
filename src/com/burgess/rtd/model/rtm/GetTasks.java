@@ -27,9 +27,11 @@ import com.burgess.rtd.exceptions.RTDException;
  */
 public class GetTasks extends RTMObject {
 	public Hashtable<Integer, Hashtable<String, Object>> tasks;
+	public ArrayList<Integer> deletedTasks;
 	
 	public GetTasks() {
 		tasks = new Hashtable<Integer, Hashtable<String, Object>>();
+		deletedTasks = new ArrayList<Integer>();
 	}
 
 	/* (non-Javadoc)
@@ -48,6 +50,10 @@ public class GetTasks extends RTMObject {
 				int id;
 				for (int i = 0; i < lists.length(); i++) {
 					list = lists.getJSONObject(i);
+					if (list.has("deleted")) {
+						processDeletedTasks(list.getJSONObject("deleted").get("taskseries"));
+					}
+					
 					if (list.has("taskseries")) {
 						taskseries = list.get("taskseries");
 						if (taskseries.getClass().equals(JSONArray.class)) {
@@ -85,6 +91,8 @@ public class GetTasks extends RTMObject {
 						}
 					}
 				}
+			} else {
+				throw new RTDException(Program.Error.EXCEPTION, R.string.error_task_sync, true);
 			}
 		} catch (JSONException e) {
 			throw new RTDException(Program.Error.JSON_EXCEPTION, R.string.error_task_sync, true, e);			
@@ -208,6 +216,19 @@ public class GetTasks extends RTMObject {
 		}
 		
 		return tasks;
+	}
+	
+	private void processDeletedTasks(Object json) throws JSONException, ParseException {
+		JSONObject j;
+		if (json.getClass().equals(JSONArray.class)) {
+			for (int i = 0; i < ((JSONArray)json).length(); i++) {
+				j = ((JSONArray)json).getJSONObject(i);
+				deletedTasks.add(j.getInt("id"));
+			}
+		} else {
+			j = (JSONObject) json;
+			deletedTasks.add(j.getInt("id"));
+		}
 	}
 
 }
