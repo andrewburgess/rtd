@@ -16,10 +16,13 @@ import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
 import android.os.Bundle;
+import android.view.ContextMenu;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.ContextMenu.ContextMenuInfo;
 import android.view.View.OnClickListener;
+import android.view.View.OnCreateContextMenuListener;
 import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.CursorAdapter;
@@ -50,6 +53,15 @@ public class ListsActivity extends ListActivity implements IListsView {
 			startActivityForResult(intent, 0);
 		}
 	
+	};
+	
+	private OnCreateContextMenuListener listCreateContextMenuListener = new OnCreateContextMenuListener() {
+
+		@Override
+		public void onCreateContextMenu(ContextMenu menu, View v, ContextMenuInfo menuInfo) {
+			menu.setHeaderTitle("List Options");
+		}
+		
 	};
 	
 	private OnClickListener errorButtonOnClickListener = new OnClickListener() {
@@ -129,8 +141,10 @@ public class ListsActivity extends ListActivity implements IListsView {
 	}
 
 	@Override
-	public void setListsCursor(Cursor cursor) {
-		setListAdapter(new ListsCursorAdapter(this, cursor));		
+	public void setupListView(Cursor cursor) {
+		setListAdapter(new ListsCursorAdapter(this, cursor));
+		registerForContextMenu(getListView());
+		getListView().setOnCreateContextMenuListener(listCreateContextMenuListener);
 	}
 	
 	@Override

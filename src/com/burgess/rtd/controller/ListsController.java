@@ -46,6 +46,6 @@ public class ListsController {
 								null, null, null, null, 
 								List.POSITION + ", " + List.NAME);
 		
-		view.setListsCursor(cursor);
+		view.setupListView(cursor);
 	}
 }

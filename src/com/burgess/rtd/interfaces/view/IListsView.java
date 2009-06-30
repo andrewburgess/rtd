@@ -20,6 +20,6 @@ import android.database.Cursor;
  */
 public interface IListsView {
 	public Context getContext();
-	public void setListsCursor(Cursor cursor);
+	public void setupListView(Cursor cursor);
 	public void createErrorDialog(RTDError error);
 }
