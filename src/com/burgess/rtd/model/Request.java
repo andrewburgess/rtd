@@ -31,6 +31,7 @@ public class Request {
 	public static String TYPE = "type";
 	public static String LOCAL_ID = "local_id";
 	public static String CREATED = "created";
+	public static String SYNCED = "synced";
 	
 	public static String TABLE = "requests";
 	
@@ -39,13 +40,20 @@ public class Request {
 						QUERY + " text, " +
 						TYPE + " integer, " +
 						LOCAL_ID + " integer default null, " +
-						CREATED + " datetime);";
+						CREATED + " datetime, " + 
+						SYNCED + " boolean default 0);";
 	public static String DESTROY = "drop table if exists requests";
+	
+	public String url = null;
 	
 	/**
 	 * Stores the Request parameters in a key/value structure
 	 */
 	private Hashtable<String, Object> parameters;
+	
+	public Request() {
+		
+	}
 	
 	/**
 	 * Constructor which uses the default JSON format
@@ -89,15 +97,19 @@ public class Request {
 	 */
 	@Override
 	public String toString() {
-		String ret = "";
-		
-		for (String key : parameters.keySet()) {
-			ret += key + "=" + parameters.get(key).toString() + "&";
+		if (url == null) {
+			String ret = "";
+			
+			for (String key : parameters.keySet()) {
+				ret += key + "=" + parameters.get(key).toString() + "&";
+			}
+			
+			ret += "api_sig=" + signMethod();
+			
+			return ret.replace(" ", "%20");
+		} else {
+			return url;
 		}
-		
-		ret += "api_sig=" + signMethod();
-		
-		return ret;
 	}
 	
 	/**

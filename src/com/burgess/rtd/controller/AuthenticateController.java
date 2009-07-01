@@ -23,7 +23,7 @@ import com.burgess.rtd.model.RTMModel;
 import com.burgess.rtd.model.Request;
 import com.burgess.rtd.model.rtm.GetFrob;
 import com.burgess.rtd.model.rtm.GetToken;
-import com.burgess.rtd.model.rtm.Timeline;
+import com.burgess.rtd.model.rtm.GetTimeline;
 
 /**
  * Handles Authenticating the application with RTM
@@ -51,6 +51,7 @@ public class AuthenticateController {
 	 */
 	private GetFrob frob;
 	private GetToken token;
+	private GetTimeline timeline;
 	
 	private RTDError error;
 	
@@ -124,7 +125,7 @@ public class AuthenticateController {
 				request = new Request(RTM.Timelines.CREATE);
 				request.setParameter("auth_token", token.token);
 				
-				Timeline timeline = new Timeline();
+				timeline = new GetTimeline();
 				timeline.parse(rtm.execute(RTM.PATH, request));
 			} catch (RTDException e) {
 				error = e.error;
@@ -171,6 +172,7 @@ public class AuthenticateController {
 		
 		SharedPreferences.Editor editor = view.getPreferences().edit();
 		editor.putString(Program.Config.AUTH_TOKEN, token.token);
+		editor.putLong(Program.Config.TIMELINE, timeline.time);
 		editor.putString(Program.Config.FULLNAME, token.fullname);
 		editor.putString(Program.Config.USERNAME, token.username);
 		editor.putLong(Program.Config.ID, token.id);

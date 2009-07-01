@@ -23,6 +23,7 @@ public class RTM {
 	public static class Lists {
 		public static final String GET_LIST = "rtm.lists.getList";
 		public static final String ADD = "rtm.lists.add";
+		public static final String SET_NAME = "rtm.lists.setName";
 	}
 	
 	public static class Locations {

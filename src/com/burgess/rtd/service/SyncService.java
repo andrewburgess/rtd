@@ -58,11 +58,21 @@ public class SyncService extends BroadcastReceiver {
 	private String lastSync;
 	private Context context;
 	
-	private Thread syncThread = new Thread() {
+	private class SyncThread extends Thread {
 		public void run() {
 			synchronize();
 			
 			updateAlarmManager(context);
+		}
+	};
+	
+	private class UpdateThread extends Thread {
+		public void run() {
+			try {
+				updateRTM();
+			} catch (RTDException e) {
+
+			}
 		}
 	};
 	
@@ -104,6 +114,7 @@ public class SyncService extends BroadcastReceiver {
 			return;
 		}
 		
+		SyncThread syncThread = new SyncThread();
 		syncThread.start();
 	}
 	
@@ -111,6 +122,8 @@ public class SyncService extends BroadcastReceiver {
 		Log.i(Program.LOG, "Last Sync: " + lastSync);
 		
 		try {
+			updateRTM();
+			
 			synchronizeLists();
 			synchronizeTasks();
 			synchronizeLocations();
@@ -130,6 +143,49 @@ public class SyncService extends BroadcastReceiver {
 		return null;
 	}
 	
+	public void sendRequests() {
+		UpdateThread updateThread = new UpdateThread();
+		updateThread.start();
+	}
+	
+	private void updateRTM() throws RTDException {
+		Cursor c = db.query(Request.TABLE, new String[] {Request.ID, Request.QUERY,
+														 Request.TYPE, Request.LOCAL_ID},
+							Request.SYNCED + "=0", null, null, null, null);
+		
+		if (!c.moveToFirst()) {
+			c.close();
+			return;
+		}
+		
+		ContentValues cv;
+		while (c.isAfterLast() == false) {
+			switch (c.getInt(2)) {
+				case Program.Data.LIST:
+					GetLists lists = new GetLists();
+					Request r = new Request();
+					r.url = c.getString(1);
+					lists.parse(rtm.execute(RTM.PATH, r));
+					for (Integer key : lists.lists.keySet()) {
+						cv = new ContentValues();
+						cv.put(List.ID, key);
+						db.update(List.TABLE, cv, List.ID + "=" + c.getInt(3), null);
+					}
+					
+					break;
+				default:
+					break;
+			}
+			
+			cv = new ContentValues();
+			cv.put(Request.SYNCED, true);
+			db.update(Request.TABLE, cv, Request.ID + "=" + c.getInt(0), null);
+			
+			c.moveToNext();
+		}
+		c.close();
+	}
+	
 	private void synchronizeLists() throws RTDException {
 		markAllListsUnsynced();
 		
@@ -139,6 +195,12 @@ public class SyncService extends BroadcastReceiver {
 		
 		lists.parse(rtm.execute(RTM.PATH, r));
 		
+		processLists(lists);
+		
+		deleteAllUnsyncedLists();
+	}
+	
+	private void processLists(GetLists lists) {
 		Log.i(Program.LOG, "Found " + lists.lists.size() + " lists");
 		
 		ContentValues cv;
@@ -162,11 +224,8 @@ public class SyncService extends BroadcastReceiver {
 			}
 			cursor.close();
 		}
-		
-		deleteAllUnsyncedLists();
 	}
 	
-	@SuppressWarnings("unchecked")
 	private void synchronizeTasks() throws RTDException {
 		GetTasks tasks = new GetTasks();
 		Request r = new Request(RTM.Tasks.GET_LIST);
@@ -175,6 +234,13 @@ public class SyncService extends BroadcastReceiver {
 
 		tasks.parse(rtm.execute(RTM.PATH, r));
 		
+		processTasks(tasks);
+		
+		deleteTasks(tasks.deletedTasks);
+	}
+	
+	@SuppressWarnings("unchecked")
+	private void processTasks(GetTasks tasks) {
 		Log.i(Program.LOG, "Found " + tasks.tasks.size() + " tasks");
 		
 		ContentValues cv;
@@ -307,28 +373,6 @@ public class SyncService extends BroadcastReceiver {
 				cursor.close();
 			}
 		}
-		
-		deleteTasks(tasks.deletedTasks);
-	}
-	
-	private void deleteTasks(ArrayList<Integer> taskIds) {
-		String whereTS = "";
-		String whereT = "";
-		for (int i = 0; i < taskIds.size(); i++) {
-			whereTS = whereTS + TaskSeries.ID + "=" + taskIds.get(i) + " OR ";
-			whereT = whereT + Task.TASK_SERIES_ID + "=" + taskIds.get(i) + " OR ";
-		}
-		whereTS = whereTS + "0=1";
-		whereT = whereT + "0=1";
-		
-		int rows = db.delete(Task.TABLE, whereT, null);
-		Log.d(Program.LOG, "Deleted " + rows + " tasks");
-		rows = db.delete(TaskSeries.TABLE, whereTS, null);
-		Log.d(Program.LOG, "Deleted " + rows + " task series");
-		rows = db.delete(Note.TABLE, whereT, null);
-		Log.d(Program.LOG, "Deleted " + rows + " notes");
-		rows = db.delete(TaskTag.TABLE, whereT, null);
-		Log.d(Program.LOG, "Deleted " + rows + " task/tags");
 	}
 	
 	private void synchronizeLocations() throws RTDException {
@@ -339,6 +383,12 @@ public class SyncService extends BroadcastReceiver {
 		r.setParameter("auth_token", token);
 		locations.parse(rtm.execute(RTM.PATH, r));
 		
+		processLocations(locations);
+		
+		deleteAllUnsyncedLocations();
+	}
+	
+	private void processLocations(GetLocations locations) {
 		Log.i(Program.LOG, "Found " + locations.locations.size() + " locations");
 		
 		ContentValues cv;
@@ -364,14 +414,32 @@ public class SyncService extends BroadcastReceiver {
 			
 			cursor.close();
 		}
-		
-		deleteAllUnsyncedLocations();
 	}
 	
 	private void markAllListsUnsynced() {
 		ContentValues cv = new ContentValues();
 		cv.put(List.SYNCED, false);
 		db.update(List.TABLE, cv, "1=1", null);
+	}
+	
+	private void deleteTasks(ArrayList<Integer> taskIds) {
+		String whereTS = "";
+		String whereT = "";
+		for (int i = 0; i < taskIds.size(); i++) {
+			whereTS = whereTS + TaskSeries.ID + "=" + taskIds.get(i) + " OR ";
+			whereT = whereT + Task.TASK_SERIES_ID + "=" + taskIds.get(i) + " OR ";
+		}
+		whereTS = whereTS + "0=1";
+		whereT = whereT + "0=1";
+		
+		int rows = db.delete(Task.TABLE, whereT, null);
+		Log.d(Program.LOG, "Deleted " + rows + " tasks");
+		rows = db.delete(TaskSeries.TABLE, whereTS, null);
+		Log.d(Program.LOG, "Deleted " + rows + " task series");
+		rows = db.delete(Note.TABLE, whereT, null);
+		Log.d(Program.LOG, "Deleted " + rows + " notes");
+		rows = db.delete(TaskTag.TABLE, whereT, null);
+		Log.d(Program.LOG, "Deleted " + rows + " task/tags");
 	}
 	
 	private void deleteAllUnsyncedLists() {

@@ -25,7 +25,7 @@ import com.burgess.rtd.exceptions.RTDException;
  */
 public class Database {
 	private static final String DATABASE_NAME = "rtd.db";
-	private static final int DATABASE_VERSION = 6;
+	private static final int DATABASE_VERSION = 7;
 	
 	private static class DatabaseHelper extends SQLiteOpenHelper {
 		public DatabaseHelper(Context context) {

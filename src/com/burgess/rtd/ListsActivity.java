@@ -54,13 +54,13 @@ public class ListsActivity extends ListActivity implements IListsView {
 	private Context context = this;
 	private AlertDialog renameDialog;
 	
+	private long listId;
+	
 	private OnItemClickListener itemClickListener = new OnItemClickListener() {
-
 		@Override
 		public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
 			viewTask(id);
 		}
-	
 	};
 	
 	public void onCreateContextMenu(ContextMenu menu, View view, ContextMenuInfo menuInfo) {
@@ -97,7 +97,8 @@ public class ListsActivity extends ListActivity implements IListsView {
 	private OnClickListener onRenameEnterClickListener = new OnClickListener() {
 		@Override
 		public void onClick(View view) {
-			
+			controller.renameList(listId, ((EditText)renameDialog.findViewById(R.id.edit)).getText().toString());
+			controller.initializeView();
 			
 			renameDialog.dismiss();
 		}
@@ -205,6 +206,8 @@ public class ListsActivity extends ListActivity implements IListsView {
 	}
 	
 	private void renameList(long listId, CharSequence name) {
+		this.listId = listId;
+		
 		AlertDialog.Builder builder;
 		
 		LayoutInflater inflater = (LayoutInflater)getSystemService(LAYOUT_INFLATER_SERVICE);

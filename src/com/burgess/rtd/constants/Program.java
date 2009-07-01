@@ -25,6 +25,7 @@ public class Program {
 		public static final String FULLNAME = "fullname";
 		public static final String ID = "id";
 		public static final String SYNC_TIME = "synctime";
+		public static final String TIMELINE = "timeline";
 		
 		public static class SyncValues {
 			public static final int HALF_HOUR = 0;

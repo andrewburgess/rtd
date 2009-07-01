@@ -39,12 +39,23 @@ public class GetLists extends RTMObject {
 			JSONObject json = new JSONObject(data).getJSONObject("rsp");
 			status = json.getString("stat");
 			if (status.equals("ok")) {
-				JSONArray l = json.getJSONObject("lists").getJSONArray("list");
-				JSONObject list;
-				int id;
-				for (int i = 0; i < l.length(); i++) {
-					list = l.getJSONObject(i);
-					id = list.getInt("id");
+				if (json.has("lists")) {
+					JSONArray l = json.getJSONObject("lists").getJSONArray("list");
+					JSONObject list;
+					int id;
+					for (int i = 0; i < l.length(); i++) {
+						list = l.getJSONObject(i);
+						id = list.getInt("id");
+						lists.put(id, new Hashtable<String,  Object>());
+						lists.get(id).put("name", list.getString("name"));
+						lists.get(id).put("position", list.getInt("position"));
+						lists.get(id).put("archived", list.getInt("archived") > 0);
+						lists.get(id).put("deleted", list.getInt("deleted") > 0);
+						lists.get(id).put("smart", list.getInt("smart") > 0);
+					}
+				} else if (json.has("list")) {
+					JSONObject list = json.getJSONObject("list");
+					int id = list.getInt("id");
 					lists.put(id, new Hashtable<String,  Object>());
 					lists.get(id).put("name", list.getString("name"));
 					lists.get(id).put("position", list.getInt("position"));
