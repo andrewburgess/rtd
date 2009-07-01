@@ -36,10 +36,10 @@ public class GetFrob extends RTMObject {
 			if (status.equals("ok")) {
 				frob = json.getString("frob");
 			} else {
-				throw new RTDException(Program.Error.EXCEPTION, R.string.error_default, true);
+				throw new RTDException(Program.Error.RTM_ERROR, R.string.error_rtm, true, false);
 			}
 		} catch (JSONException e) {
-			throw new RTDException(Program.Error.JSON_EXCEPTION, R.string.error_auth_getFrob, true);
+			throw new RTDException(Program.Error.JSON_EXCEPTION, R.string.error_auth_getFrob, true, false);
 		}
 	}
 

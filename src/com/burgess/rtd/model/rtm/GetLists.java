@@ -52,9 +52,11 @@ public class GetLists extends RTMObject {
 					lists.get(id).put("deleted", list.getInt("deleted") > 0);
 					lists.get(id).put("smart", list.getInt("smart") > 0);
 				}
+			} else {
+				throw new RTDException(Program.Error.RTM_ERROR, R.string.error_rtm, true, false);
 			}
 		} catch (JSONException e) {
-			throw new RTDException(Program.Error.JSON_EXCEPTION, R.string.error_list_sync, true, e);
+			throw new RTDException(Program.Error.JSON_EXCEPTION, R.string.error_list_sync, true, false, e);
 		}
 	}
 }

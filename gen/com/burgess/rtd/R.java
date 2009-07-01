@@ -27,6 +27,8 @@ public final class R {
         public static final int authstatus=0x7f070002;
         public static final int cancel=0x7f070007;
         public static final int due=0x7f070013;
+        public static final int edit=0x7f070014;
+        public static final int enter=0x7f070015;
         public static final int error_button=0x7f07000a;
         public static final int error_text=0x7f070008;
         public static final int issue_url=0x7f070009;
@@ -52,10 +54,11 @@ public final class R {
         public static final int initial_row=0x7f030004;
         public static final int list_tasks_row=0x7f030005;
         public static final int lists_row=0x7f030006;
+        public static final int rename_list=0x7f030007;
     }
     public static final class string {
         public static final int app_name=0x7f060001;
-        public static final int configure_not_synced=0x7f060011;
+        public static final int configure_not_synced=0x7f060012;
         public static final int dialog_get_auth_message=0x7f060005;
         public static final int dialog_get_auth_title=0x7f060004;
         public static final int dialog_get_frob_message=0x7f060003;
@@ -67,11 +70,12 @@ public final class R {
         public static final int error_list_sync=0x7f06000a;
         public static final int error_network_unavailable=0x7f06000b;
         public static final int error_parse_default=0x7f06000c;
-        public static final int error_sql=0x7f06000d;
-        public static final int error_task_sync=0x7f06000e;
-        public static final int error_timeline_create=0x7f06000f;
+        public static final int error_rtm=0x7f06000d;
+        public static final int error_sql=0x7f06000e;
+        public static final int error_task_sync=0x7f06000f;
+        public static final int error_timeline_create=0x7f060010;
         public static final int hello=0x7f060000;
-        public static final int issue_url=0x7f060010;
-        public static final int sync_prompt=0x7f060012;
+        public static final int issue_url=0x7f060011;
+        public static final int sync_prompt=0x7f060013;
     }
 }

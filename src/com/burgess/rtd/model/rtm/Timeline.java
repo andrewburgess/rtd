@@ -18,10 +18,10 @@ public class Timeline extends RTMObject {
 			if (status.equals("ok")) {
 				time = json.getLong("timeline");
 			} else {
-				throw new RTDException(Program.Error.EXCEPTION, R.string.error_default, true);
+				throw new RTDException(Program.Error.RTM_ERROR, R.string.error_rtm, true, false);
 			}
 		} catch (JSONException e) {
-			throw new RTDException(Program.Error.JSON_EXCEPTION, R.string.error_timeline_create, true);
+			throw new RTDException(Program.Error.JSON_EXCEPTION, R.string.error_timeline_create, true, false);
 		}
 	}
 

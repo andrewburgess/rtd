@@ -45,6 +45,7 @@ public class Program {
 		public static final int GET_AUTH = 2;
 		public static final int ERROR = 3;
 		public static final int SYNCHRONIZE = 4;
+		public static final int RENAME_LIST = 5;
 	}
 	
 	public static class Error {
@@ -56,6 +57,7 @@ public class Program {
 		public static final int SQL_EXCEPTION = 6;
 		public static final int JSON_EXCEPTION = 7;
 		public static final int PARSE_EXCEPTION = 8;
+		public static final int RTM_ERROR = 9;
 	}
 	
 	public static class Menu {
@@ -67,7 +69,7 @@ public class Program {
 		public static final int SYNC = 0;
 	}
 	
-	public static class DATA {
+	public static class Data {
 		public static final int LIST = 0;
 		public static final int LOCATION = 1;
 		public static final int NOTE = 2;

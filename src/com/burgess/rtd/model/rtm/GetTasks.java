@@ -92,12 +92,12 @@ public class GetTasks extends RTMObject {
 					}
 				}
 			} else {
-				throw new RTDException(Program.Error.EXCEPTION, R.string.error_task_sync, true);
+				throw new RTDException(Program.Error.RTM_ERROR, R.string.error_rtm, true, false);
 			}
 		} catch (JSONException e) {
-			throw new RTDException(Program.Error.JSON_EXCEPTION, R.string.error_task_sync, true, e);			
+			throw new RTDException(Program.Error.JSON_EXCEPTION, R.string.error_task_sync, true, false, e);			
 		} catch (ParseException e) {
-			throw new RTDException(Program.Error.PARSE_EXCEPTION, R.string.error_date_parse, true, e);
+			throw new RTDException(Program.Error.PARSE_EXCEPTION, R.string.error_date_parse, true, false, e);
 		}
 	}
 	

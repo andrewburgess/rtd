@@ -40,10 +40,10 @@ public class GetToken extends RTMObject {
 				fullname = user.getString("fullname");
 				id = user.getLong("id");
 			} else {
-				throw new RTDException(Program.Error.EXCEPTION, R.string.error_default, true);
+				throw new RTDException(Program.Error.RTM_ERROR, R.string.error_rtm, true, false);
 			}
 		} catch (JSONException e) {
-			throw new RTDException(Program.Error.JSON_EXCEPTION, R.string.error_auth_getToken, true);
+			throw new RTDException(Program.Error.JSON_EXCEPTION, R.string.error_auth_getToken, true, false, e);
 		}
 	}
 	

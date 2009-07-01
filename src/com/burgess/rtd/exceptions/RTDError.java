@@ -18,10 +18,12 @@ public class RTDError {
 	public int errorCode;
 	public int errorMessageId;
 	public boolean showIssueUrl;
+	public boolean isFatal;
 	
-	public RTDError(int errorCode, int errorMessageId, boolean showIssueUrl) {
+	public RTDError(int errorCode, int errorMessageId, boolean showIssueUrl, boolean isFatal) {
 		this.errorCode = errorCode;
 		this.errorMessageId = errorMessageId;
 		this.showIssueUrl = showIssueUrl;
+		this.isFatal = isFatal;
 	}
 }

@@ -75,6 +75,10 @@ public class InitialController {
 		}
 	}
 	
+	public void stop() {
+		dbHelper.close();
+	}
+	
 	private void buildDatabase() {
 		dbHelper = new Database(view.getContext());
 		try {
@@ -91,7 +95,7 @@ public class InitialController {
 		try {
 			cal.setTime(df.parse(df.format(Calendar.getInstance().getTime())));
 		} catch (ParseException e) {
-			RTDError error = new RTDError(Program.Error.PARSE_EXCEPTION, R.string.error_parse_default, true);
+			RTDError error = new RTDError(Program.Error.PARSE_EXCEPTION, R.string.error_parse_default, true, false);
 			view.createErrorDialog(error);
 		}
 		
@@ -120,7 +124,7 @@ public class InitialController {
 		try {
 			cal.setTime(df.parse(df.format(Calendar.getInstance().getTime())));
 		} catch (ParseException e) {
-			RTDError error = new RTDError(Program.Error.PARSE_EXCEPTION, R.string.error_parse_default, true);
+			RTDError error = new RTDError(Program.Error.PARSE_EXCEPTION, R.string.error_parse_default, true, false);
 			view.createErrorDialog(error);
 		}
 		
@@ -150,7 +154,7 @@ public class InitialController {
 		try {
 			cal.setTime(df.parse(df.format(Calendar.getInstance().getTime())));
 		} catch (ParseException e) {
-			RTDError error = new RTDError(Program.Error.PARSE_EXCEPTION, R.string.error_parse_default, true);
+			RTDError error = new RTDError(Program.Error.PARSE_EXCEPTION, R.string.error_parse_default, true, false);
 			view.createErrorDialog(error);
 		}
 		

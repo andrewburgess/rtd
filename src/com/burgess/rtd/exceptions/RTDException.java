@@ -18,27 +18,27 @@ public class RTDException extends Throwable {
 	private static final long serialVersionUID = 1L;
 	public RTDError error;
 	
-	public RTDException(int errorCode, int errorMessageId, boolean showIssueUrl) {
-		this.error = new RTDError(errorCode, errorMessageId, showIssueUrl);
+	public RTDException(int errorCode, int errorMessageId, boolean showIssueUrl, boolean isFatal) {
+		this.error = new RTDError(errorCode, errorMessageId, showIssueUrl, isFatal);
 	}
 
-	public RTDException(int errorCode, int errorMessageId, boolean showIssueUrl, String detailMessage) {
+	public RTDException(int errorCode, int errorMessageId, boolean showIssueUrl, boolean isFatal, String detailMessage) {
 		super(detailMessage);
-		this.error = new RTDError(errorCode, errorMessageId, showIssueUrl);
+		this.error = new RTDError(errorCode, errorMessageId, showIssueUrl, isFatal);
 	}
 
-	public RTDException(int errorCode, int errorMessageId, boolean showIssueUrl, Throwable throwable) {
+	public RTDException(int errorCode, int errorMessageId, boolean showIssueUrl, boolean isFatal, Throwable throwable) {
 		super(throwable);
-		this.error = new RTDError(errorCode, errorMessageId, showIssueUrl);
+		this.error = new RTDError(errorCode, errorMessageId, showIssueUrl, isFatal);
 	}
 
 	/**
 	 * @param detailMessage
 	 * @param throwable
 	 */
-	public RTDException(int errorCode, int errorMessageId, boolean showIssueUrl, String detailMessage, Throwable throwable) {
+	public RTDException(int errorCode, int errorMessageId, boolean showIssueUrl, boolean isFatal, String detailMessage, Throwable throwable) {
 		super(detailMessage, throwable);
-		this.error = new RTDError(errorCode, errorMessageId, showIssueUrl);
+		this.error = new RTDError(errorCode, errorMessageId, showIssueUrl, isFatal);
 	}
 
 }

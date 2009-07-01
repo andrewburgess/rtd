@@ -56,10 +56,10 @@ public class GetLocations extends RTMObject {
 					locations.put(loc.getInt("id"), l);
 				}
 			} else {
-				throw new RTDException(Program.Error.EXCEPTION, R.string.error_default, true);
+				throw new RTDException(Program.Error.RTM_ERROR, R.string.error_rtm, true, false);
 			}
 		} catch (JSONException e) {
-			throw new RTDException(Program.Error.JSON_EXCEPTION, R.string.error_parse_default, true, e);
+			throw new RTDException(Program.Error.JSON_EXCEPTION, R.string.error_parse_default, true, false, e);
 		}
 	}
 

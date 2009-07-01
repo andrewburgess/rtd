@@ -186,6 +186,13 @@ public class InitialActivity extends TabActivity implements IInitialView {
     }
     
     @Override
+    public void onStop() {
+    	super.onStop();
+    	
+    	controller.stop();
+    }
+    
+    @Override
 	public void onActivityResult(int requestCode, int resultCode, Intent data) {
 		switch (requestCode) {
 			case CONFIGURE_ACTIVITY:

@@ -23,12 +23,13 @@ import com.burgess.rtd.model.List;
  */
 public class ListsController {
 	private IListsView view;
+	private Database dbHelper;
 	private SQLiteDatabase db;
 	
 	public ListsController(IListsView view) {
 		this.view = view;
 		
-		Database dbHelper = new Database(view.getContext());
+		dbHelper = new Database(view.getContext());
 		try {
 			dbHelper.open();
 			db = dbHelper.getDb();
@@ -37,13 +38,18 @@ public class ListsController {
 		}
 	}
 	
+	public void stop() {
+		dbHelper.close();
+	}
+	
 	public void initializeView() {
 		Cursor cursor = db.query(List.TABLE, 
 								new String[] {
 									List.ID, 
 									List.NAME
 								}, 
-								null, null, null, null, 
+								List.ARCHIVED + "=0 AND " +
+								List.DELETED + "=0", null, null, null, 
 								List.POSITION + ", " + List.NAME);
 		
 		view.setupListView(cursor);

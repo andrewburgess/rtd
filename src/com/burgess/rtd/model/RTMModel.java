@@ -60,11 +60,11 @@ public class RTMModel {
 				return null;
 			} catch (MalformedURLException e) {
 				Log.e(Program.LOG, "Problem forming URL: " + request + "\n" + e.getMessage());
-				throw new RTDException(Program.Error.MALFORMED_URL, R.string.error_default, true, e);
+				throw new RTDException(Program.Error.MALFORMED_URL, R.string.error_default, true, false, e);
 			}
 		} else {
 			Log.e(Program.LOG, "Network is not available");
-			throw new RTDException(Program.Error.NETWORK_UNAVAILABLE_EXCEPTION, R.string.error_network_unavailable, false);
+			throw new RTDException(Program.Error.NETWORK_UNAVAILABLE_EXCEPTION, R.string.error_network_unavailable, false, false);
 		}
 	}
 	
@@ -88,14 +88,14 @@ public class RTMModel {
 				return (InputStream) connection.getInputStream();
 			} else {
 				Log.e(Program.LOG, "HTTP Error: " + response);
-				throw new RTDException(Program.Error.HTTP_EXCEPTION, R.string.error_default, true);
+				throw new RTDException(Program.Error.HTTP_EXCEPTION, R.string.error_default, true, false);
 			}
 		} catch (MalformedURLException e) {
 			Log.e(Program.LOG, "Problem forming URL: " + request + "\n" + e.getMessage());
-			throw new RTDException(Program.Error.MALFORMED_URL, R.string.error_default, true, e);
+			throw new RTDException(Program.Error.MALFORMED_URL, R.string.error_default, true, false, e);
 		} catch (IOException e) {
 			Log.e(Program.LOG, "Problem opening the connection: " + e.getMessage());
-			throw new RTDException(Program.Error.IO_EXCEPTION, R.string.error_default, true, e);
+			throw new RTDException(Program.Error.IO_EXCEPTION, R.string.error_default, true, false, e);
 		}
 	}
 	
@@ -113,7 +113,7 @@ public class RTMModel {
 			in.close();
 		} catch (IOException e) {
 			Log.e(Program.LOG, e.getMessage());
-			throw new RTDException(Program.Error.IO_EXCEPTION, R.string.error_default, true, e);
+			throw new RTDException(Program.Error.IO_EXCEPTION, R.string.error_default, true, false, e);
 		}
 		
 		return data;

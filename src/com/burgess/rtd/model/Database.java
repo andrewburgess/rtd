@@ -76,7 +76,7 @@ public class Database {
 			db = dbHelper.getWritableDatabase();
 			return this;
 		} catch (SQLException e) {
-			throw new RTDException(Program.Error.SQL_EXCEPTION, R.string.error_sql, true, e);
+			throw new RTDException(Program.Error.SQL_EXCEPTION, R.string.error_sql, true, true, e);
 		}
 	}
 	
