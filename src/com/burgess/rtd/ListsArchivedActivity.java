@@ -49,6 +49,7 @@ public class ListsArchivedActivity extends ListsActivity {
     		case Program.Menu.VIEW_ARCHIVED:
     			Intent intent = new Intent(context, ListsActivity.class);
     			startActivity(intent);
+    			finish();
     			return true;
     		default:
     			return false;
