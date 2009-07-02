@@ -14,6 +14,7 @@ import android.app.AlertDialog;
 import android.app.Dialog;
 import android.app.ListActivity;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.database.Cursor;
 import android.os.Bundle;
@@ -72,7 +73,7 @@ public class ListsActivity extends ListActivity implements IListsView {
 		menu.add(MENU, VIEW_TASKS, VIEW_TASKS, "View Tasks");
 		menu.add(MENU, RENAME_LIST, RENAME_LIST, "Rename List");
 		menu.add(MENU, DELETE_LIST, DELETE_LIST, "Delete List");
-		menu.add(MENU, SET_AS_DEFAULT, SET_AS_DEFAULT, "Set As Default");
+		//menu.add(MENU, SET_AS_DEFAULT, SET_AS_DEFAULT, "Set As Default");
 		menu.add(MENU, ARCHIVE, ARCHIVE, "Archive");
 	}
 	
@@ -90,11 +91,33 @@ public class ListsActivity extends ListActivity implements IListsView {
 				controller.initializeView();
 				Toast.makeText(this, "List archived", Toast.LENGTH_SHORT).show();
 				break;
+			case DELETE_LIST:
+				deleteList(info.id);
+				break;
 		}
 		
 		return true;
 	}
-	
+
+	private void deleteList(final long listId) {
+		AlertDialog.Builder builder = new AlertDialog.Builder(this);
+		builder.setMessage("Are you sure you want to delete this list?").setCancelable(false)
+			   .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+				   								public void onClick(DialogInterface dialog, int id) {
+				   									controller.deleteList(listId);
+				   									controller.initializeView();
+				   									Toast.makeText(context, "List deleted", Toast.LENGTH_SHORT).show();
+				   								}
+			   							 })
+			   .setNegativeButton("No", new DialogInterface.OnClickListener() {
+				   								public void onClick(DialogInterface dialog, int id) {
+				   									dialog.cancel();
+				   								}
+			   							 });
+		AlertDialog alert = builder.create();
+		alert.show();
+	}
+
 	protected OnClickListener errorButtonOnClickListener = new OnClickListener() {
 		@Override
 		public void onClick(View view) {

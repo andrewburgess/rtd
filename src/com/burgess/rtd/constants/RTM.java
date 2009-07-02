@@ -26,6 +26,7 @@ public class RTM {
 		public static final String SET_NAME = "rtm.lists.setName";
 		public static final String ARCHIVE = "rtm.lists.archive";
 		public static final String UNARCHIVE = "rtm.lists.unarchive";
+		public static final String DELETE = "rtm.lists.delete";
 	}
 	
 	public static class Locations {

@@ -22,6 +22,7 @@ import com.burgess.rtd.interfaces.view.IListsView;
 import com.burgess.rtd.model.Database;
 import com.burgess.rtd.model.List;
 import com.burgess.rtd.model.Request;
+import com.burgess.rtd.model.TaskSeries;
 import com.burgess.rtd.service.SyncService;
 
 /**
@@ -30,7 +31,6 @@ import com.burgess.rtd.service.SyncService;
 public class ListsController {
 	private IListsView view;
 	private Database dbHelper;
-	private SQLiteDatabase db;
 	private String token;
 	private long timeline;
 	
@@ -40,7 +40,6 @@ public class ListsController {
 		dbHelper = new Database(view.getContext());
 		try {
 			dbHelper.open();
-			db = dbHelper.getDb();
 		} catch (RTDException e) {
 			view.createErrorDialog(e.error);
 		}
@@ -59,48 +58,96 @@ public class ListsController {
 	}
 	
 	private Cursor getLists(boolean viewArchived) {
-		return db.query(List.TABLE, 
-				new String[] {
-					List.ID, 
-					List.NAME
-				}, 
-				List.ARCHIVED + "=" + (viewArchived ? "1" : "0") + " AND " +
-				List.DELETED + "=0", null, null, null, 
-				List.POSITION + ", " + List.NAME);
+		try {
+			return dbHelper.getDb().query(List.TABLE, 
+					new String[] {
+						List.ID, 
+						List.NAME
+					}, 
+					List.ARCHIVED + "=" + (viewArchived ? "1" : "0") + " AND " +
+					List.DELETED + "=0", null, null, null, 
+					List.POSITION + ", " + List.NAME);
+		} catch (RTDException e) {
+			view.createErrorDialog(e.error);
+			return null;
+		}
 	}
 
 	public void renameList(long listId, String name) {
-		ContentValues cv = new ContentValues();
-		cv.put(List.NAME, name);
-		db.update(List.TABLE, cv, List.ID + "=" + listId, null);
-		
-		Request r = new Request(RTM.Lists.SET_NAME);
-		r.setParameter("auth_token", token);
-		r.setParameter("timeline", timeline);
-		r.setParameter("list_id", listId);
-		r.setParameter("name", name);
-		
-		r.save(db, listId, Program.Data.LIST);
-		
-		SyncService s = new SyncService(view.getContext());
-		
-		s.sendRequests();
+		try {
+			ContentValues cv = new ContentValues();
+			cv.put(List.NAME, name);
+			dbHelper.getDb().update(List.TABLE, cv, List.ID + "=" + listId, null);
+			
+			Request r = new Request(RTM.Lists.SET_NAME);
+			r.setParameter("auth_token", token);
+			r.setParameter("timeline", timeline);
+			r.setParameter("list_id", listId);
+			r.setParameter("name", name);
+			
+			r.save(dbHelper.getDb(), listId, Program.Data.LIST);
+			
+			SyncService s = new SyncService(view.getContext());
+			
+			s.sendRequests();
+		} catch (RTDException e) {
+			view.createErrorDialog(e.error);
+		}
+	}
+	
+	public void deleteList(long listId) {
+		try {
+			ContentValues cv = new ContentValues();
+			cv.put(List.DELETED, true);
+			dbHelper.getDb().update(List.TABLE, cv, List.ID + "=" + listId, null);
+			
+			moveTasks(listId);
+			
+			Request r = new Request(RTM.Lists.DELETE);
+			r.setParameter("auth_token", token);
+			r.setParameter("timeline", timeline);
+			r.setParameter("list_id", listId);
+			
+			r.save(dbHelper.getDb(), listId, Program.Data.LIST);
+			
+			SyncService s = new SyncService(view.getContext());
+			
+			s.sendRequests();
+		} catch (RTDException e) {
+			view.createErrorDialog(e.error);
+		}
 	}
 	
 	public void setListArchived(long listId, boolean archive) {
+		try {
+			ContentValues cv = new ContentValues();
+			cv.put(List.ARCHIVED, archive);
+			dbHelper.getDb().update(List.TABLE, cv, List.ID + "=" + listId, null);
+			
+			Request r = new Request(archive ? RTM.Lists.ARCHIVE : RTM.Lists.UNARCHIVE);
+			r.setParameter("auth_token", token);
+			r.setParameter("timeline", timeline);
+			r.setParameter("list_id", listId);
+			
+			r.save(dbHelper.getDb(), listId, Program.Data.LIST);
+			
+			SyncService s = new SyncService(view.getContext());
+			
+			s.sendRequests();
+		} catch (RTDException e) {
+			view.createErrorDialog(e.error);
+		}
+	}
+	
+	private void moveTasks(long listId) throws RTDException {
+		Cursor c = dbHelper.getDb().query(List.TABLE, new String[] {List.ID}, List.NAME + "=?", new String[] {"Inbox"}, null, null, null);
+		c.moveToFirst();
+		
+		int id = c.getInt(0);
+		c.close();
+		
 		ContentValues cv = new ContentValues();
-		cv.put(List.ARCHIVED, archive);
-		db.update(List.TABLE, cv, List.ID + "=" + listId, null);
-		
-		Request r = new Request(archive ? RTM.Lists.ARCHIVE : RTM.Lists.UNARCHIVE);
-		r.setParameter("auth_token", token);
-		r.setParameter("timeline", timeline);
-		r.setParameter("list_id", listId);
-		
-		r.save(db, listId, Program.Data.LIST);
-		
-		SyncService s = new SyncService(view.getContext());
-		
-		s.sendRequests();
+		cv.put(TaskSeries.LIST_ID, id);
+		dbHelper.getDb().update(TaskSeries.TABLE, cv, TaskSeries.LIST_ID + "=" + listId, null);
 	}
 }

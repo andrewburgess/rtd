@@ -88,7 +88,7 @@ public class Database {
 		if (db.isOpen())
 			return db;
 		else {
-			open();
+			this.open();
 			return db;
 		}
 	}
