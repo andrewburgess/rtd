@@ -17,7 +17,6 @@ import java.util.GregorianCalendar;
 import java.util.TimeZone;
 
 import android.content.SharedPreferences;
-import android.database.sqlite.SQLiteDatabase;
 import android.util.Log;
 
 import com.burgess.rtd.R;
@@ -33,7 +32,6 @@ public class InitialController {
 	private IInitialView view;
 	private SharedPreferences preferences;
 	private Database dbHelper;
-	private SQLiteDatabase db;
 	
 	/**
 	 * Constructor for InitialController. Saves a view, and works from there
@@ -61,7 +59,7 @@ public class InitialController {
 		} else {
 			dbHelper = new Database(view.getContext());
 			try {
-				db = dbHelper.open().getDb();
+				dbHelper.open();
 			} catch (RTDException e) {
 				view.createErrorDialog(e.error);
 				return;
@@ -70,8 +68,6 @@ public class InitialController {
 			getTasksDueToday();
 			getTasksDueTomorrow();
 			getTasksOverdue();
-			
-			dbHelper.close();
 		}
 	}
 	
@@ -86,7 +82,6 @@ public class InitialController {
 		} catch (RTDException e) {
 			view.createErrorDialog(e.error);
 		}
-		dbHelper.close();
 	}
 	
 	private void getTasksDueToday() {
@@ -104,8 +99,8 @@ public class InitialController {
 		String dstart = Program.DATE_FORMAT.format(cal.getTime());
 		cal.add(Calendar.DATE, 1);
 		String dend = Program.DATE_FORMAT.format(cal.getTime());
-		
-		view.setTasksDueToday(db.query(TaskSeries.TABLE + ", " + Task.TABLE,
+		try {
+			view.setTasksDueToday(dbHelper.getDb().query(TaskSeries.TABLE + ", " + Task.TABLE,
 									   new String[] {
 														TaskSeries.TABLE + "." + TaskSeries.ID, 
 														TaskSeries.NAME, Task.DUE_DATE,
@@ -116,6 +111,9 @@ public class InitialController {
 									   Task.COMPLETED + " is NULL AND " + 
 									   TaskSeries.TABLE + "." + TaskSeries.ID + "=" + Task.TABLE + "." + Task.TASK_SERIES_ID,
 									   new String[] {dstart, dend}, null, null, Task.DUE_DATE + " ASC"));
+		} catch (RTDException e) {
+			view.createErrorDialog(e.error);
+		}
 	}
 	
 	private void getTasksDueTomorrow() {
@@ -135,7 +133,8 @@ public class InitialController {
 		cal.add(Calendar.DATE, 1);
 		String dend = Program.DATE_FORMAT.format(cal.getTime());
 		
-		view.setTasksDueTomorrow(db.query(TaskSeries.TABLE + ", " + Task.TABLE,
+		try {
+			view.setTasksDueTomorrow(dbHelper.getDb().query(TaskSeries.TABLE + ", " + Task.TABLE,
 										  new String[] {
 															TaskSeries.TABLE + "." + TaskSeries.ID, 
 															TaskSeries.NAME, Task.DUE_DATE,
@@ -146,6 +145,9 @@ public class InitialController {
 									   Task.COMPLETED + " is NULL AND " + 
 									   TaskSeries.TABLE + "." + TaskSeries.ID + "=" + Task.TABLE + "." + Task.TASK_SERIES_ID,
 									   new String[] {dstart, dend}, null, null, Task.DUE_DATE + " ASC"));
+		} catch (RTDException e) {
+			view.createErrorDialog(e.error);
+		}
 	}
 	
 	private void getTasksOverdue() {
@@ -162,7 +164,8 @@ public class InitialController {
 		
 		String dend = Program.DATE_FORMAT.format(cal.getTime());
 		
-		view.setTasksOverdue(db.query(TaskSeries.TABLE + ", " + Task.TABLE,
+		try {
+			view.setTasksOverdue(dbHelper.getDb().query(TaskSeries.TABLE + ", " + Task.TABLE,
 									  new String[] {
 												   		TaskSeries.TABLE + "." + TaskSeries.ID, 
 												   		TaskSeries.NAME, Task.DUE_DATE,
@@ -172,5 +175,8 @@ public class InitialController {
 									   Task.DUE_DATE + "<? AND " + Task.COMPLETED + " is NULL AND " + 
 									   TaskSeries.TABLE + "." + TaskSeries.ID + "=" + Task.TABLE + "." + Task.TASK_SERIES_ID,
 									   new String[] {dend}, null, null, Task.DUE_DATE + " ASC"));
+		} catch (RTDException e) {
+			view.createErrorDialog(e.error);
+		}
 	}
 }

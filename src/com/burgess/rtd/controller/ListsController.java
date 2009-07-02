@@ -13,7 +13,6 @@ package com.burgess.rtd.controller;
 import android.content.ContentValues;
 import android.content.SharedPreferences;
 import android.database.Cursor;
-import android.database.sqlite.SQLiteDatabase;
 
 import com.burgess.rtd.constants.Program;
 import com.burgess.rtd.constants.RTM;

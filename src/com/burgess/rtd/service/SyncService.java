@@ -58,6 +58,8 @@ public class SyncService extends BroadcastReceiver {
 	private String lastSync;
 	private Context context;
 	
+	private boolean full = false;
+	
 	private class SyncThread extends Thread {
 		public void run() {
 			synchronize();
@@ -230,8 +232,13 @@ public class SyncService extends BroadcastReceiver {
 		GetTasks tasks = new GetTasks();
 		Request r = new Request(RTM.Tasks.GET_LIST);
 		r.setParameter("auth_token", token);
-		r.setParameter("last_sync", lastSync);
-
+		if (lastSync.length() == 0) {
+			full = true;
+		} else {
+			full = false;
+			r.setParameter("last_sync", lastSync);
+		}
+		
 		tasks.parse(rtm.execute(RTM.PATH, r));
 		
 		processTasks(tasks);
@@ -242,6 +249,9 @@ public class SyncService extends BroadcastReceiver {
 	@SuppressWarnings("unchecked")
 	private void processTasks(GetTasks tasks) {
 		Log.i(Program.LOG, "Found " + tasks.tasks.size() + " tasks");
+		
+		if (full)
+			markAllTasksUnsynced();
 		
 		ContentValues cv;
 		ArrayList<Hashtable<String, Object>> x;
@@ -373,6 +383,9 @@ public class SyncService extends BroadcastReceiver {
 				cursor.close();
 			}
 		}
+		
+		if (full)
+			deleteAllUnsyncedTasks();
 	}
 	
 	private void synchronizeLocations() throws RTDException {

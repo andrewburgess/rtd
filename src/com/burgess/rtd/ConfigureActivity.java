@@ -71,9 +71,20 @@ public class ConfigureActivity extends Activity implements IConfigureView {
 		}
 	};
 	
-	private OnClickListener syncOnClickListener = new OnClickListener() {
+	private OnClickListener quickSyncOnClickListener = new OnClickListener() {
 		@Override
 		public void onClick(View view) {
+			controller.synchronize();
+		}
+	};
+	
+	private OnClickListener fullSyncOnClickListener = new OnClickListener() {
+		@Override
+		public void onClick(View view) {
+			SharedPreferences.Editor editor = getPreferences().edit();
+			editor.putString(Program.Config.LAST_SYNC, "");
+			editor.commit();
+			
 			controller.synchronize();
 		}
 	};
@@ -136,8 +147,11 @@ public class ConfigureActivity extends Activity implements IConfigureView {
 		btn = (Button) findViewById(R.id.cancel);
 		btn.setOnClickListener(cancelOnClickListener);
 		
-		btn = (Button) findViewById(R.id.sync);
-		btn.setOnClickListener(syncOnClickListener);
+		btn = (Button) findViewById(R.id.quicksync);
+		btn.setOnClickListener(quickSyncOnClickListener);
+		
+		btn = (Button) findViewById(R.id.fullsync);
+		btn.setOnClickListener(fullSyncOnClickListener);
 
 		controller = new ConfigureController(this);
 		controller.initializeView();
