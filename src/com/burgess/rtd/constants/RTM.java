@@ -24,6 +24,8 @@ public class RTM {
 		public static final String GET_LIST = "rtm.lists.getList";
 		public static final String ADD = "rtm.lists.add";
 		public static final String SET_NAME = "rtm.lists.setName";
+		public static final String ARCHIVE = "rtm.lists.archive";
+		public static final String UNARCHIVE = "rtm.lists.unarchive";
 	}
 	
 	public static class Locations {

@@ -13,10 +13,13 @@ package com.burgess.rtd.model;
 import java.math.BigInteger;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
+import java.util.Calendar;
 import java.util.Collections;
 import java.util.Hashtable;
 import java.util.Vector;
 
+import android.content.ContentValues;
+import android.database.sqlite.SQLiteDatabase;
 import android.util.Log;
 
 import com.burgess.rtd.constants.API;
@@ -134,5 +137,15 @@ public class Request {
 		} catch (NoSuchAlgorithmException e) {
 			return null;
 		}
+	}
+
+	public void save(SQLiteDatabase db, long localId, int dataType) {
+		ContentValues cv = new ContentValues();
+		cv.put(Request.CREATED, Program.DATE_FORMAT.format(Calendar.getInstance().getTime()));
+		cv.put(Request.LOCAL_ID, localId);
+		cv.put(Request.QUERY, toString());
+		cv.put(Request.SYNCED, false);
+		cv.put(Request.TYPE, Program.Data.LIST);
+		db.insert(Request.TABLE, null, cv);
 	}
 }

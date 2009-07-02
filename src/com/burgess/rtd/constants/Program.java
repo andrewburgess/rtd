@@ -64,6 +64,8 @@ public class Program {
 	public static class Menu {
 		public static final int CONFIGURE = 0;
 		public static final int LISTS = 1;
+		public static final int NEW_LIST = 2;
+		public static final int VIEW_ARCHIVED = 3;
 	}
 	
 	public static class Request {

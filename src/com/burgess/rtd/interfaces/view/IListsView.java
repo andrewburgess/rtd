@@ -22,4 +22,6 @@ public interface IListsView {
 	public Context getContext();
 	public void setupListView(Cursor cursor);
 	public void createErrorDialog(RTDError error);
+	
+	public boolean isShowingArchived();
 }

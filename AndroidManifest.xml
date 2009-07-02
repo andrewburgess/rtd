@@ -17,6 +17,7 @@
 
 <activity android:name="ListsActivity"></activity>
 <receiver android:name="com.burgess.rtd.service.SyncService"></receiver>
+<activity android:name="ListsArchivedActivity"></activity>
 </application>
     <uses-sdk android:minSdkVersion="3" />
 

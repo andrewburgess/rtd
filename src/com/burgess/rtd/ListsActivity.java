@@ -19,6 +19,7 @@ import android.database.Cursor;
 import android.os.Bundle;
 import android.view.ContextMenu;
 import android.view.LayoutInflater;
+import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
@@ -29,6 +30,7 @@ import android.widget.Button;
 import android.widget.CursorAdapter;
 import android.widget.EditText;
 import android.widget.TextView;
+import android.widget.Toast;
 import android.widget.AdapterView.AdapterContextMenuInfo;
 import android.widget.AdapterView.OnItemClickListener;
 
@@ -42,21 +44,23 @@ import com.burgess.rtd.model.List;
  *
  */
 public class ListsActivity extends ListActivity implements IListsView {
-	private static final int MENU = 0;
-	private static final int VIEW_TASKS = 0;
-	private static final int RENAME_LIST = 2;
-	private static final int DELETE_LIST = 3;
-	private static final int SET_AS_DEFAULT = 1;
-	private static final int ARCHIVE = 4;
+	protected static final int MENU = 0;
+	protected static final int VIEW_TASKS = 0;
+	protected static final int RENAME_LIST = 2;
+	protected static final int DELETE_LIST = 3;
+	protected static final int SET_AS_DEFAULT = 1;
+	protected static final int ARCHIVE = 4;
 	
-	private ListsController controller;
-	private RTDError error;
-	private Context context = this;
-	private AlertDialog renameDialog;
+	protected ListsController controller;
+	protected RTDError error;
+	protected Context context = this;
+	protected AlertDialog renameDialog;
 	
-	private long listId;
+	protected boolean viewingArchived = false;
 	
-	private OnItemClickListener itemClickListener = new OnItemClickListener() {
+	protected long listId;
+	
+	protected OnItemClickListener itemClickListener = new OnItemClickListener() {
 		@Override
 		public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
 			viewTask(id);
@@ -80,12 +84,18 @@ public class ListsActivity extends ListActivity implements IListsView {
 				break;
 			case RENAME_LIST:
 				renameList(info.id, ((TextView)info.targetView.findViewById(R.id.name)).getText());
+				break;
+			case ARCHIVE:
+				controller.setListArchived(info.id, true);
+				controller.initializeView();
+				Toast.makeText(this, "List archived", Toast.LENGTH_SHORT).show();
+				break;
 		}
 		
 		return true;
 	}
 	
-	private OnClickListener errorButtonOnClickListener = new OnClickListener() {
+	protected OnClickListener errorButtonOnClickListener = new OnClickListener() {
 		@Override
 		public void onClick(View view) {
 			dismissDialog(Program.Dialog.ERROR);
@@ -94,7 +104,7 @@ public class ListsActivity extends ListActivity implements IListsView {
 		}
 	};
 	
-	private OnClickListener onRenameEnterClickListener = new OnClickListener() {
+	protected OnClickListener onRenameEnterClickListener = new OnClickListener() {
 		@Override
 		public void onClick(View view) {
 			controller.renameList(listId, ((EditText)renameDialog.findViewById(R.id.edit)).getText().toString());
@@ -104,14 +114,14 @@ public class ListsActivity extends ListActivity implements IListsView {
 		}
 	};
 	
-	private OnClickListener onRenameCancelClickListener = new OnClickListener() {
+	protected OnClickListener onRenameCancelClickListener = new OnClickListener() {
 		@Override
 		public void onClick(View view) {
 			renameDialog.dismiss();
 		}
 	};
 	
-	private class ListsCursorAdapter extends CursorAdapter {
+	protected class ListsCursorAdapter extends CursorAdapter {
 
 		public ListsCursorAdapter(Context context, Cursor c) {
 			super(context, c);
@@ -180,6 +190,25 @@ public class ListsActivity extends ListActivity implements IListsView {
 				return null;
 		}
 	}
+	
+	public boolean onCreateOptionsMenu(Menu menu) {
+    	menu.add(0, Program.Menu.NEW_LIST, 0, "Add New List").setIcon(android.R.drawable.ic_menu_add);
+    	menu.add(0, Program.Menu.VIEW_ARCHIVED, 0, "View Archived").setIcon(android.R.drawable.ic_menu_more);
+    	return true;
+    }
+	
+	public boolean onOptionsItemSelected(MenuItem item) {
+    	switch (item.getItemId()) {
+    		case Program.Menu.NEW_LIST:
+    			return true;
+    		case Program.Menu.VIEW_ARCHIVED:
+    			Intent intent = new Intent(context, ListsArchivedActivity.class);
+    			startActivity(intent);
+    			return true;
+    		default:
+    			return false;
+    	}
+    }
 
 	@Override
 	public Context getContext() {
@@ -198,14 +227,19 @@ public class ListsActivity extends ListActivity implements IListsView {
 		showDialog(Program.Dialog.ERROR);
 	}
 	
-	private void viewTask(long taskId) {
+	@Override
+	public boolean isShowingArchived() {
+		return viewingArchived;
+	}
+	
+	protected void viewTask(long taskId) {
 		Intent intent = new Intent(context, ListTasksActivity.class);
 		intent.putExtra("com.burgess.rtd.listId", taskId);
 		
-		startActivityForResult(intent, 0);
+		startActivity(intent);
 	}
 	
-	private void renameList(long listId, CharSequence name) {
+	protected void renameList(long listId, CharSequence name) {
 		this.listId = listId;
 		
 		AlertDialog.Builder builder;

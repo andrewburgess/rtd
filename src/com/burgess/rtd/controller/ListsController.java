@@ -10,8 +10,6 @@
  */
 package com.burgess.rtd.controller;
 
-import java.util.Calendar;
-
 import android.content.ContentValues;
 import android.content.SharedPreferences;
 import android.database.Cursor;
@@ -57,16 +55,18 @@ public class ListsController {
 	}
 	
 	public void initializeView() {
-		Cursor cursor = db.query(List.TABLE, 
-								new String[] {
-									List.ID, 
-									List.NAME
-								}, 
-								List.ARCHIVED + "=0 AND " +
-								List.DELETED + "=0", null, null, null, 
-								List.POSITION + ", " + List.NAME);
-		
-		view.setupListView(cursor);
+		view.setupListView(getLists(view.isShowingArchived()));
+	}
+	
+	private Cursor getLists(boolean viewArchived) {
+		return db.query(List.TABLE, 
+				new String[] {
+					List.ID, 
+					List.NAME
+				}, 
+				List.ARCHIVED + "=" + (viewArchived ? "1" : "0") + " AND " +
+				List.DELETED + "=0", null, null, null, 
+				List.POSITION + ", " + List.NAME);
 	}
 
 	public void renameList(long listId, String name) {
@@ -80,13 +80,24 @@ public class ListsController {
 		r.setParameter("list_id", listId);
 		r.setParameter("name", name);
 		
-		cv = new ContentValues();
-		cv.put(Request.CREATED, Program.DATE_FORMAT.format(Calendar.getInstance().getTime()));
-		cv.put(Request.LOCAL_ID, listId);
-		cv.put(Request.QUERY, r.toString());
-		cv.put(Request.SYNCED, false);
-		cv.put(Request.TYPE, Program.Data.LIST);
-		db.insert(Request.TABLE, null, cv);
+		r.save(db, listId, Program.Data.LIST);
+		
+		SyncService s = new SyncService(view.getContext());
+		
+		s.sendRequests();
+	}
+	
+	public void setListArchived(long listId, boolean archive) {
+		ContentValues cv = new ContentValues();
+		cv.put(List.ARCHIVED, archive);
+		db.update(List.TABLE, cv, List.ID + "=" + listId, null);
+		
+		Request r = new Request(archive ? RTM.Lists.ARCHIVE : RTM.Lists.UNARCHIVE);
+		r.setParameter("auth_token", token);
+		r.setParameter("timeline", timeline);
+		r.setParameter("list_id", listId);
+		
+		r.save(db, listId, Program.Data.LIST);
 		
 		SyncService s = new SyncService(view.getContext());
 		
