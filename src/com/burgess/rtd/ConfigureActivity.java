@@ -93,7 +93,8 @@ public class ConfigureActivity extends Activity implements IConfigureView {
 		@Override
 		public void onClick(View view) {
 			dismissDialog(Program.Dialog.ERROR);
-			finish();
+			if (error.isFatal)
+				finish();
 		}
 	};
 	

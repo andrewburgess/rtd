@@ -37,6 +37,7 @@ public class ConfigureController {
 						view.removeDialog(Program.Dialog.SYNCHRONIZE);
 						break;
 					} else {
+						view.removeDialog(Program.Dialog.SYNCHRONIZE);
 						view.createErrorDialog(error);
 						return;
 					}
@@ -80,7 +81,7 @@ public class ConfigureController {
 		token = preferences.getString(Program.Config.AUTH_TOKEN, Program.DEFAULT_AUTH_TOKEN);
 		username = preferences.getString(Program.Config.USERNAME, "");
 		
-		if (token == Program.DEFAULT_AUTH_TOKEN) {
+		if (token.equals(Program.DEFAULT_AUTH_TOKEN)) {
 			view.setAuthStatus("Not authenticated");
 		} else {
 			view.setAuthStatus(username + " logged in");

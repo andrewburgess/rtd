@@ -10,18 +10,11 @@
     	android:layout_weight="1"
     	android:layout_marginTop="5dp"
     	android:layout_marginBottom="5dp" />
-    
-    <FrameLayout
-    	android:layout_height="fill_parent"
-    	android:layout_width="fill_parent"
-    	android:layout_weight="5">
     	
-    	<Button android:id="@+id/authbutton"
-    		android:layout_height="fill_parent"
-    		android:layout_width="fill_parent"
-    		android:layout_marginBottom="5dp"
-    		android:text="Complete Authorization" />
-    	
-    </FrameLayout>
+   	<Button android:id="@+id/authbutton"
+   		android:layout_height="wrap_content"
+   		android:layout_width="fill_parent"
+   		android:layout_marginBottom="5dp"
+   		android:text="Complete Authorization" />
     
 </LinearLayout>

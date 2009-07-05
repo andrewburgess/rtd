@@ -28,6 +28,7 @@ import android.database.sqlite.SQLiteDatabase;
 import android.os.SystemClock;
 import android.util.Log;
 
+import com.burgess.rtd.R;
 import com.burgess.rtd.constants.Program;
 import com.burgess.rtd.constants.RTM;
 import com.burgess.rtd.exceptions.RTDError;
@@ -122,6 +123,10 @@ public class SyncService extends BroadcastReceiver {
 	
 	public RTDError synchronize() {
 		Log.i(Program.LOG, "Last Sync: " + lastSync);
+		
+		if (token.equals(Program.DEFAULT_AUTH_TOKEN)) {
+			return new RTDError(Program.Error.NOT_AUTHENTICATED, R.string.error_not_authenticated, false, false);
+		}
 		
 		try {
 			updateRTM();

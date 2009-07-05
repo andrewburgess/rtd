@@ -61,6 +61,9 @@ public class ListsActivity extends ListActivity implements IListsView {
 	
 	protected long listId;
 	
+	private long inboxListId;
+	private long sentListId;
+	
 	protected OnItemClickListener itemClickListener = new OnItemClickListener() {
 		@Override
 		public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
@@ -69,12 +72,16 @@ public class ListsActivity extends ListActivity implements IListsView {
 	};
 	
 	public void onCreateContextMenu(ContextMenu menu, View view, ContextMenuInfo menuInfo) {
+		AdapterContextMenuInfo info = (AdapterContextMenuInfo)menuInfo;
+		
 		menu.setHeaderTitle("List Options");
 		menu.add(MENU, VIEW_TASKS, VIEW_TASKS, "View Tasks");
-		menu.add(MENU, RENAME_LIST, RENAME_LIST, "Rename List");
-		menu.add(MENU, DELETE_LIST, DELETE_LIST, "Delete List");
-		//menu.add(MENU, SET_AS_DEFAULT, SET_AS_DEFAULT, "Set As Default");
-		menu.add(MENU, ARCHIVE, ARCHIVE, "Archive");
+		if (!(info.id == inboxListId || info.id == sentListId)) {
+			menu.add(MENU, RENAME_LIST, RENAME_LIST, "Rename List");
+			menu.add(MENU, DELETE_LIST, DELETE_LIST, "Delete List");
+			//menu.add(MENU, SET_AS_DEFAULT, SET_AS_DEFAULT, "Set As Default");
+			menu.add(MENU, ARCHIVE, ARCHIVE, "Archive");
+		}
 	}
 	
 	public boolean onContextItemSelected(MenuItem item) {
@@ -153,6 +160,12 @@ public class ListsActivity extends ListActivity implements IListsView {
 		@Override
 		public void bindView(View view, Context context, Cursor c) {
 			String name = c.getString(1);
+			
+			if (name.equals("Inbox"))
+				inboxListId = c.getLong(0);
+			
+			if (name.equals("Sent"))
+				sentListId = c.getLong(0);
 			
 			TextView tv = (TextView) view.findViewById(R.id.name);
 			tv.setText(name);

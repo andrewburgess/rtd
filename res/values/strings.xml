@@ -14,6 +14,7 @@
 	<string name="error_default">An error has occured\n\nPlease submit a bug report</string>
 	<string name="error_list_sync">Problem syncing lists\n\nPlease submit a bug report</string>
 	<string name="error_network_unavailable">Network is not available!</string>
+	<string name="error_not_authenticated">You have not authenticated your account yet</string>
 	<string name="error_parse_default">Error parsing RTM data\n\nPlease submit a bug report</string>
 	<string name="error_rtm">Error code received from RTM\n\nPlease submit a bug report</string>
 	<string name="error_sql">Error occurred with the database\n\nPlease submit a bug report</string>

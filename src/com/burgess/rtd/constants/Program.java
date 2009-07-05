@@ -59,6 +59,7 @@ public class Program {
 		public static final int JSON_EXCEPTION = 7;
 		public static final int PARSE_EXCEPTION = 8;
 		public static final int RTM_ERROR = 9;
+		public static final int NOT_AUTHENTICATED = 10;
 	}
 	
 	public static class Menu {
