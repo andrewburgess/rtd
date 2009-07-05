@@ -67,6 +67,7 @@ public class Program {
 		public static final int LISTS = 1;
 		public static final int NEW_LIST = 2;
 		public static final int VIEW_ARCHIVED = 3;
+		public static final int NEW_TASK = 4;
 	}
 	
 	public static class Request {

@@ -228,8 +228,10 @@ public class ListsActivity extends ListActivity implements IListsView {
 	}
 	
 	public boolean onCreateOptionsMenu(Menu menu) {
-    	menu.add(0, Program.Menu.NEW_LIST, 0, "Add New List").setIcon(android.R.drawable.ic_menu_add);
+    	menu.add(0, Program.Menu.NEW_LIST, 0, "New List").setIcon(android.R.drawable.ic_menu_agenda);
+    	menu.add(0, Program.Menu.NEW_TASK, 0, "New Task").setIcon(android.R.drawable.ic_menu_add);
     	menu.add(0, Program.Menu.VIEW_ARCHIVED, 0, "View Archived").setIcon(android.R.drawable.ic_menu_more);
+    	menu.add(0, Program.Menu.CONFIGURE, 0, "Configure").setIcon(android.R.drawable.ic_menu_preferences);
     	return true;
     }
 	
