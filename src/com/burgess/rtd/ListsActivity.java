@@ -55,7 +55,7 @@ public class ListsActivity extends ListActivity implements IListsView {
 	protected ListsController controller;
 	protected RTDError error;
 	protected Context context = this;
-	protected AlertDialog renameDialog;
+	protected AlertDialog nameDialog;
 	
 	protected boolean viewingArchived = false;
 	
@@ -137,17 +137,34 @@ public class ListsActivity extends ListActivity implements IListsView {
 	protected OnClickListener onRenameEnterClickListener = new OnClickListener() {
 		@Override
 		public void onClick(View view) {
-			controller.renameList(listId, ((EditText)renameDialog.findViewById(R.id.edit)).getText().toString());
+			controller.renameList(listId, ((EditText)nameDialog.findViewById(R.id.edit)).getText().toString());
 			controller.initializeView();
 			
-			renameDialog.dismiss();
+			nameDialog.dismiss();
 		}
 	};
 	
 	protected OnClickListener onRenameCancelClickListener = new OnClickListener() {
 		@Override
 		public void onClick(View view) {
-			renameDialog.dismiss();
+			nameDialog.dismiss();
+		}
+	};
+	
+	protected OnClickListener onAddListClickListener = new OnClickListener() {
+		@Override
+		public void onClick(View view) {
+			controller.addList(((EditText)nameDialog.findViewById(R.id.edit)).getText().toString());
+			controller.initializeView();
+			
+			nameDialog.dismiss();
+		}
+	};
+	
+	protected OnClickListener onAddListCancelClickListener = new OnClickListener() {
+		@Override
+		public void onClick(View view) {
+			nameDialog.dismiss();
 		}
 	};
 	
@@ -238,6 +255,7 @@ public class ListsActivity extends ListActivity implements IListsView {
 	public boolean onOptionsItemSelected(MenuItem item) {
     	switch (item.getItemId()) {
     		case Program.Menu.NEW_LIST:
+    			addList();
     			return true;
     		case Program.Menu.VIEW_ARCHIVED:
     			Intent intent = new Intent(context, ListsArchivedActivity.class);
@@ -277,13 +295,36 @@ public class ListsActivity extends ListActivity implements IListsView {
 		startActivity(intent);
 	}
 	
+	private void addList() {
+		AlertDialog.Builder builder;
+		
+		LayoutInflater inflater = (LayoutInflater)getSystemService(LAYOUT_INFLATER_SERVICE);
+		View layout = inflater.inflate(R.layout.name_list, (ViewGroup) getListView(), false);
+		EditText edit = (EditText)layout.findViewById(R.id.edit);
+		edit.setHint("Enter new list's name");
+		
+		Button button = (Button)layout.findViewById(R.id.enter);
+		button.setText("Add List");
+		button.setOnClickListener(onAddListClickListener);
+		
+		button = (Button)layout.findViewById(R.id.cancel);
+		button.setOnClickListener(onAddListCancelClickListener);
+		
+		builder = new AlertDialog.Builder(this);
+		builder.setView(layout);
+		
+		nameDialog = builder.create();
+		nameDialog.setTitle("Add List");
+		nameDialog.show();
+	}
+	
 	protected void renameList(long listId, CharSequence name) {
 		this.listId = listId;
 		
 		AlertDialog.Builder builder;
 		
 		LayoutInflater inflater = (LayoutInflater)getSystemService(LAYOUT_INFLATER_SERVICE);
-		View layout = inflater.inflate(R.layout.rename_list, (ViewGroup) getListView(), false);
+		View layout = inflater.inflate(R.layout.name_list, (ViewGroup) getListView(), false);
 		EditText edit = (EditText)layout.findViewById(R.id.edit);
 		edit.setText(name);
 		
@@ -296,9 +337,9 @@ public class ListsActivity extends ListActivity implements IListsView {
 		builder = new AlertDialog.Builder(this);
 		builder.setView(layout);
 		
-		renameDialog = builder.create();
-		renameDialog.setTitle("Rename List");
-		renameDialog.show();
+		nameDialog = builder.create();
+		nameDialog.setTitle("Rename List");
+		nameDialog.show();
 	}
 	
 }

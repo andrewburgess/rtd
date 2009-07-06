@@ -167,16 +167,21 @@ public class SyncService extends BroadcastReceiver {
 		
 		ContentValues cv;
 		while (c.isAfterLast() == false) {
+			Request r = Request.parse(c.getString(1));
+			r.setParameter("auth_token", token);
+			
 			switch (c.getInt(2)) {
 				case Program.Data.LIST:
 					GetLists lists = new GetLists();
-					Request r = new Request();
-					r.url = c.getString(1);
 					lists.parse(rtm.execute(RTM.PATH, r));
 					for (Integer key : lists.lists.keySet()) {
 						cv = new ContentValues();
 						cv.put(List.ID, key);
 						db.update(List.TABLE, cv, List.ID + "=" + c.getInt(3), null);
+						
+						cv = new ContentValues();
+						cv.put(TaskSeries.LIST_ID, key);
+						db.update(TaskSeries.TABLE, cv, TaskSeries.LIST_ID + "=" + c.getInt(3), null);
 					}
 					
 					break;

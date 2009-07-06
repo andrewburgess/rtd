@@ -55,7 +55,7 @@ public class Request {
 	private Hashtable<String, Object> parameters;
 	
 	public Request() {
-		
+		parameters = new Hashtable<String, Object>();
 	}
 	
 	/**
@@ -93,6 +93,10 @@ public class Request {
 	 */
 	public void setParameter(String key, Object value) {
 		parameters.put(key, value);
+	}
+	
+	public void removeParameter(String key) {
+		parameters.remove(key);
 	}
 	
 	/**
@@ -147,5 +151,19 @@ public class Request {
 		cv.put(Request.SYNCED, false);
 		cv.put(Request.TYPE, Program.Data.LIST);
 		db.insert(Request.TABLE, null, cv);
+	}
+
+	public static Request parse(String url) {
+		Request r = new Request();
+		
+		String[] pairs = url.split("&");
+		for (int i = 0; i < pairs.length; i++) {
+			String[] keyvalue = pairs[i].split("=");
+			r.setParameter(keyvalue[0], keyvalue[1]);
+		}
+		
+		r.removeParameter("api_sig");
+		
+		return r;
 	}
 }

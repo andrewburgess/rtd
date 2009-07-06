@@ -71,6 +71,26 @@ public class ListsController {
 			return null;
 		}
 	}
+	
+	public void addList(String name) {
+		try {
+			ContentValues cv = new ContentValues();
+			cv.put(List.NAME, name);
+			long id = dbHelper.getDb().insert(List.TABLE, null, cv);
+			
+			Request r = new Request(RTM.Lists.ADD);
+			r.setParameter("auth_token", token);
+			r.setParameter("timeline", timeline);
+			r.setParameter("name", name);
+			
+			r.save(dbHelper.getDb(), id, Program.Data.LIST);
+			
+			SyncService s = new SyncService(view.getContext());
+			s.sendRequests();
+		} catch (RTDException e) {
+			view.createErrorDialog(e.error);
+		}
+	}
 
 	public void renameList(long listId, String name) {
 		try {
