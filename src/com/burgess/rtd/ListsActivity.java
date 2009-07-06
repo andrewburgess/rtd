@@ -108,7 +108,8 @@ public class ListsActivity extends ListActivity implements IListsView {
 
 	private void deleteList(final long listId) {
 		AlertDialog.Builder builder = new AlertDialog.Builder(this);
-		builder.setMessage("Are you sure you want to delete this list?").setCancelable(false)
+		builder.setMessage("Do you really want to delete this list?").setCancelable(false)
+			   .setTitle("Confirm Delete")
 			   .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
 				   								public void onClick(DialogInterface dialog, int id) {
 				   									controller.deleteList(listId);
