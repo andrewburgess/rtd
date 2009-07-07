@@ -26,12 +26,16 @@ public class Task {
 	public static final String POSTPONED = "postponed";
 	public static final String ESTIMATE = "estimate";
 	public static final String SYNCED = "synced";
+	public static final String REMOTE_ID = "remote_id";
+	public static final String REMOTE_TASK_SERIES_ID = "remote_task_series_id";
 	
 	public static final String TABLE = "tasks";
 	
 	public static final String CREATE = "create table tasks (" +
 										  "_id integer primary key autoincrement, " +
+										  "remote_id integer default 0, " +
 										  "task_series_id integer, " +
+										  "remote_task_series_id integer default 0, " + 
 										  "added datetime, " +
 										  "due_date datetime default NULL, " +
 										  "has_due_time boolean default 0, " +

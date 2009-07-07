@@ -24,18 +24,24 @@ public class TaskSeries {
 	public static final String LOCATION_ID = "location_id";
 	public static final String RRULE = "rrule";
 	public static final String SYNCED = "synced";
+	public static final String REMOTE_ID = "remote_id";
+	public static final String REMOTE_LIST_ID = "remote_list_id";
+	public static final String REMOTE_LOCATION_ID = "remote_location_id";
 	
 	public static final String TABLE = "task_series";
 	
 	public static final String CREATE = "create table task_series (" + 
 										  "_id integer primary key autoincrement, " +
+										  "remote_id integer default 0, " +
 										  "created datetime default NULL, " +
 										  "modified datetime default NULL, " +
 										  "name text default '', " +
 										  "list_id int, " +
+										  "remote_list_id integer default 0, " +
 										  "source text default '', " +
 										  "url text default '', " +
 										  "location_id int default NULL," +
+										  "remote_location_id integer default 0, " +
 										  "rrule text default ''," + 
 										  "synced boolean default 0);";				
 	

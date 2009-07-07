@@ -21,12 +21,16 @@ public class Note {
 	public static final String CREATED = "created";
 	public static final String MODIFIED = "modified";
 	public static final String SYNCED = "synced";
+	public static final String REMOTE_ID = "remote_id";
+	public static final String REMOTE_TASK_SERIES_ID = "remote_task_series_id";
 	
 	public static final String TABLE = "notes";
 	
 	public static final String CREATE = "create table notes (" +
 										   "_id integer primary key autoincrement, " +
+										   "remote_id integer default 0, " +
 										   "task_series_id integer, " +
+										   "remote_task_series_id integer default 0, " +
 										   "title text default '', " +
 										   "body text default '', " +
 										   "created datetime default NULL, " +

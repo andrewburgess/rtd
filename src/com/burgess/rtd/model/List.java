@@ -21,11 +21,13 @@ public class List {
 	public static final String POSITION = "position";
 	public static final String SMART = "smart";
 	public static final String SYNCED = "synced";
+	public static final String REMOTE_ID = "remote_id";
 	
 	public static final String TABLE = "lists";
 	
 	public static final String CREATE = "create table lists (" +
 										   "_id integer primary key autoincrement, " +
+										   "remote_id integer default 0, " + 
 										   "name text, " +
 										   "deleted boolean default 0, " +
 										   "archived boolean default 0, " +
