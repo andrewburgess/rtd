@@ -23,8 +23,8 @@ public class TaskTag {
 	
 	public static final String CREATE = "create table task_tags (" +
 										  "_id integer primary key autoincrement, " +
-										  "task_series_id integer, " +
-										  "remote_task_series_id integer default 0, " +
+										  "task_series_id integer default NULL, " +
+										  "remote_task_series_id integer default NULL, " +
 										  "tag_id integer);";
 	public static final String DESTROY = "drop table if exists task_tags";
 }

@@ -160,6 +160,7 @@ public class ListsController {
 	
 	private void moveTasks(long listId) throws RTDException {
 		Cursor c = dbHelper.getDb().query(List.TABLE, new String[] {List.ID}, List.NAME + "=?", new String[] {"Inbox"}, null, null, null);
+		
 		c.moveToFirst();
 		
 		int id = c.getInt(0);

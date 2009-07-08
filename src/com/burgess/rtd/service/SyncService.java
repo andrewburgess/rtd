@@ -132,10 +132,11 @@ public class SyncService extends BroadcastReceiver {
 			updateRTM();
 			
 			synchronizeLists();
-			synchronizeTasks();
 			synchronizeLocations();
+			synchronizeTasks();
 		} catch (RTDException e) {
 			Log.e(Program.LOG, "Problem synchronizing: " + e.getMessage());
+			dbHelper.close();
 			return e.error;
 		}
 		
@@ -151,6 +152,11 @@ public class SyncService extends BroadcastReceiver {
 	}
 	
 	public void sendRequests() {
+		if (token.equals(Program.DEFAULT_AUTH_TOKEN)) {
+			//Not authenticated, just hold on to the request
+			return;
+		}
+		
 		UpdateThread updateThread = new UpdateThread();
 		updateThread.start();
 	}
@@ -218,7 +224,7 @@ public class SyncService extends BroadcastReceiver {
 		ContentValues cv;
 		for (Integer key : lists.lists.keySet()) {
 			cv = new ContentValues();
-			cv.put(List.ID, key);
+			cv.put(List.REMOTE_ID, key);
 			cv.put(List.ARCHIVED, (Boolean)lists.lists.get(key).get("archived"));
 			cv.put(List.DELETED, (Boolean)lists.lists.get(key).get("deleted"));
 			cv.put(List.NAME, (String)lists.lists.get(key).get("name"));
@@ -226,13 +232,13 @@ public class SyncService extends BroadcastReceiver {
 			cv.put(List.SMART, (Boolean)lists.lists.get(key).get("smart"));
 			cv.put(List.SYNCED, true);
 			
-			cursor = db.query(List.TABLE, new String[] {List.ID}, List.ID + "=?", 
+			cursor = db.query(List.TABLE, new String[] {List.REMOTE_ID}, List.REMOTE_ID + "=?", 
 							  new String[] {key.toString()}, null, null, null);
 			cursor.moveToFirst();
 			if (cursor.getCount() == 0) {
 				db.insert(List.TABLE, null, cv);
 			} else {
-				db.update(List.TABLE, cv, List.ID + "=?", new String[] {key.toString()});
+				db.update(List.TABLE, cv, List.REMOTE_ID + "=?", new String[] {key.toString()});
 			}
 			cursor.close();
 		}
@@ -268,8 +274,8 @@ public class SyncService extends BroadcastReceiver {
 		ArrayList<String> y;
 		for (Integer key : tasks.tasks.keySet()) {
 			cv = new ContentValues();
-			cv.put(TaskSeries.ID, key);
-			cv.put(TaskSeries.LIST_ID, (Integer)tasks.tasks.get(key).get("list_id"));
+			cv.put(TaskSeries.REMOTE_ID, key);
+			cv.put(TaskSeries.REMOTE_LIST_ID, (Integer)tasks.tasks.get(key).get("list_id"));
 			cv.put(TaskSeries.CREATED, Program.DATE_FORMAT.format((Date)tasks.tasks.get(key).get("created")));
 			cv.put(TaskSeries.MODIFIED, Program.DATE_FORMAT.format((Date)tasks.tasks.get(key).get("modified")));
 			cv.put(TaskSeries.NAME, (String)tasks.tasks.get(key).get("name"));
@@ -277,18 +283,18 @@ public class SyncService extends BroadcastReceiver {
 			cv.put(TaskSeries.URL, (String)tasks.tasks.get(key).get("url"));
 			int loc = (Integer)tasks.tasks.get(key).get("location_id");
 			if (loc > 0)
-				cv.put(TaskSeries.LOCATION_ID, loc);
+				cv.put(TaskSeries.REMOTE_LOCATION_ID, loc);
 			else
 				cv.putNull(TaskSeries.LOCATION_ID);
 			cv.put(TaskSeries.SYNCED, true);
 			
-			cursor = db.query(TaskSeries.TABLE, new String[] {TaskSeries.ID}, TaskSeries.ID + "=?", 
+			cursor = db.query(TaskSeries.TABLE, new String[] {TaskSeries.REMOTE_ID}, TaskSeries.REMOTE_ID + "=?", 
 							  new String[] {key.toString()}, null, null, null);
 			cursor.moveToFirst();
 			if (cursor.getCount() == 0) {
 				db.insert(TaskSeries.TABLE, null, cv);
 			} else {
-				db.update(TaskSeries.TABLE, cv, TaskSeries.ID + "=?", new String[] {key.toString()});
+				db.update(TaskSeries.TABLE, cv, TaskSeries.REMOTE_ID + "=?", new String[] {key.toString()});
 			}
 			
 			cursor.close();
@@ -298,21 +304,21 @@ public class SyncService extends BroadcastReceiver {
 			for (int i = 0; i < x.size(); i++) {
 				cv = new ContentValues();
 				Integer id = (Integer)x.get(i).get("id");
-				cv.put(Note.ID, id);
+				cv.put(Note.REMOTE_ID, id);
 				cv.put(Note.BODY, (String)x.get(i).get("body"));
 				cv.put(Note.CREATED, Program.DATE_FORMAT.format((Date)x.get(i).get("created")));
 				cv.put(Note.MODIFIED, Program.DATE_FORMAT.format((Date)x.get(i).get("modified")));
 				cv.put(Note.TITLE, (String)x.get(i).get("title"));
 				cv.put(Note.SYNCED, true);
-				cv.put(Note.TASK_SERIES_ID, key);
+				cv.put(Note.REMOTE_TASK_SERIES_ID, key);
 				
-				cursor = db.query(Note.TABLE, new String[] {Note.ID}, Note.ID + "=?", 
+				cursor = db.query(Note.TABLE, new String[] {Note.REMOTE_ID}, Note.REMOTE_ID + "=?", 
 						  new String[] {id.toString()}, null, null, null);
 				cursor.moveToFirst();
 				if (cursor.getCount() == 0) {
 					db.insert(Note.TABLE, null, cv);
 				} else {
-					db.update(Note.TABLE, cv, Note.ID + "=?", new String[] {id.toString()});
+					db.update(Note.TABLE, cv, Note.REMOTE_ID + "=?", new String[] {id.toString()});
 				}
 				
 				cursor.close();
@@ -329,7 +335,7 @@ public class SyncService extends BroadcastReceiver {
 					cv.put(Tag.NAME, y.get(i));
 					long tagId = db.insert(Tag.TABLE, null, cv);
 					cv = new ContentValues();
-					cv.put(TaskTag.TASK_SERIES_ID, key);
+					cv.put(TaskTag.REMOTE_TASK_SERIES_ID, key);
 					cv.put(TaskTag.TAG_ID, tagId);
 					db.insert(TaskTag.TABLE, null, cv);
 					cursor.close();
@@ -337,13 +343,13 @@ public class SyncService extends BroadcastReceiver {
 					int tagId = cursor.getInt(0);
 					cursor.close();
 					cursor = db.query(TaskTag.TABLE, new String[] {TaskTag.ID},
-									  TaskTag.TAG_ID + "=? AND " + TaskTag.TASK_SERIES_ID + "=?",
+									  TaskTag.TAG_ID + "=? AND " + TaskTag.REMOTE_TASK_SERIES_ID + "=?",
 									  new String[] {tagId + "", key + ""}, null, null, null);
 					cursor.moveToFirst();
 					if (cursor.getCount() == 0) {
 						cv = new ContentValues();
 						cv.put(TaskTag.TAG_ID, tagId);
-						cv.put(TaskTag.TASK_SERIES_ID, key);
+						cv.put(TaskTag.REMOTE_TASK_SERIES_ID, key);
 						db.insert(TaskTag.TABLE, null, cv);
 					}
 					cursor.close();
@@ -356,7 +362,7 @@ public class SyncService extends BroadcastReceiver {
 			for (int i = 0; i < x.size(); i++) {
 				cv = new ContentValues();
 				Integer id = (Integer)x.get(i).get("id");
-				cv.put(Task.ID, id);
+				cv.put(Task.REMOTE_ID, id);
 				if (x.get(i).get("due").getClass().equals(String.class))
 					cv.putNull(Task.DUE_DATE);
 				else
@@ -380,15 +386,15 @@ public class SyncService extends BroadcastReceiver {
 					cv.put(Task.POSTPONED, (Integer)x.get(i).get("postponed"));
 				cv.put(Task.ESTIMATE, (String)x.get(i).get("estimate"));
 				cv.put(Task.HAS_DUE_TIME, (Boolean)x.get(i).get("has_due_time"));
-				cv.put(Task.TASK_SERIES_ID, key);
+				cv.put(Task.REMOTE_TASK_SERIES_ID, key);
 				
-				cursor = db.query(Task.TABLE, new String[] {Task.ID}, Task.ID + "=?", 
+				cursor = db.query(Task.TABLE, new String[] {Task.REMOTE_ID}, Task.REMOTE_ID + "=?", 
 						  new String[] {id.toString()}, null, null, null);
 				cursor.moveToFirst();
 				if (cursor.getCount() == 0) {
 					db.insert(Task.TABLE, null, cv);
 				} else {
-					db.update(Task.TABLE, cv, Task.ID + "=?", new String[] {id.toString()});
+					db.update(Task.TABLE, cv, Task.REMOTE_ID + "=?", new String[] {id.toString()});
 				}
 				cursor.close();
 			}
@@ -417,7 +423,7 @@ public class SyncService extends BroadcastReceiver {
 		ContentValues cv;
 		for (Integer key : locations.locations.keySet()) {
 			cv = new ContentValues();
-			cv.put(Location.ID, key);
+			cv.put(Location.REMOTE_ID, key);
 			cv.put(Location.ADDRESS, (String)locations.locations.get(key).get("address"));
 			cv.put(Location.LATITUDE, (Double)locations.locations.get(key).get("latitude"));
 			cv.put(Location.LONGITUDE, (Double)locations.locations.get(key).get("longitude"));
@@ -426,7 +432,7 @@ public class SyncService extends BroadcastReceiver {
 			cv.put(Location.VIEWABLE, (Boolean)locations.locations.get(key).get("viewable"));
 			cv.put(Location.ZOOM, (Integer)locations.locations.get(key).get("zoom"));
 			
-			cursor = db.query(Location.TABLE, new String[] {Location.ID}, Location.ID + "=?", 
+			cursor = db.query(Location.TABLE, new String[] {Location.REMOTE_ID}, Location.REMOTE_ID + "=?", 
 							  new String[] {key.toString()}, null, null, null);
 			cursor.moveToFirst();
 			if (cursor.getCount() == 0) {

@@ -28,9 +28,9 @@ public class Note {
 	
 	public static final String CREATE = "create table notes (" +
 										   "_id integer primary key autoincrement, " +
-										   "remote_id integer default 0, " +
-										   "task_series_id integer, " +
-										   "remote_task_series_id integer default 0, " +
+										   "remote_id integer default NULL, " +
+										   "task_series_id integer default NULL, " +
+										   "remote_task_series_id integer default NULL, " +
 										   "title text default '', " +
 										   "body text default '', " +
 										   "created datetime default NULL, " +

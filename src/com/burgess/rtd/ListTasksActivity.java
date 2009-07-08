@@ -119,6 +119,11 @@ public class ListTasksActivity extends ListActivity implements IListTasksView {
 		controller.initializeView();
 	}
 	
+	@Override
+	public void onStop() {
+		controller.stop();
+	}
+	
 	public long getListId() {
 		return getIntent().getLongExtra("com.burgess.rtd.listId", 0);
 	}

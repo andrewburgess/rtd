@@ -32,16 +32,16 @@ public class TaskSeries {
 	
 	public static final String CREATE = "create table task_series (" + 
 										  "_id integer primary key autoincrement, " +
-										  "remote_id integer default 0, " +
+										  "remote_id integer default NULL, " +
 										  "created datetime default NULL, " +
 										  "modified datetime default NULL, " +
 										  "name text default '', " +
-										  "list_id int, " +
-										  "remote_list_id integer default 0, " +
+										  "list_id integer default NULL, " +
+										  "remote_list_id integer default NULL, " +
 										  "source text default '', " +
 										  "url text default '', " +
 										  "location_id int default NULL," +
-										  "remote_location_id integer default 0, " +
+										  "remote_location_id integer default NULL, " +
 										  "rrule text default ''," + 
 										  "synced boolean default 0);";				
 	

@@ -28,7 +28,7 @@ public class Location {
 	
 	public static final String CREATE = "create table locations (" +
 										   "_id integer primary key autoincrement, " +
-										   "remote_id integer default 0, " +
+										   "remote_id integer default NULL, " +
 										   "name text default '', " +
 										   "longitude real default 0.0, " +
 										   "latitude real default 0.0, " +
