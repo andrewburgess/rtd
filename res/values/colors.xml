@@ -4,4 +4,9 @@
 	<color name="medium_priority">#0060bf</color>
 	<color name="low_priority">#359aff</color>
 	
+	<color name="warning">#550000</color>
+	
+<color name="light_gray">#EEEEEE</color>
+<color name="medium_gray">#999999</color>
+<color name="dark_gray">#333333</color>
 </resources>

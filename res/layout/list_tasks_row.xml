@@ -3,30 +3,32 @@
 	android:layout_width="fill_parent"
 	android:layout_height="fill_parent"
 	android:orientation="horizontal">
-	
+		
+		<LinearLayout
+			android:layout_width="fill_parent"
+			android:layout_height="fill_parent"
+			android:layout_weight="1"
+			android:orientation="vertical">	
+			
+			<TextView android:id="@+id/name"
+				android:layout_width="fill_parent"
+				android:layout_height="wrap_content"
+				android:padding="10dp"
+				android:textSize="20sp" />
+			
+			<TextView android:id="@+id/due"
+				android:layout_width="wrap_content"
+				android:layout_height="wrap_content"
+				android:layout_marginLeft="10dp"
+				android:layout_marginRight="10dp"
+				android:textSize="10sp" />
+			
+		</LinearLayout>
+			
 		<TextView android:id="@+id/priority"
 			android:layout_width="wrap_content"
 			android:layout_height="fill_parent"
-			android:paddingLeft = "10dp"
-			android:paddingRight = "10dp" />
-			
-		<TextView android:id="@+id/name"
-			android:layout_width="fill_parent"
-			android:layout_height="wrap_content"
-			android:layout_weight="1"
-			android:textColor="@android:color/primary_text_dark"
-			android:padding="10dp"
-			android:textSize="20px" />
-		
-		<TextView android:id="@+id/due"
-			android:layout_width="wrap_content"
-			android:layout_height="wrap_content"
-			android:layout_gravity="center"
-			android:textColor="@android:color/primary_text_dark"
-			android:gravity="right"
-			android:layout_marginLeft="10dp"
-			android:layout_marginRight="10dp"
-			android:minWidth="40dp"
-			android:textSize="14px" />
+			android:paddingLeft="10dp"
+			android:paddingRight="10dp" />
 
 </LinearLayout>

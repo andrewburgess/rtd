@@ -79,23 +79,26 @@ public class ListTasksActivity extends ListActivity implements IListTasksView {
 				
 				if (DateUtils.isToday(date.getTime())) {
 					tv.setTypeface(tv.getTypeface(), Typeface.BOLD);
+					tv.setTextColor(Color.parseColor(getString(R.color.medium_gray)));
 					if (c.getInt(3) > 0) {
 						SimpleDateFormat df = new SimpleDateFormat("h:mm a");
-						tv.setText(df.format(date));
+						tv.setText("Due: " + df.format(date));
 					} else {
 						tv.setText("Today");
 					}
 				} else {
-					SimpleDateFormat df = new SimpleDateFormat("MMM dd");
-					tv.setText(df.format(date));
+					SimpleDateFormat df = new SimpleDateFormat("MMMM dd, yyyy");
+					tv.setText("Due: " + df.format(date));
 					if (date.before(Calendar.getInstance().getTime())) {
 						tv.setTypeface(tv.getTypeface(), Typeface.BOLD);
-						tv.setTextColor(Color.rgb(180, 10, 10));
+						tv.setTextColor(Color.parseColor(getString(R.color.warning)));
+					} else {
+						tv.setTextColor(Color.parseColor(getString(R.color.medium_gray)));
 					}
 				}
 			} else {
 				tv = (TextView) view.findViewById(R.id.due);
-				tv.setText("");
+				tv.setVisibility(View.GONE);
 			}
 		}
 
@@ -121,6 +124,8 @@ public class ListTasksActivity extends ListActivity implements IListTasksView {
 	
 	@Override
 	public void onStop() {
+		super.onStop();
+		
 		controller.stop();
 	}
 	

@@ -101,7 +101,7 @@ public class ListsController {
 			Request r = new Request(RTM.Lists.SET_NAME);
 			r.setParameter("auth_token", token);
 			r.setParameter("timeline", timeline);
-			r.setParameter("list_id", listId);
+			r.setParameter("list_id", List.getRemoteId(dbHelper.getDb(), listId));
 			r.setParameter("name", name);
 			
 			r.save(dbHelper.getDb(), listId, Program.Data.LIST);
@@ -125,7 +125,7 @@ public class ListsController {
 			Request r = new Request(RTM.Lists.DELETE);
 			r.setParameter("auth_token", token);
 			r.setParameter("timeline", timeline);
-			r.setParameter("list_id", listId);
+			r.setParameter("list_id", List.getRemoteId(dbHelper.getDb(), listId));
 			
 			r.save(dbHelper.getDb(), listId, Program.Data.LIST);
 			
@@ -146,7 +146,7 @@ public class ListsController {
 			Request r = new Request(archive ? RTM.Lists.ARCHIVE : RTM.Lists.UNARCHIVE);
 			r.setParameter("auth_token", token);
 			r.setParameter("timeline", timeline);
-			r.setParameter("list_id", listId);
+			r.setParameter("list_id", List.getRemoteId(dbHelper.getDb(), listId));
 			
 			r.save(dbHelper.getDb(), listId, Program.Data.LIST);
 			

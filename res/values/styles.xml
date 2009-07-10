@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+	
+	<style name="RTD">
+		<item name="android:textColor">@color/light_gray</item>
+		<item name="android:tabWidgetStyle">@style/tab_widget</item>
+	</style>
+	
+	<style name="tab_widget">
+		<item name="android:textColor">@android:color/tab_indicator_text</item>
+	</style>
+
+</resources>

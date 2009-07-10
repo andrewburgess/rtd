@@ -26,8 +26,7 @@
 				android:textSize="24px" 
 				android:textStyle="bold" 
 				android:gravity="center_horizontal" 
-				android:layout_marginBottom="10px"
-				android:textColor="@android:color/primary_text_dark" />
+				android:layout_marginBottom="10px" />
 	
 			<LinearLayout
 				android:layout_width="fill_parent"
@@ -39,14 +38,12 @@
 					android:layout_width="wrap_content"
 					android:textSize="18px"
 					android:textStyle="bold"
-					android:textColor="@android:color/primary_text_dark"
 					android:text="Status: "/>
 					
 				<TextView android:id="@+id/authstatus"
 					android:layout_height="wrap_content"
 					android:layout_width="wrap_content"
 					android:textSize="18px"
-					android:textColor="@android:color/primary_text_dark"
 					android:layout_weight="1" />
 				
 			</LinearLayout>
@@ -67,7 +64,6 @@
 					android:layout_width="wrap_content"
 					android:textStyle="bold"
 					android:textSize="18px"
-					android:textColor="@android:color/primary_text_dark"
 					android:text="Sync: " />
 				
 				<Spinner 
@@ -83,7 +79,6 @@
 				android:layout_height="wrap_content"
 				android:layout_width="fill_parent"
 				android:textSize="14px"
-				android:textColor="@android:color/primary_text_dark"
 				android:text="Syncing more often uses more battery" 
 				android:textStyle="italic"/>
 			
@@ -108,7 +103,6 @@
 			<TextView android:id="@+id/lastsync"
 				android:layout_height="wrap_content"
 				android:layout_width="fill_parent"
-				android:textColor="@android:color/primary_text_dark"
 				android:textSize="14px" />
 				
 			

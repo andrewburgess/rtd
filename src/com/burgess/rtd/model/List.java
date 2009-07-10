@@ -10,6 +10,9 @@
  */
 package com.burgess.rtd.model;
 
+import android.database.Cursor;
+import android.database.sqlite.SQLiteDatabase;
+
 /**
  * Represents a List object in the database
  */
@@ -35,4 +38,19 @@ public class List {
 										   "smart boolean default 0, " +
 										   "synced boolean default 0);";
 	public static final String DESTROY = "drop table if exists lists";
+	
+	public static long getRemoteId(SQLiteDatabase db, long listId) {
+		long remoteId = -1;
+		
+		Cursor cursor = db.query(List.TABLE, new String[] {List.REMOTE_ID}, 
+				List.ID + "=" + listId, null, null, null, null);
+		
+		cursor.moveToFirst();
+		if (cursor.getCount() > 0)
+			remoteId = cursor.getLong(0);
+		
+		cursor.close();
+		
+		return remoteId;
+	}
 }
