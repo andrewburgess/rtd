@@ -25,7 +25,7 @@ import com.burgess.rtd.exceptions.RTDException;
 /**
  *
  */
-public class GetTasks extends RTMObject {
+public class GetTasks extends RtmObject {
 	public Hashtable<Integer, Hashtable<String, Object>> tasks;
 	public ArrayList<Integer> deletedTasks;
 	

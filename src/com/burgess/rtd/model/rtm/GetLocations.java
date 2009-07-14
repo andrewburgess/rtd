@@ -23,7 +23,7 @@ import com.burgess.rtd.exceptions.RTDException;
 /**
  *
  */
-public class GetLocations extends RTMObject {
+public class GetLocations extends RtmObject {
 	public Hashtable<Integer, Hashtable<String, Object>> locations;
 	
 	public GetLocations() {

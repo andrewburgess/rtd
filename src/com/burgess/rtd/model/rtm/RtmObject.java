@@ -16,7 +16,7 @@ import com.burgess.rtd.exceptions.RTDException;
  * @author Andrew
  *
  */
-public abstract class RTMObject {
+public abstract class RtmObject {
 	public String status;
 	
 	public abstract void parse(String data) throws RTDException;

@@ -23,7 +23,7 @@ import com.burgess.rtd.exceptions.RTDException;
 /**
  *
  */
-public class GetLists extends RTMObject {
+public class GetLists extends RtmObject {
 	public Hashtable<Integer, Hashtable<String, Object>> lists;
 	
 	public GetLists() {

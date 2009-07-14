@@ -21,7 +21,7 @@ import com.burgess.rtd.exceptions.RTDException;
  * @author Andrew
  *
  */
-public class GetFrob extends RTMObject {
+public class GetFrob extends RtmObject {
 	public String frob;
 
 	/* (non-Javadoc)

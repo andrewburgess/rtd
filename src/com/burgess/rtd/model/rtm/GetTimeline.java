@@ -7,7 +7,7 @@ import com.burgess.rtd.R;
 import com.burgess.rtd.constants.Program;
 import com.burgess.rtd.exceptions.RTDException;
 
-public class GetTimeline extends RTMObject {
+public class GetTimeline extends RtmObject {
 	public long time;
 
 	@Override
