@@ -24,11 +24,16 @@ import android.graphics.Color;
 import android.graphics.Typeface;
 import android.os.Bundle;
 import android.text.format.DateUtils;
+import android.view.ContextMenu;
 import android.view.LayoutInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.ContextMenu.ContextMenuInfo;
 import android.widget.CursorAdapter;
 import android.widget.TextView;
+import android.widget.Toast;
+import android.widget.AdapterView.AdapterContextMenuInfo;
 
 import com.burgess.rtd.constants.Program;
 import com.burgess.rtd.controller.ListTasksController;
@@ -38,6 +43,10 @@ import com.burgess.rtd.interfaces.view.IListTasksView;
  *
  */
 public class ListTasksActivity extends ListActivity implements IListTasksView {
+	protected static final int MENU = 0;
+	protected static final int COMPLETE = 0;
+	protected static final int POSTPONE = 1;
+	
 	private ListTasksController controller;
 	
 	private class ListTasksCursorAdapter extends CursorAdapter {
@@ -114,6 +123,26 @@ public class ListTasksActivity extends ListActivity implements IListTasksView {
 		
 	}
 	
+	public void onCreateContextMenu(ContextMenu menu, View view, ContextMenuInfo menuInfo) {
+		menu.setHeaderTitle("Task Options");
+		menu.add(MENU, COMPLETE, COMPLETE, "Complete");
+		menu.add(MENU, POSTPONE, POSTPONE, "Postpone");
+	}
+	
+	public boolean onContextItemSelected(MenuItem item) {
+		//AdapterContextMenuInfo info = (AdapterContextMenuInfo)item.getMenuInfo();
+		switch (item.getItemId()) {
+			case COMPLETE:
+				//viewTask(info.id);
+				break;
+			case POSTPONE:
+				//renameList(info.id, ((TextView)info.targetView.findViewById(R.id.name)).getText());
+				break;
+		}
+		
+		return true;
+	}
+	
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -133,8 +162,9 @@ public class ListTasksActivity extends ListActivity implements IListTasksView {
 		return getIntent().getLongExtra("com.burgess.rtd.listId", 0);
 	}
 	
-	public void setTaskListCursor(Cursor cursor) {
+	public void setupTaskList(Cursor cursor) {
 		setListAdapter(new ListTasksCursorAdapter(this, cursor));
+		registerForContextMenu(getListView());
 	}
 
 	@Override

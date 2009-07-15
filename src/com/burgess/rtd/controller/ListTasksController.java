@@ -49,7 +49,7 @@ public class ListTasksController {
 					"WHERE (list_id = ? OR remote_list_id = ?) AND completed IS NULL " +
 					"ORDER BY priority, due_date, name ", new String[] {"" + id, "" + remoteId });
 			
-			view.setTaskListCursor(cursor);
+			view.setupTaskList(cursor);
 		} catch (RTDException e) {
 			
 		}

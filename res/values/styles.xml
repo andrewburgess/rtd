@@ -2,12 +2,21 @@
 <resources>
 	
 	<style name="RTD">
-		<item name="android:textColor">@color/light_gray</item>
+		<item name="android:textViewStyle">@style/text_view</item>
 		<item name="android:tabWidgetStyle">@style/tab_widget</item>
+		<item name="android:spinnerItemStyle">@style/spinner</item>
 	</style>
 	
 	<style name="tab_widget">
 		<item name="android:textColor">@android:color/tab_indicator_text</item>
+	</style>
+	
+	<style name="text_view">
+		<item name="android:textColor">@color/light_gray</item>
+	</style>
+	
+	<style name="spinner">
+		<item name="android:textColor">@android:color/primary_text_light</item>
 	</style>
 
 </resources>

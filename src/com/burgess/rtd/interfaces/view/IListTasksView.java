@@ -19,7 +19,7 @@ import android.database.Cursor;
  */
 public interface IListTasksView {
 	public long getListId();
-	public void setTaskListCursor(Cursor cursor);
+	public void setupTaskList(Cursor cursor);
 	public Context getContext();
 	public SharedPreferences getPreferences();
 }

@@ -86,6 +86,8 @@ public final class R {
     }
     public static final class style {
         public static final int RTD=0x7f070000;
+        public static final int spinner=0x7f070003;
         public static final int tab_widget=0x7f070001;
+        public static final int text_view=0x7f070002;
     }
 }
